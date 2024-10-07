@@ -1,5 +1,6 @@
 package database;
 
+import javax.swing.*;
 import java.sql.*;
 
 public class DataBaseHandler {
@@ -16,6 +17,7 @@ public class DataBaseHandler {
     public DataBaseHandler() {
         createConnection();
         setupBookTable();
+        setupMemberTable();
     }
 
     void createConnection() {
@@ -53,6 +55,60 @@ public class DataBaseHandler {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage() + " ... setupDatabase");
+        } finally {
+        }
+    }
+
+    void setupMemberTable() {
+        String TABLE_NAME = "MEMBER";
+        try {
+            // Create a variable to store the introduction that user give to database to execute
+            stmt = conn.createStatement();
+            DatabaseMetaData dbm = conn.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
+
+            // If exist a table already, then return table, else create new table with SQL introduction
+            if (tables.next()) {
+                System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
+            } else {
+                stmt.execute("CREATE TABLE " + TABLE_NAME + "("
+                        + "         id varchar(200) primary key,\n"
+                        + "         name varchar(200),\n"
+                        + "         phone varchar(30),\n"
+                        + "         email varchar(100)\n"
+                        + " )");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage() + " ... setupDatabase");
+        } finally {
+        }
+    }
+
+    // return the pointer to the result table of statement "query"
+    public ResultSet execQuery(String query) {
+        // maintain cursor point to the first row of data table that gain after execute statement
+        ResultSet result;
+        try {
+            stmt = conn.createStatement();
+            result = stmt.executeQuery(query);
+        } catch (SQLException ex) {
+            System.out.println("Exception at execQuery: dataHandler" + ex.getLocalizedMessage());
+            return null;
+        } finally {
+        }
+        return result;
+    }
+
+    // check if we can execute statement "qu"
+    public boolean execAction(String qu) {
+        try {
+            stmt = conn.createStatement();
+            stmt.execute(qu);
+            return true;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error Occured", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Exception at execAction: dataHandler" + e.getLocalizedMessage());
+            return false;
         } finally {
         }
     }

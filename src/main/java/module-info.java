@@ -6,9 +6,12 @@ module controller {
     requires com.dlsc.formsfx;
     requires com.jfoenix;
     requires java.sql;
+    requires java.desktop;
 
-    opens controller to javafx.fxml;
     opens ui.addbook to javafx.fxml;
+    opens ui.addmember to javafx.fxml;
+    opens ui.listbook to javafx.fxml;
     exports ui.addbook;
-    exports controller;
+    exports ui.addmember;
+    exports ui.listbook;
 }

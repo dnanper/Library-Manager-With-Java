@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Tue Oct 08 00:59:23 ICT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0192-6822-c95b-000025ae1bd0 
+on database directory C:\Users\admin\OneDrive\Desktop\UNI\1. COURSE\Kì III\LTHDT(OOP)\LIbraryManagement\database with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1b2c6ec2 
+Loaded from file:/C:/Users/admin/Downloads/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=22.0.2+9-70
+user.dir=C:\Users\admin\OneDrive\Desktop\UNI\1. COURSE\Kì III\LTHDT(OOP)\LIbraryManagement
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
