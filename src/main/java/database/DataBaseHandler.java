@@ -5,7 +5,7 @@ import java.sql.*;
 
 public class DataBaseHandler {
     // Singleton Pattern
-    private  static  DataBaseHandler handler;
+    private  static  DataBaseHandler handler = null;
 
     // String connect Derby Database with URL or Create new one if not existed yet
     private static final String DB_URL = "jdbc:derby:database;create=true";
@@ -14,10 +14,18 @@ public class DataBaseHandler {
     // store the statement to the database
     private static Statement stmt = null;
 
-    public DataBaseHandler() {
+    private DataBaseHandler() {
         createConnection();
         setupBookTable();
         setupMemberTable();
+    }
+
+    // Singleton
+    public static DataBaseHandler getInstance() {
+        if (handler == null) {
+            handler = new DataBaseHandler();
+        }
+        return handler;
     }
 
     void createConnection() {

@@ -65,7 +65,7 @@ public class ListBookController implements Initializable {
 
     // function to extract data from database to put to table
     private void loadData() {
-        DataBaseHandler handler = new DataBaseHandler();
+        DataBaseHandler handler = DataBaseHandler.getInstance();
         String qu = "SELECT * FROM BOOK";
         ResultSet res = handler.execQuery(qu);
         try {
@@ -95,7 +95,7 @@ public class ListBookController implements Initializable {
         private final SimpleStringProperty publisher;
         private final SimpleBooleanProperty availability;
 
-        Book(String title, String id, String author, String publisher, Boolean avail) {
+        public Book(String title, String id, String author, String publisher, Boolean avail) {
             this.title = new SimpleStringProperty(title);
             this.id = new SimpleStringProperty(id);
             this.author = new SimpleStringProperty(author);

@@ -44,7 +44,7 @@ public class AddBookController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        dataBaseHandler = new DataBaseHandler();
+        dataBaseHandler = DataBaseHandler.getInstance();
         checkData();
     }
 
