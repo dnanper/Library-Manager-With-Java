@@ -14,7 +14,10 @@ public class MainLoader extends Application{
         stage.setScene(scene);
         stage.show();
 
-        DataBaseHandler.getInstance();
+        // A little multithreading to reduce latency
+        new Thread(() -> {
+            DataBaseHandler.getInstance();
+        }).start();
     }
 
     public static void main(String[] args) {

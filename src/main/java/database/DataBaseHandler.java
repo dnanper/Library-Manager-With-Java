@@ -93,6 +93,7 @@ public class DataBaseHandler {
     }
 
     // return the pointer to the result table of statement "query"
+    // execQuery: get something from SQL database
     public ResultSet execQuery(String query) {
         // maintain cursor point to the first row of data table that gain after execute statement
         ResultSet result;
@@ -108,6 +109,7 @@ public class DataBaseHandler {
     }
 
     // check if we can execute statement "qu"
+    // execAction: add something to SQL database
     public boolean execAction(String qu) {
         try {
             stmt = conn.createStatement();

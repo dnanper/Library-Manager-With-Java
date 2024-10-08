@@ -7,6 +7,8 @@ module controller {
     requires com.jfoenix;
     requires java.sql;
     requires java.desktop;
+    //requires derbyclient;
+    requires derby;
 
     opens ui.listmember to javafx.fxml;
     opens ui.addbook to javafx.fxml;
