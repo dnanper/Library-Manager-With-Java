@@ -1,7 +1,8 @@
 package ui.settings;
 
 import com.google.gson.Gson;
-
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -72,6 +73,17 @@ public class Preferences {
                 Logger.getLogger(Preferences.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    public static Preferences getPreferences() {
+        Gson gson = new Gson();
+        Preferences preferences = new Preferences();
+        try {
+            preferences = gson.fromJson(new FileReader(CONFIG_FILE), Preferences.class);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Preferences.class.getName()).info("Config file is missing. Creating new one with default config");
+            initConfig();
+        }
+        return preferences;
     }
 }
 

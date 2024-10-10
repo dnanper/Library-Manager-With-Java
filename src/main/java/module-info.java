@@ -11,12 +11,14 @@ module controller {
     requires derby;
     requires com.google.gson;
 
-    opens ui.settings to javafx.fxml;
+
+    opens ui.settings to javafx.fxml, com.google.gson;
     opens ui.listmember to javafx.fxml;
     opens ui.addbook to javafx.fxml;
     opens ui.addmember to javafx.fxml;
     opens ui.listbook to javafx.fxml;
     opens ui.main to javafx.fxml;
+
 
     exports ui.settings;
     exports ui.main;

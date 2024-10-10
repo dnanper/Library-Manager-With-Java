@@ -25,7 +25,7 @@ public class SettingsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        initDefaultValues();
     }
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
@@ -33,6 +33,14 @@ public class SettingsController implements Initializable {
     }
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
+
+    }
+    private void initDefaultValues() {
+        Preferences preferences = Preferences.getPreferences();
+        nDaysWithoutFine.setText(String.valueOf(preferences.getnDaysWithoutFine()));
+        finePerDay.setText(String.valueOf(preferences.getFinePerDay()));
+        username.setText(String.valueOf(preferences.getUsername()));
+        password.setText(String.valueOf(preferences.getPassword()));
 
     }
 }

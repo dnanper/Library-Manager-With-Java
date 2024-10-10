@@ -1,3 +1,4 @@
+# Ignore target directories and IDE-specific files
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -23,10 +24,10 @@ target/
 
 ### NetBeans ###
 /nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -36,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# Ignore custom files and directories
+config.txt
+database/
+derby.log
