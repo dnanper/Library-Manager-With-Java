@@ -1,6 +1,8 @@
 package ui.settings;
 
 import com.google.gson.Gson;
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -22,7 +24,7 @@ public class Preferences {
         nDaysWithoutFine = 14;
         finePerDay = 2;
         username = "admin";
-        password = "admin";
+        setPassword("admin");
     }
 
     public int getnDaysWithoutFine() {
@@ -54,8 +56,10 @@ public class Preferences {
     }
 
     public void setPassword(String password) {
-
-        this.password = password;
+        if (password.length() < 16) {
+            this.password = DigestUtils.shaHex(password);
+        }else
+            this.password = password;
     }
     public static void initConfig() {
         Writer writer = null;
@@ -84,6 +88,26 @@ public class Preferences {
             initConfig();
         }
         return preferences;
+    }
+
+    public static void writePreferenceToFile(Preferences preference) {
+        Writer writer = null;
+        try {
+            Gson gson = new Gson();
+            writer = new FileWriter(CONFIG_FILE);
+            gson.toJson(preference, writer);
+
+
+        } catch (IOException ex) {
+            Logger.getLogger(Preferences.class.getName()).log(Level.SEVERE, null, ex);
+
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Preferences.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }
 

@@ -82,7 +82,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button contentDisplay="TOP" layoutX="10.0" layoutY="238.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="165.0" text="Settings">
+                  <Button contentDisplay="TOP" layoutX="10.0" layoutY="238.0" mnemonicParsing="false" onAction="#loadSettings" prefHeight="150.0" prefWidth="165.0" text="Settings">
                      <graphic>
                         <ImageView fitHeight="36.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
                            <image>

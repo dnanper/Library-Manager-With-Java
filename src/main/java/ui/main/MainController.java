@@ -280,6 +280,11 @@ public class MainController implements Initializable {
         loadWindow("/fxml/listmember.fxml", "View Memebers");
     }
 
+    @FXML
+    public void loadSettings(ActionEvent event) {
+        loadWindow("/fxml/settings.fxml", "View Settings");
+    }
+
     // function to load window of each method
     void loadWindow(String loc, String title) {
         try {
