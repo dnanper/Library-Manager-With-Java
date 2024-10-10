@@ -168,7 +168,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                        <children>
-                                          <JFXButton styleClass="setup-button" stylesheets="@main.css" text="Issue" />
+                                          <JFXButton onAction="#loadIssueOperation" styleClass="setup-button" stylesheets="@main.css" text="Issue" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -183,14 +183,14 @@
                            <children>
                               <BorderPane layoutX="218.0" layoutY="111.0" prefHeight="460.0" prefWidth="584.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <top>
-                                    <JFXTextField maxWidth="-Infinity" prefHeight="37.0" prefWidth="349.0" promptText="Enter Book ID" BorderPane.alignment="CENTER">
+                                    <JFXTextField fx:id="bookID" maxWidth="-Infinity" onAction="#loadBookInfor2" prefHeight="37.0" prefWidth="349.0" promptText="Enter Book ID" BorderPane.alignment="CENTER">
                                        <BorderPane.margin>
                                           <Insets top="10.0" />
                                        </BorderPane.margin>
                                     </JFXTextField>
                                  </top>
                                  <center>
-                                    <ListView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                    <ListView fx:id="issueDataList" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                        <padding>
                                           <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                        </padding>
@@ -199,12 +199,12 @@
                                  <bottom>
                                     <HBox alignment="CENTER" prefHeight="72.0" prefWidth="584.0" BorderPane.alignment="CENTER">
                                        <children>
-                                          <JFXButton styleClass="setup-button" stylesheets="@main.css" text="Renew">
+                                          <JFXButton onAction="#loadRenewOP" styleClass="setup-button" stylesheets="@main.css" text="Renew">
                                              <HBox.margin>
                                                 <Insets right="20.0" />
                                              </HBox.margin>
                                           </JFXButton>
-                                          <JFXButton styleClass="setup-button" stylesheets="@main.css" text="Submission">
+                                          <JFXButton onAction="#loadSubmissionOP" styleClass="setup-button" stylesheets="@main.css" text="Submission">
                                              <HBox.margin>
                                                 <Insets right="20.0" />
                                              </HBox.margin>

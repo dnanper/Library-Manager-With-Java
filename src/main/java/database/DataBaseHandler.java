@@ -18,6 +18,7 @@ public class DataBaseHandler {
         createConnection();
         setupBookTable();
         setupMemberTable();
+        setupIssueTable();
     }
 
     // Singleton
@@ -92,6 +93,34 @@ public class DataBaseHandler {
         }
     }
 
+    // prepare table for book-member table
+    void setupIssueTable() {
+        String TABLE_NAME = "ISSUE";
+        try {
+            // Create a variable to store the introduction that user give to database to execute
+            stmt = conn.createStatement();
+            DatabaseMetaData dbm = conn.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
+
+            // If exist a table already, then return table, else create new table with SQL introduction
+            if (tables.next()) {
+                System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
+            } else {
+                stmt.execute("CREATE TABLE " + TABLE_NAME + "("
+                        + "         bookID varchar(200) primary key,\n"
+                        + "         memberID varchar(200),\n"
+                        + "         issueTime timestamp default CURRENT_TIMESTAMP,\n"
+                        + "         renew_count integer default 0,\n"
+                        + "         FOREIGN KEY (bookID) REFERENCES BOOK(id),\n"
+                        + "         FOREIGN KEY (memberID) REFERENCES MEMBER(id)"
+                        + " )");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage() + " ... setupDatabase");
+        } finally {
+        }
+    }
+
     // return the pointer to the result table of statement "query"
     // execQuery: get something from SQL database
     public ResultSet execQuery(String query) {
@@ -109,7 +138,7 @@ public class DataBaseHandler {
     }
 
     // check if we can execute statement "qu"
-    // execAction: add something to SQL database
+    // execAction: add/update something to SQL database
     public boolean execAction(String qu) {
         try {
             stmt = conn.createStatement();
