@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import util.LibraryUtil;
 
 public class MainLoader extends Application{
     public void start(Stage stage) throws Exception {
@@ -13,6 +14,8 @@ public class MainLoader extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+
+        LibraryUtil.setStageIcon(stage);
 
         // A little multithreading to reduce latency
         new Thread(() -> {

@@ -15,11 +15,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import javafx.event.ActionEvent;
+import util.LibraryUtil;
 //import org.apache.derby.impl.tools.sysinfo.Main;
 //import org.apache.derby.iapi.sql.dictionary.OptionalTool;
 
@@ -69,6 +71,9 @@ public class MainController implements Initializable {
 
     @FXML
     private ListView<String> issueDataList;
+
+    @FXML
+    private StackPane rootPane;
 
     Boolean isReadyForSubmission = false;
 
@@ -290,6 +295,7 @@ public class MainController implements Initializable {
             // Create scene from FXML file that stored in parent
             stage.setScene(new Scene(parent));
             stage.show();
+            LibraryUtil.setStageIcon(stage);
 
         } catch (IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
@@ -390,5 +396,36 @@ public class MainController implements Initializable {
             alert1.setContentText("Renew has been Failed!");
             alert1.showAndWait();
         }
+    }
+
+    @FXML
+    private void handleMenuClose(ActionEvent event) {
+        ((Stage)rootPane.getScene().getWindow()).close();
+    }
+
+    @FXML
+    private void handleMenuAddBook(ActionEvent event) {
+        loadWindow("/fxml/addbook.fxml", "Add New Book");
+    }
+
+    @FXML
+    private void handleMenuAddMember(ActionEvent event) {
+        loadWindow("/fxml/addmember.fxml", "Add New Member");
+    }
+
+    @FXML
+    private void handleMenuLoadBook(ActionEvent event) {
+        loadWindow("/fxml/listbook.fxml", "View Books");
+    }
+
+    @FXML
+    private void handleMenuLoadMember(ActionEvent event) {
+        loadWindow("/fxml/listmember.fxml", "View Memebers");
+    }
+
+    @FXML
+    private void handleMenuFullScreen(ActionEvent event) {
+        Stage stage = ((Stage) rootPane.getScene().getWindow());
+        stage.setFullScreen(!stage.isFullScreen());
     }
 }

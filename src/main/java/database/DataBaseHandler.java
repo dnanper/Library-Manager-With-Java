@@ -36,6 +36,8 @@ public class DataBaseHandler {
             // connect database with URL
             conn = DriverManager.getConnection(DB_URL);
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Can't load Database", "Database Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
             e.printStackTrace();
         }
     }

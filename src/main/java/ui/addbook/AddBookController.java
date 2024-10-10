@@ -78,7 +78,6 @@ public class AddBookController implements Initializable{
                 "'" + bookPublisher + "'," +
                 "" +  true + "" +
                 " )";
-        System.out.println(qu);
 
         // Check if statement work well with database
         if (dataBaseHandler.execAction(qu)) {
@@ -108,7 +107,6 @@ public class AddBookController implements Initializable{
         try {
             while (res.next()) {
                 String tit = res.getString("title");
-                System.out.println(tit);
             }
         } catch (SQLException ex) {
             Logger.getLogger(AddBookController.class.getName()).log(Level.SEVERE, null, ex);
