@@ -90,7 +90,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button contentDisplay="TOP" layoutX="10.0" layoutY="238.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="165.0" text="Settings">
+                  <Button contentDisplay="TOP" layoutX="10.0" layoutY="238.0" mnemonicParsing="false" onAction="#loadSettings" prefHeight="150.0" prefWidth="165.0" text="Settings">
                      <graphic>
                         <ImageView fitHeight="36.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -113,7 +113,7 @@
                                  <children>
                                     <HBox fx:id="bookinfo" alignment="CENTER" prefHeight="230.0" prefWidth="584.0" style="-fx-background-color: #e7e7e7;">
                                        <children>
-                                          <JFXTextField fx:id="bookIDInput" onAction="#loadBookInfo" prefHeight="25.0" prefWidth="181.0" promptText="Book ID">
+                                          <JFXTextField fx:id="bookIDInput" onAction="#loadBookInfo" promptText="Book ID">
                                              <HBox.margin>
                                                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                                              </HBox.margin>

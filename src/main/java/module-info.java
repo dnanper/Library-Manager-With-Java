@@ -13,6 +13,12 @@ module controller {
 
     opens util to javafx.fxml;
     //opens ui.settings to javafx.fxml;
+    requires com.google.gson;
+    requires org.apache.commons.codec;
+
+    opens ui.login to javafx.fxml;
+    opens ui.settings to javafx.fxml, com.google.gson;
+
     opens ui.listmember to javafx.fxml;
     opens ui.addbook to javafx.fxml;
     opens ui.addmember to javafx.fxml;
@@ -21,6 +27,7 @@ module controller {
 
     exports util;
     //exports ui.settings;
+
     exports ui.main;
     exports ui.listmember;
     exports ui.addbook;
