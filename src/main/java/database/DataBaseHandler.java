@@ -1,7 +1,12 @@
 package database;
 
+import ui.listbook.ListBookController;
+import ui.listmember.ListMemberController;
+
 import javax.swing.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DataBaseHandler {
     // Singleton Pattern
@@ -153,4 +158,106 @@ public class DataBaseHandler {
         } finally {
         }
     }
+
+    public boolean deleteBook(ListBookController.Book book) {
+
+        try {
+            String delStatement = "DELETE FROM BOOK WHERE ID = ?";
+            PreparedStatement stmt = conn.prepareStatement(delStatement);
+            stmt.setString(1, book.getId());
+            int rw = stmt.executeUpdate();
+            if (rw == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null ,e);
+        }
+        return false;
+    }
+
+    public boolean deleteMember(ListMemberController.Member member) {
+
+        try {
+            String delStatement = "DELETE FROM MEMBER WHERE ID = ?";
+            PreparedStatement stmt = conn.prepareStatement(delStatement);
+            stmt.setString(1, member.getId());
+            int rw = stmt.executeUpdate();
+            if (rw == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null ,e);
+        }
+        return false;
+    }
+
+    public boolean isIssued(ListBookController.Book book) {
+        try {
+            String checkSmt = "SELECT COUNT(*) FROM ISSUE WHERE bookID = ?";
+            // Get the string that has same bookID
+            PreparedStatement stmt = conn.prepareStatement(checkSmt);
+            stmt.setString(1, book.getId());
+            ResultSet rs = stmt.executeQuery();
+            // If execute query success
+            if (rs.next()) {
+                int cnt = rs.getInt(1); // get first col
+                return (cnt > 0);
+            }
+
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+    public boolean isMemberHasAnyBooks(ListMemberController.Member member) {
+        try {
+            String checkstmt = "SELECT COUNT(*) FROM ISSUE WHERE memberID=?";
+            PreparedStatement stmt = conn.prepareStatement(checkstmt);
+            stmt.setString(1, member.getId());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                System.out.println(count);
+                return (count > 0);
+            }
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean updateBook(ListBookController.Book book) {
+        try {
+            String update = "UPDATE BOOK SET TITLE = ?, AUTHOR = ?, PUBLISHER = ? WHERE ID = ?";
+            PreparedStatement stmt = conn.prepareStatement(update);
+            stmt.setString(1, book.getTitle());
+            stmt.setString(2, book.getAuthor());
+            stmt.setString(3, book.getPublisher());
+            stmt.setString(4, book.getId());
+            int res = stmt.executeUpdate();
+            return (res > 0);
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+    public boolean updateMember(ListMemberController.Member member) {
+        try {
+            String update = "UPDATE MEMBER SET NAME = ?, PHONE = ?, EMAIL = ? WHERE ID = ?";
+            PreparedStatement stmt = conn.prepareStatement(update);
+            stmt.setString(1, member.getName());
+            stmt.setString(2, member.getPhone());
+            stmt.setString(3, member.getEmail());
+            stmt.setString(4, member.getId());
+            int res = stmt.executeUpdate();
+            return (res > 0);
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
 }

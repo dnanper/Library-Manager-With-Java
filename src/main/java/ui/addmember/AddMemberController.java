@@ -1,5 +1,6 @@
 package ui.addmember;
 
+import alert.AlertMaker;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import database.DataBaseHandler;
@@ -8,6 +9,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
+import javafx.stage.Stage;
+import ui.listbook.ListBookController;
+import ui.listmember.ListMemberController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,6 +38,8 @@ public class AddMemberController implements Initializable {
     @FXML
     private JFXButton saveButton;
 
+    private Boolean isEditMod = false;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         handler = DataBaseHandler.getInstance();
@@ -51,6 +57,11 @@ public class AddMemberController implements Initializable {
             alert.setHeaderText(null);
             alert.setContentText("Please Finish all Fields!");
             alert.showAndWait();
+            return;
+        }
+
+        if (isEditMod) {
+            handleEditMod();
             return;
         }
 
@@ -83,7 +94,28 @@ public class AddMemberController implements Initializable {
 
     @FXML
     void cancel(ActionEvent event) {
+        Stage stage = (Stage)name.getScene().getWindow();
+        stage.close();
+    }
 
+    public void inflateUI(ListMemberController.Member member) {
+        name.setText(member.getName());
+        id.setText(member.getId());
+        phone.setText(member.getPhone());
+        email.setText(member.getEmail());
+        id.setEditable(false);
+        isEditMod = Boolean.TRUE;
+    }
+
+    private void handleEditMod() {
+        // push data after edit to new book and use that book to update
+        ListMemberController.Member member = new ListMemberController.Member(name.getText(), id.getText(), phone.getText(), email.getText());
+        // update here
+        if (DataBaseHandler.getInstance().updateMember(member)) {
+            AlertMaker.showSimpleAlert("Success", "Member Updated");
+        } else {
+            AlertMaker.showErrorMessage("Failed", "Can Update Member");
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package ui.addbook;
 
+import alert.AlertMaker;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
@@ -10,10 +11,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import ui.listbook.ListBookController;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +43,8 @@ public class AddBookController implements Initializable{
     @FXML
     private JFXTextField title;
 
+    private Boolean isEditMod = Boolean.FALSE;
+
     DataBaseHandler dataBaseHandler;
 
     @Override
@@ -63,6 +68,12 @@ public class AddBookController implements Initializable{
             alert.showAndWait();
             return;
         }
+
+        if (isEditMod) {
+            handleEditMod();
+            return;
+        }
+
         // create SQL statement to save new book.
         //        stmt.execute("CREATE TABLE " + TABLE_NAME + "("
         //        + "         id varchar(200) primary key,\n"
@@ -110,6 +121,27 @@ public class AddBookController implements Initializable{
             }
         } catch (SQLException ex) {
             Logger.getLogger(AddBookController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    // Function to feed the information of required book from ListBookController
+    public void inflateUI(ListBookController.Book book) {
+        title.setText(book.getTitle());
+        id.setText(book.getId());
+        author.setText(book.getAuthor());
+        publisher.setText(book.getPublisher());
+        id.setEditable(false);
+        isEditMod = Boolean.TRUE;
+    }
+
+    private void handleEditMod() {
+        // push data after edit to new book and use that book to update
+        ListBookController.Book book = new ListBookController.Book(title.getText(), id.getText(), author.getText(), publisher.getText(), true);
+        // update here
+        if (dataBaseHandler.updateBook(book)) {
+            AlertMaker.showSimpleAlert("Success", "Book Updated");
+        } else {
+            AlertMaker.showErrorMessage("Failed", "Can Update Book");
         }
     }
 

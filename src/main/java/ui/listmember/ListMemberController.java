@@ -1,19 +1,35 @@
 package ui.listmember;
 
+import alert.AlertMaker;
 import database.DataBaseHandler;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import ui.addbook.AddBookController;
+import ui.addmember.AddMemberController;
+import ui.listbook.ListBookController;
+import ui.main.MainController;
+import util.LibraryUtil;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,6 +70,8 @@ public class ListMemberController implements Initializable {
 
     // function to extract data from database to put to table
     private void loadData() {
+        list.clear();
+
         DataBaseHandler handler = DataBaseHandler.getInstance();
         String qu = "SELECT * FROM MEMBER";
         ResultSet res = handler.execQuery(qu);
@@ -105,6 +123,83 @@ public class ListMemberController implements Initializable {
             return email.get();
         }
 
+    }
+
+    @FXML
+    void handleMemberDelete(ActionEvent event) {
+        // Fetch the chosen row ( member )
+        // return selected member objects
+        Member selectDel = tableView.getSelectionModel().getSelectedItem();
+        if (selectDel == null) {
+            AlertMaker.showErrorMessage("No member selected", "Please select a member for deletion!");
+            return;
+        }
+
+        // If the member currently issue some books
+        if (DataBaseHandler.getInstance().isMemberHasAnyBooks(selectDel))
+        {
+            AlertMaker.showErrorMessage("This Member has some books", "Please select another member for deletion!");
+            return;
+        }
+        // else
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Deleting Member");
+        alert.setContentText("Are you sure want to delete this member " + selectDel.getName() + "?");
+        Optional<ButtonType> ans = alert.showAndWait();
+        // If user agree to delete
+        if (ans.get() == ButtonType.OK) {
+            Boolean flag = DataBaseHandler.getInstance().deleteMember(selectDel);
+            if (flag) {
+                list.remove(selectDel);
+                AlertMaker.showSimpleAlert("Member Deleted ", selectDel.getName() + " was delete successfully! ");
+                
+            } else {
+                AlertMaker.showSimpleAlert("Failed ", selectDel.getName() + " could not be delete");
+
+            }
+        } else {
+            AlertMaker.showSimpleAlert("Deletion Cancelled", "Deletion process cancelled");
+        }
+    }
+
+    @FXML
+    void handleMemberEdit(ActionEvent event) {
+        // Fetch the chosen row ( member )
+        // return selected member objects
+        Member selectEdit = tableView.getSelectionModel().getSelectedItem();
+        if (selectEdit == null) {
+            AlertMaker.showErrorMessage("No member selected", "Please select a member for edition");
+        }
+
+        // Display Edit Member Window
+        try {
+            // Load window
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addmember.fxml"));
+            Parent parent = loader.load();
+
+            AddMemberController controller = (AddMemberController) loader.getController();
+            controller.inflateUI(selectEdit);
+
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.setTitle("Edit Member");
+            // Create scene from FXML file that stored in parent
+            stage.setScene(new Scene(parent));
+            stage.show();
+            LibraryUtil.setStageIcon(stage);
+
+            // Refresh after Edit
+            stage.setOnCloseRequest((e)->{
+                handleMemberRefresh(new ActionEvent());
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    void handleMemberRefresh(ActionEvent event) {
+        loadData();
     }
 
 }
