@@ -1,10 +1,16 @@
 package ui.main;
 
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.effects.JFXDepthManager;
+import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition;
 import database.DataBaseHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,6 +22,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -25,16 +32,19 @@ import util.LibraryUtil;
 //import org.apache.derby.impl.tools.sysinfo.Main;
 //import org.apache.derby.iapi.sql.dictionary.OptionalTool;
 
+//import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.input.MouseEvent;
 
 // Main Window to Manage Add/View Object
 public class MainController implements Initializable {
@@ -75,6 +85,12 @@ public class MainController implements Initializable {
     @FXML
     private StackPane rootPane;
 
+    @FXML
+    private JFXDrawer drawer;
+
+    @FXML
+    private JFXHamburger hamburger;
+
     Boolean isReadyForSubmission = false;
 
     DataBaseHandler dataBaseHandler;
@@ -85,6 +101,31 @@ public class MainController implements Initializable {
         JFXDepthManager.setDepth(memberinfo, 1);
 
         dataBaseHandler = DataBaseHandler.getInstance();
+
+        initDrawer();
+    }
+
+    private void initDrawer() {
+        // Display toolbar
+        try {
+            VBox toolBar = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/toolbar.fxml")));
+            drawer.setSidePane(toolBar);
+        } catch (IOException e) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, e);
+        }
+        HamburgerSlideCloseTransition task = new HamburgerSlideCloseTransition(hamburger);
+        task.setRate(-1);
+        hamburger.addEventHandler(MouseEvent.MOUSE_CLICKED, (Event event) -> {
+            task.setRate(task.getRate()*-1);
+            task.play();
+            if (drawer.isHidden()) {
+                drawer.open();
+                drawer.setMinWidth(200);
+            } else {
+                drawer.close();
+                drawer.setMinWidth(0);
+            }
+        });
     }
 
     // find book information in library from book ID

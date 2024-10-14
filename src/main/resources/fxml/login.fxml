@@ -4,22 +4,47 @@
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import java.net.URL?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="247.0" prefWidth="395.0" stylesheets="@login.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.login.LoginController">
+<AnchorPane prefHeight="277.0" prefWidth="421.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.login.LoginController">
    <children>
-      <Label alignment="CENTER" prefHeight="82.0" prefWidth="396.0" style="-fx-font-size: 36; -fx-text-fill: #4caf50; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 2, 2);" text="Login">
+      <Label alignment="CENTER" layoutX="13.0" prefHeight="59.0" prefWidth="396.0" style="-fx-font-size: 36; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 2, 2);" text="LOGIN" textAlignment="CENTER">
          <font>
             <Font size="31.0" />
          </font>
+         <textFill>
+            <LinearGradient endX="0.0685579196217494" endY="0.3664302600472813" startY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.8421052694320679" green="0.7621832489967346" blue="0.7621832489967346" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.9868420958518982" green="0.9762960076332092" blue="0.35407528281211853" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
       </Label>
-      <JFXTextField fx:id="username" labelFloat="true" layoutX="56.0" layoutY="90.0" prefHeight="26.0" prefWidth="295.0" promptText="username" />
-      <JFXPasswordField fx:id="password" labelFloat="true" layoutX="56.0" layoutY="135.0" onAction="#handleLoginButtonAction" prefHeight="26.0" prefWidth="295.0" promptText="password" />
-      <JFXButton layoutX="68.0" layoutY="192.0" onAction="#handleLoginButtonAction" prefHeight="38.0" prefWidth="110.0" text="Login" />
-      <JFXButton layoutX="237.0" layoutY="192.0" onAction="#handleCancelButtonAction" prefHeight="38.0" text="Cancel" />
-      <FontAwesomeIcon glyphName="LOCK" layoutX="26.0" layoutY="161.0" size="3em" wrappingWidth="18.114249229431152" />
-      <FontAwesomeIcon glyphName="USER" layoutX="26.0" layoutY="116.0" size="3em" wrappingWidth="9.428571701049805" />
+      <JFXTextField fx:id="username" labelFloat="true" layoutX="63.0" layoutY="103.0" prefHeight="30.0" prefWidth="295.0" promptText="username" />
+      <JFXPasswordField fx:id="password" labelFloat="true" layoutX="64.0" layoutY="157.0" onAction="#handleLoginButtonAction" prefHeight="30.0" prefWidth="295.0" promptText="password" />
+      <JFXButton layoutX="67.0" layoutY="211.0" onAction="#handleLoginButtonAction" prefHeight="38.0" prefWidth="110.0" text="Login" />
+      <JFXButton layoutX="253.0" layoutY="211.0" onAction="#handleCancelButtonAction" prefHeight="38.0" text="Cancel" />
+      <FontAwesomeIcon glyphName="KEY" layoutX="25.0" layoutY="180.0" size="30" wrappingWidth="18.114249229431152" />
+      <FontAwesomeIcon glyphName="USER" layoutX="25.0" layoutY="132.0" size="30" wrappingWidth="9.428571701049805" />
+      <FontAwesomeIcon glyphName="LOCK" layoutX="199.0" layoutY="84.0" size="40" />
    </children>
+   <stylesheets>
+      <URL value="@d" />
+      <URL value="@../dark-theme.css" />
+   </stylesheets>
 </AnchorPane>
