@@ -43,6 +43,8 @@ public class AddBookController implements Initializable{
     @FXML
     private JFXTextField title;
 
+
+
     private Boolean isEditMod = Boolean.FALSE;
 
     DataBaseHandler dataBaseHandler;

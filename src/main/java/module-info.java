@@ -7,11 +7,13 @@ module controller {
     requires java.sql;
     requires java.desktop;
     //  requires derbyclient;
+    requires org.apache.httpcomponents.httpclient;
+    requires org.apache.httpcomponents.httpcore;
+    requires commons.logging;
     requires derby;
     //requires com.google.gson;
 
     opens util to javafx.fxml;
-    //opens ui.settings to javafx.fxml;
     requires com.google.gson;
     requires org.apache.commons.codec;
 
@@ -23,6 +25,8 @@ module controller {
     opens ui.listbook to javafx.fxml;
     opens ui.main to javafx.fxml;
     opens ui.main.toolbar to javafx.fxml;
+    opens api to org.apache.httpcomponents.httpclient, org.apache.httpcomponents.httpcore, commons.logging, javafx.fxml;
+
 
     exports util;
     //exports ui.settings;
@@ -32,4 +36,5 @@ module controller {
     exports ui.addbook;
     exports ui.addmember;
     exports ui.listbook;
+    exports api;
 }
