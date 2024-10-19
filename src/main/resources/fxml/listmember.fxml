@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.listmember.ListMemberController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../dark-theme.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.listmember.ListMemberController">
    <children>
       <TableView fx:id="tableView" prefHeight="400.0" prefWidth="600.0">
          <columns>

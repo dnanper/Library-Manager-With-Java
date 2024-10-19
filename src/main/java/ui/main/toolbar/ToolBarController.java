@@ -2,32 +2,42 @@ package ui.main.toolbar;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import util.LibraryUtil;
 
-public class ToolBarController {
+import java.net.URL;
+import java.util.ResourceBundle;
 
-    @FXML
-    void loadAddBook(ActionEvent event) {
+public class ToolBarController implements Initializable {
 
-    }
-
-    @FXML
-    void loadAddMember(ActionEvent event) {
-
-    }
-
-    @FXML
-    void loadBookTable(ActionEvent event) {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
 
     @FXML
-    void loadMemberTable(ActionEvent event) {
-
+    private void loadAddBook(ActionEvent event) {
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/addbook.fxml"), "Add New Book", null);
     }
 
     @FXML
-    void loadSettings(ActionEvent event) {
+    private void loadAddMember(ActionEvent event) {
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/addmember.fxml"), "Add New Member", null);
+    }
 
+    @FXML
+    private void loadBookTable(ActionEvent event) {
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/listbook.fxml"), "View Book", null);
+    }
+
+    @FXML
+    private void loadMemberTable(ActionEvent event) {
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/listmember.fxml"), "View Member", null);
+    }
+
+    @FXML
+    private void loadSettings(ActionEvent event) {
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/settings.fxml"), "Settings", null);
     }
 
 }

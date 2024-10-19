@@ -1,5 +1,7 @@
 package ui.main;
 
+import alert.AlertMaker;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXTextField;
@@ -20,6 +22,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -39,9 +42,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.input.MouseEvent;
@@ -90,6 +92,45 @@ public class MainController implements Initializable {
 
     @FXML
     private JFXHamburger hamburger;
+
+    @FXML
+    private JFXButton renewButton;
+
+    @FXML
+    private JFXButton submissionButton;
+
+    @FXML
+    private HBox submissionDataContainer;
+
+    @FXML
+    private Text memberNameHolder;
+
+    @FXML
+    private Text memberEmailHolder;
+
+    @FXML
+    private Text memberContactHolder;
+
+    @FXML
+    private Text bookNameHolder;
+
+    @FXML
+    private Text bookAuthorHolder;
+
+    @FXML
+    private Text bookPublisherHolder;
+
+    @FXML
+    private Text issueDateHolder;
+
+    @FXML
+    private Text numberDaysHolder;
+
+    @FXML
+    private Text fineInfoHolder;
+
+    @FXML
+    private AnchorPane rootAnchorPane;
 
     Boolean isReadyForSubmission = false;
 
@@ -169,54 +210,82 @@ public class MainController implements Initializable {
     // function to display all the information from ISSUE, BOOK and MEMBER TABLE about one book
     @FXML
     void loadBookInfor2(ActionEvent event) {
-
+        clearEntries();
         ObservableList<String> issueData = FXCollections.observableArrayList();
         isReadyForSubmission = false;
 
-        String id = bookID.getText();
-        String qu = "SELECT * FROM ISSUE WHERE bookID = '" + id + "'";
-        ResultSet rs = dataBaseHandler.execQuery(qu);
-        // fetch data to the data list to display
         try {
-            while (rs.next()) {
-                String iBookID = id;
-                String iMemberID = rs.getString("memberID");
-                Timestamp iTime = rs.getTimestamp("issueTime");
-                int iRenewCount = rs.getInt("renew_count");
+            String id = bookID.getText();
+            String myQuery = "SELECT ISSUE.bookID, ISSUE.memberID, ISSUE.issueTime, ISSUE.renew_count,\n"
+                    + "MEMBER.name, MEMBER.phone, MEMBER.email,\n"
+                    + "BOOK.title, BOOK.author, BOOK.publisher\n"
+                    + "FROM ISSUE\n"
+                    + "LEFT JOIN MEMBER\n"
+                    + "ON ISSUE.memberID=MEMBER.ID\n"
+                    + "LEFT JOIN BOOK\n"
+                    + "ON ISSUE.bookID=BOOK.ID\n"
+                    + "WHERE ISSUE.bookID='" + id + "'";
+            ResultSet rs = dataBaseHandler.execQuery(myQuery);
+            if (rs.next()) {
+                memberNameHolder.setText(rs.getString("name"));
+                memberContactHolder.setText(rs.getString("phone"));
+                memberEmailHolder.setText(rs.getString("email"));
 
-                issueData.add("Issue Date and Time: " + iTime.toGMTString());
-                issueData.add("Renew Count: " + iRenewCount);
+                bookNameHolder.setText(rs.getString("title"));
+                bookAuthorHolder.setText(rs.getString("author"));
+                bookPublisherHolder.setText(rs.getString("publisher"));
 
-                issueData.add("Book Information: ");
-                qu = "SELECT * FROM BOOK WHERE ID = '" + iBookID + "'";
-                ResultSet r1 = dataBaseHandler.execQuery(qu);
-
-                // take data from BOOK TABLE
-                while (r1.next()) {
-                    issueData.add("Book Name: " + r1.getString("title"));
-                    issueData.add("Book ID: " + r1.getString("id"));
-                    issueData.add("Book Author: " + r1.getString("author"));
-                    issueData.add("Book Publisher: " + r1.getString("publisher"));
+                Timestamp mIssueTime = rs.getTimestamp("issueTime");
+                Date dateOfIssue = new Date(mIssueTime.getTime());
+                issueDateHolder.setText(LibraryUtil.formatDateTimeString(dateOfIssue));
+                Long timeElapsed = System.currentTimeMillis() - mIssueTime.getTime();
+                Long days = TimeUnit.DAYS.convert(timeElapsed, TimeUnit.MILLISECONDS) + 1;
+                String daysElapsed = String.format("Used %d days", days);
+                numberDaysHolder.setText(daysElapsed);
+                Float fine = LibraryUtil.getFineAmount(days.intValue());
+                if (fine > 0) {
+                    fineInfoHolder.setText(String.format("Fine : %.2f", LibraryUtil.getFineAmount(days.intValue())));
+                } else {
+                    fineInfoHolder.setText("");
                 }
 
-                issueData.add("Issuer Information: ");
-                qu = "SELECT * FROM MEMBER WHERE ID = '" + iMemberID + "'";
-                r1 = dataBaseHandler.execQuery(qu);
-
-                // take data from MEMBER TABLE
-                while (r1.next()) {
-                    issueData.add("Member Name: " + r1.getString("name"));
-                    issueData.add("Member ID: " + r1.getString("id"));
-                    issueData.add("Member Phone: " + r1.getString("phone"));
-                    issueData.add("Member Email: " + r1.getString("email"));
-                }
                 isReadyForSubmission = true;
+                disableEnableControls(true);
+                submissionDataContainer.setOpacity(1);
+            } else {
+                JFXButton button = new JFXButton("Okay.I'll Check");
+                AlertMaker.showMaterialDialog(rootPane, rootAnchorPane, Arrays.asList(button), "No such Book Exists in Issue Database", null);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        issueDataList.getItems().setAll(issueData);
+    private void clearEntries() {
+        memberNameHolder.setText("");
+        memberEmailHolder.setText("");
+        memberContactHolder.setText("");
+
+        bookNameHolder.setText("");
+        bookAuthorHolder.setText("");
+        bookPublisherHolder.setText("");
+
+        issueDateHolder.setText("");
+        numberDaysHolder.setText("");
+        fineInfoHolder.setText("");
+
+        disableEnableControls(false);
+        submissionDataContainer.setOpacity(0);
+    }
+
+    private void disableEnableControls(Boolean enableFlag) {
+        if (enableFlag) {
+            renewButton.setDisable(false);
+            submissionButton.setDisable(false);
+        } else {
+            renewButton.setDisable(true);
+            submissionButton.setDisable(true);
+        }
     }
 
     void clearBookCache() {
@@ -304,48 +373,6 @@ public class MainController implements Initializable {
     void clearMemberCache() {
         memberName.setText("");
         memberPhone.setText("");
-    }
-
-    @FXML
-    public void loadAddBook(ActionEvent event) {
-        loadWindow("/fxml/addbook.fxml", "Add New Book");
-    }
-
-    @FXML
-    public void loadAddMember(ActionEvent event) {
-        loadWindow("/fxml/addmember.fxml", "Add New Member");
-    }
-
-    @FXML
-    public void loadBookTable(ActionEvent event) {
-        loadWindow("/fxml/listbook.fxml", "View Books");
-    }
-
-    @FXML
-    public void loadMemberTable(ActionEvent event) {
-        loadWindow("/fxml/listmember.fxml", "View Memebers");
-    }
-
-    @FXML
-    public void loadSettings(ActionEvent event) {
-        loadWindow("/fxml/settings.fxml", "View Settings");
-    }
-
-    // function to load window of each method
-    void loadWindow(String loc, String title) {
-        try {
-            // for each of FXML file, parent will be different
-            Parent parent = FXMLLoader.load(getClass().getResource(loc));
-            Stage stage = new Stage(StageStyle.DECORATED);
-            stage.setTitle(title);
-            // Create scene from FXML file that stored in parent
-            stage.setScene(new Scene(parent));
-            stage.show();
-            LibraryUtil.setStageIcon(stage);
-
-        } catch (IOException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     // function to return book
@@ -451,22 +478,22 @@ public class MainController implements Initializable {
 
     @FXML
     private void handleMenuAddBook(ActionEvent event) {
-        loadWindow("/fxml/addbook.fxml", "Add New Book");
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/addbook.fxml"), "Add New Book", null);
     }
 
     @FXML
     private void handleMenuAddMember(ActionEvent event) {
-        loadWindow("/fxml/addmember.fxml", "Add New Member");
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/addmember.fxml"), "Add New Member", null);
     }
 
     @FXML
     private void handleMenuLoadBook(ActionEvent event) {
-        loadWindow("/fxml/listbook.fxml", "View Books");
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/listbook.fxml"), "View Book", null);
     }
 
     @FXML
     private void handleMenuLoadMember(ActionEvent event) {
-        loadWindow("/fxml/listmember.fxml", "View Memebers");
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/listmember.fxml"), "View Member", null);
     }
 
     @FXML

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="327.0" prefWidth="599.0" xmlns="http://javafx.com/javafx/22.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.addmember.AddMemberController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="327.0" prefWidth="599.0" stylesheets="@../dark-theme.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.addmember.AddMemberController">
    <children>
       <VBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -46,7 +46,7 @@
             </JFXTextField>
             <HBox prefHeight="100.0" prefWidth="570.0">
                <children>
-                  <JFXButton fx:id="saveButton" onAction="#addMember" prefHeight="118.0" prefWidth="300.0" stylesheets="@addbook.css" text="Save">
+                  <JFXButton fx:id="saveButton" onAction="#addMember" prefHeight="118.0" prefWidth="300.0" stylesheets="@../dark-theme.css" text="Save">
                      <font>
                         <Font size="25.0" />
                      </font>
@@ -54,7 +54,7 @@
                         <Insets top="10.0" />
                      </HBox.margin>
                   </JFXButton>
-                  <JFXButton fx:id="cancelButton" onAction="#cancel" prefHeight="118.0" prefWidth="300.0" stylesheets="@addbook.css" text="Cancel">
+                  <JFXButton fx:id="cancelButton" onAction="#cancel" prefHeight="118.0" prefWidth="300.0" text="Cancel">
                      <font>
                         <Font size="25.0" />
                      </font>

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="295.0" prefWidth="401.0" stylesheets="@settings.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.settings.SettingsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="548.0" stylesheets="@../dark-theme.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.settings.SettingsController">
    <children>
       <VBox prefHeight="238.0" prefWidth="401.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -36,8 +36,8 @@
       </VBox>
       <HBox layoutY="209.0" prefHeight="50.0" prefWidth="401.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <JFXButton onAction="#handleSaveButtonAction" prefHeight="100.0" prefWidth="200.0" text="Save" />
-            <JFXButton onAction="#handleCancelButtonAction" prefHeight="100.0" prefWidth="200.0" text="Cancel" />
+            <JFXButton onAction="#handleSaveButtonAction" prefHeight="120.0" prefWidth="300.0" text="Save" />
+            <JFXButton onAction="#handleCancelButtonAction" prefHeight="120.0" prefWidth="300.0" text="Cancel" />
          </children>
       </HBox>
    </children>
