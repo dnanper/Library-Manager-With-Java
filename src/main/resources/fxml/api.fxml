@@ -11,25 +11,18 @@
       <!-- Input fields for ISBN -->
       <HBox spacing="10" AnchorPane.topAnchor="50.0" AnchorPane.leftAnchor="20.0">
          <children>
-
             <JFXTextField fx:id="isbnField" promptText="Enter ISBN"/>
          </children>
       </HBox>
 
-      <!-- Input fields for Title -->
+      <!-- Buttons to trigger adding by ISBN -->
       <HBox spacing="10" AnchorPane.topAnchor="100.0" AnchorPane.leftAnchor="20.0">
          <children>
-
-            <JFXTextField fx:id="titleField" promptText="Enter Book Title"/>
+            <Button fx:id="addISBNButton" text="Add by ISBN" onAction="#onAddByISBN"/>
          </children>
       </HBox>
 
-      <!-- Buttons to trigger adding by ISBN or title -->
-      <HBox spacing="10" AnchorPane.topAnchor="150.0" AnchorPane.leftAnchor="20.0">
-         <children>
-            <Button text="Add by ISBN" onAction="#onAddByISBN"/>
-            <Button text="Add by Title" onAction="#onAddByTitle"/>
-         </children>
-      </HBox>
+      <!-- Label for status messages -->
+      <Label fx:id="statusLabel" AnchorPane.topAnchor="150.0" AnchorPane.leftAnchor="20.0"/>
    </children>
 </AnchorPane>
