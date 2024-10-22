@@ -176,12 +176,12 @@
                                                         <bottom>
                                                             <HBox alignment="CENTER" prefHeight="72.0" prefWidth="584.0" BorderPane.alignment="CENTER">
                                                                 <children>
-                                                                    <JFXButton fx:id="renewButton" onAction="#loadRenewOP" styleClass="setup-button" stylesheets="@main.css" text="Renew">
+                                                                    <JFXButton fx:id="renewButton" disable="true" onAction="#loadRenewOP" styleClass="setup-button" stylesheets="@main.css" text="Renew">
                                                                         <HBox.margin>
                                                                             <Insets right="20.0" />
                                                                         </HBox.margin>
                                                                     </JFXButton>
-                                                                    <JFXButton fx:id="submissionButton" onAction="#loadSubmissionOP" styleClass="setup-button" stylesheets="@main.css" text="Submission">
+                                                                    <JFXButton fx:id="submissionButton" disable="true" onAction="#loadSubmissionOP" styleClass="setup-button" stylesheets="@main.css" text="Submission">
                                                                         <HBox.margin>
                                                                             <Insets right="20.0" />
                                                                         </HBox.margin>

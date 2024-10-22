@@ -113,6 +113,7 @@ public class AlertMaker {
         alert.showAndWait();
     }
 
+    // function to create beautiful alert
     public static void showMaterialDialog(StackPane root, Node nodeToBeBlurred, List<JFXButton> controls, String header, String body) {
         BoxBlur blur = new BoxBlur(3, 3, 3);
         if (controls.isEmpty()) {
@@ -121,6 +122,7 @@ public class AlertMaker {
         JFXDialogLayout dialogLayout = new JFXDialogLayout();
         JFXDialog dialog = new JFXDialog(root, dialogLayout, JFXDialog.DialogTransition.TOP);
 
+        // Adjust button for alert
         controls.forEach(controlButton -> {
             controlButton.getStyleClass().add("dialog-button");
             controlButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent mouseEvent) -> {
