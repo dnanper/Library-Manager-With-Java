@@ -3,46 +3,52 @@ package api;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class Api {
+    // Base URL for Google Books API
     private static final String GOOGLE_BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
+    private final String apiKey = "AIzaSyAp6Bgoq3o06qefC_qQEP8I_yDSPhjy8lk"; // Replace with your actual API key
     private Gson gson = new Gson();
 
-    // Tìm kiếm sách bằng ISBN
+    // Search for books by ISBN
     public JsonObject getBookByISBN(String isbn) {
-        String urlString = GOOGLE_BOOKS_API_URL + "isbn:" + isbn;
+        String urlString = GOOGLE_BOOKS_API_URL + "isbn:" + isbn + "&key=" + apiKey;
         String jsonResponse = sendGetRequest(urlString);
-
-        // Chuyển đổi JSON thành đối tượng JsonObject
         return gson.fromJson(jsonResponse, JsonObject.class);
     }
 
-    // Tìm kiếm sách bằng tiêu đề
+    // Search for books by title
     public JsonObject getBookByTitle(String title) {
         try {
-            String encodedTitle = java.net.URLEncoder.encode(title, "UTF-8");
-            String urlString = GOOGLE_BOOKS_API_URL + "intitle:" + encodedTitle;
+            String encodedTitle = URLEncoder.encode(title, "UTF-8");
+            String urlString = GOOGLE_BOOKS_API_URL + "intitle:" + encodedTitle + "&key=" + apiKey;
             String jsonResponse = sendGetRequest(urlString);
-
-            // Chuyển đổi JSON thành đối tượng JsonObject
             return gson.fromJson(jsonResponse, JsonObject.class);
         } catch (Exception e) {
             e.printStackTrace();
-            return null; // Trả về null nếu có lỗi
+            return null; // Return null if there is an error
         }
     }
 
-    // Gửi yêu cầu GET đến API Google Books
+    // Send GET request to Google Books API
     private String sendGetRequest(String urlString) {
         StringBuilder result = new StringBuilder();
+        HttpURLConnection conn = null;
+
         try {
-            java.net.URL url = new java.net.URL(urlString);
-            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+            URL url = new URL(urlString);
+            conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
             int responseCode = conn.getResponseCode();
-            if (responseCode == java.net.HttpURLConnection.HTTP_OK) {
-                try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(conn.getInputStream()))) {
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Read the response
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         result.append(line);
@@ -53,6 +59,10 @@ public class Api {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                conn.disconnect(); // Clean up connection
+            }
         }
         return result.toString();
     }
