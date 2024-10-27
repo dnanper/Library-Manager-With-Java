@@ -22,7 +22,6 @@ public class Api {
         return gson.fromJson(jsonResponse, JsonObject.class);
     }
 
-    // Search for books by title
     public JsonObject getBookByTitle(String title) {
         try {
             String encodedTitle = URLEncoder.encode(title, "UTF-8");
@@ -34,6 +33,7 @@ public class Api {
             return null; // Return null if there is an error
         }
     }
+
 
     // Send GET request to Google Books API
     private String sendGetRequest(String urlString) {
@@ -64,6 +64,7 @@ public class Api {
                 conn.disconnect(); // Clean up connection
             }
         }
+        System.out.println("Response: " + result.toString()); // Print the response
         return result.toString();
     }
 }
