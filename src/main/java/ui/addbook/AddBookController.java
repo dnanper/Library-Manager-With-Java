@@ -10,12 +10,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import ui.listbook.ListBookController;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -38,6 +41,9 @@ public class AddBookController implements Initializable{
     private AnchorPane rootPane;
 
     @FXML
+    private StackPane stackRootPane;
+
+    @FXML
     private JFXButton saveButton;
 
     @FXML
@@ -55,6 +61,23 @@ public class AddBookController implements Initializable{
         checkData();
     }
 
+    public static boolean isBookExists(String id) {
+        try {
+            String checkstmt = "SELECT COUNT(*) FROM BOOK WHERE id=?";
+            PreparedStatement stmt = DataBaseHandler.getInstance().getConnection().prepareStatement(checkstmt);
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                System.out.println(count);
+                return (count > 0);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AddBookController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     // run whenever user press save
     @FXML
     public void addBook(ActionEvent event) {
@@ -63,16 +86,18 @@ public class AddBookController implements Initializable{
         String bookAuthor = author.getText();
         String bookTitle = title.getText();
 
-        if (bookID.isEmpty() || bookAuthor.isEmpty() || bookTitle.isEmpty() || bookPublisher.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Please Finish all Fields!");
-            alert.showAndWait();
+        if (bookID.isEmpty() || bookAuthor.isEmpty() || bookTitle.isEmpty()) {
+            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "Insufficient Data", "Please enter data in all fields.");
             return;
         }
 
         if (isEditMod) {
             handleEditMod();
+            return;
+        }
+
+        if (isBookExists(bookID)) {
+            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "Duplicate book id", "Book with same Book ID exists.\nPlease use new ID");
             return;
         }
 
@@ -94,16 +119,18 @@ public class AddBookController implements Initializable{
 
         // Check if statement work well with database
         if (dataBaseHandler.execAction(qu)) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText(null);
-            alert.setContentText("Add book Success!");
-            alert.showAndWait();
+            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "New book added", bookTitle + " has been added");
+            clearEntries();
         } else { // Error
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Add book Failed!");
-            alert.showAndWait();
+            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "Failed to add new book", "Check all the entries and try again");
         }
+    }
+
+    private void clearEntries() {
+        title.clear();
+        id.clear();
+        author.clear();
+        publisher.clear();
     }
 
     // function to clean screen
@@ -145,6 +172,11 @@ public class AddBookController implements Initializable{
         } else {
             AlertMaker.showErrorMessage("Failed", "Can Update Book");
         }
+    }
+
+    @FXML
+    void searchBookByAPI(ActionEvent event) {
+
     }
 
 }

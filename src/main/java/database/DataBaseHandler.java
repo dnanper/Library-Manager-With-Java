@@ -37,6 +37,10 @@ public class DataBaseHandler {
         return handler;
     }
 
+    public Connection getConnection() {
+        return conn;
+    }
+
     void createConnection() {
         try {
             // fetch driver for database

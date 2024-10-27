@@ -9,12 +9,21 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import ui.addbook.AddBookController;
 import ui.listbook.ListBookController;
 import ui.listmember.ListMemberController;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AddMemberController implements Initializable {
 
@@ -38,11 +47,34 @@ public class AddMemberController implements Initializable {
     @FXML
     private JFXButton saveButton;
 
+    @FXML
+    private AnchorPane rootPane;
+
+    @FXML
+    private StackPane stackRootPane;
+
     private Boolean isEditMod = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         handler = DataBaseHandler.getInstance();
+    }
+
+    public static boolean isMemberExists(String id) {
+        try {
+            String checkstmt = "SELECT COUNT(*) FROM MEMBER WHERE id=?";
+            PreparedStatement stmt = DataBaseHandler.getInstance().getConnection().prepareStatement(checkstmt);
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                System.out.println(count);
+                return (count > 0);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AddMemberController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     @FXML
@@ -53,15 +85,17 @@ public class AddMemberController implements Initializable {
         String mID = id.getText();
 
         if (mName.isEmpty() || mID.isEmpty() || mPhone.isEmpty() || mEmail.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Please Finish all Fields!");
-            alert.showAndWait();
+            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "Insufficient Data", "Please enter data in all fields.");
             return;
         }
 
         if (isEditMod) {
             handleEditMod();
+            return;
+        }
+
+        if (isMemberExists(mID)) {
+            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "Duplicate member id", "Member with same id exists.\nPlease use new ID");
             return;
         }
 
@@ -80,16 +114,18 @@ public class AddMemberController implements Initializable {
                 " )";
         System.out.println(st);
         if (handler.execAction(st)) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText(null);
-            alert.setContentText("Add Member Successfully!");
-            alert.showAndWait();
+            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "New member added", mName + " has been added");
+            clearEntries();
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Error Occurred!");
-            alert.showAndWait();
+            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "Failed to add new member", "Check you entries and try again.");
         }
+    }
+
+    private void clearEntries() {
+        name.clear();
+        id.clear();
+        phone.clear();
+        email.clear();
     }
 
     @FXML
