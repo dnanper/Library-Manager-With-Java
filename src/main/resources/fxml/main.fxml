@@ -58,7 +58,7 @@
                      <children>
                             <TabPane layoutX="7.0" layoutY="14.0" prefHeight="597.0" prefWidth="915.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <tabs>
-                                    <Tab text="Book Issue">
+                                    <Tab fx:id="bookIssueTab" text="Book Issue">
                                         <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                 <children>
@@ -75,37 +75,41 @@
                                                                           <JFXTextField fx:id="bookIDInput" onAction="#loadBookInfo" promptText="Book ID" />
                                                          </children>
                                                       </VBox>
-                                                                    <VBox alignment="CENTER" prefHeight="185.0" prefWidth="540.0">
-                                                                        <HBox.margin>
-                                                                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                                                        </HBox.margin>
-                                                                        <children>
-                                                                            <Text fx:id="bookTitle" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-text" text="Book Title" textAlignment="CENTER" wrappingWidth="450.0">
-                                                                                <VBox.margin>
-                                                                                    <Insets top="10.0" />
-                                                                                </VBox.margin>
-                                                               <font>
-                                                                  <Font size="16.0" />
-                                                               </font>
-                                                                            </Text>
-                                                                            <Text fx:id="bookAuthor" layoutX="10.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-text" text="Author" textAlignment="CENTER" wrappingWidth="450.0">
-                                                                                <VBox.margin>
-                                                                                    <Insets top="10.0" />
-                                                                                </VBox.margin>
-                                                               <font>
-                                                                  <Font size="16.0" />
-                                                               </font>
-                                                                            </Text>
-                                                                            <Text fx:id="bookStatus" layoutX="10.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-text" text="Publisher" textAlignment="CENTER" wrappingWidth="450.0">
-                                                                                <VBox.margin>
-                                                                                    <Insets top="10.0" />
-                                                                                </VBox.margin>
-                                                               <font>
-                                                                  <Font size="16.0" />
-                                                               </font>
-                                                                            </Text>
-                                                                        </children>
-                                                                    </VBox>
+                                                      <StackPane fx:id="bookInfoContainer">
+                                                         <HBox.margin>
+                                                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                                         </HBox.margin>
+                                                         <children>
+                                                                          <VBox alignment="CENTER" prefHeight="185.0" prefWidth="540.0">
+                                                                              <children>
+                                                                                  <Text fx:id="bookTitle" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-text" textAlignment="CENTER" wrappingWidth="450.0">
+                                                                                      <VBox.margin>
+                                                                                          <Insets top="10.0" />
+                                                                                      </VBox.margin>
+                                                                     <font>
+                                                                        <Font size="16.0" />
+                                                                     </font>
+                                                                                  </Text>
+                                                                                  <Text fx:id="bookAuthor" layoutX="10.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-text" textAlignment="CENTER" wrappingWidth="450.0">
+                                                                                      <VBox.margin>
+                                                                                          <Insets top="10.0" />
+                                                                                      </VBox.margin>
+                                                                     <font>
+                                                                        <Font size="16.0" />
+                                                                     </font>
+                                                                                  </Text>
+                                                                                  <Text fx:id="bookStatus" layoutX="10.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-text" textAlignment="CENTER" wrappingWidth="450.0">
+                                                                                      <VBox.margin>
+                                                                                          <Insets top="10.0" />
+                                                                                      </VBox.margin>
+                                                                     <font>
+                                                                        <Font size="16.0" />
+                                                                     </font>
+                                                                                  </Text>
+                                                                              </children>
+                                                                          </VBox>
+                                                         </children>
+                                                      </StackPane>
                                                                 </children>
                                                                 <VBox.margin>
                                                                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -122,29 +126,33 @@
                                                                           <JFXTextField fx:id="memberIDInput" onAction="#loadMemberInfo" promptText="Mem ID" />
                                                          </children>
                                                       </VBox>
-                                                                    <VBox alignment="CENTER" prefHeight="185.0" prefWidth="540.0">
-                                                                        <HBox.margin>
-                                                                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                                                        </HBox.margin>
-                                                                        <children>
-                                                                            <Text fx:id="memberName" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-text" text="Member Name" textAlignment="CENTER" wrappingWidth="450.0">
-                                                                                <VBox.margin>
-                                                                                    <Insets top="10.0" />
-                                                                                </VBox.margin>
-                                                               <font>
-                                                                  <Font size="16.0" />
-                                                               </font>
-                                                                            </Text>
-                                                                            <Text fx:id="memberPhone" layoutX="10.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-text" text="Phone" textAlignment="CENTER" wrappingWidth="450.0">
-                                                                                <VBox.margin>
-                                                                                    <Insets top="10.0" />
-                                                                                </VBox.margin>
-                                                               <font>
-                                                                  <Font size="16.0" />
-                                                               </font>
-                                                                            </Text>
-                                                                        </children>
-                                                                    </VBox>
+                                                      <StackPane fx:id="memberInfoContainer">
+                                                         <HBox.margin>
+                                                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                                         </HBox.margin>
+                                                         <children>
+                                                                          <VBox alignment="CENTER" prefHeight="185.0" prefWidth="540.0">
+                                                                              <children>
+                                                                                  <Text fx:id="memberName" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-text" textAlignment="CENTER" wrappingWidth="450.0">
+                                                                                      <VBox.margin>
+                                                                                          <Insets top="10.0" />
+                                                                                      </VBox.margin>
+                                                                     <font>
+                                                                        <Font size="16.0" />
+                                                                     </font>
+                                                                                  </Text>
+                                                                                  <Text fx:id="memberPhone" layoutX="10.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="main-text" textAlignment="CENTER" wrappingWidth="450.0">
+                                                                                      <VBox.margin>
+                                                                                          <Insets top="10.0" />
+                                                                                      </VBox.margin>
+                                                                     <font>
+                                                                        <Font size="16.0" />
+                                                                     </font>
+                                                                                  </Text>
+                                                                              </children>
+                                                                          </VBox>
+                                                         </children>
+                                                      </StackPane>
                                                                 </children>
                                                                 <VBox.margin>
                                                                     <Insets bottom="5.0" left="20.0" right="20.0" />
@@ -161,7 +169,7 @@
                                             </AnchorPane>
                                         </content>
                                     </Tab>
-                                    <Tab text="Renew / Submission">
+                                    <Tab fx:id="bookRenewTab" text="Renew / Submission">
                                         <content>
                                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                 <children>

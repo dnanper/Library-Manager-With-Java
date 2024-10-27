@@ -18,10 +18,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListView;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -68,6 +66,12 @@ public class MainController implements Initializable {
 
     @FXML
     private HBox bookinfo;
+
+    @FXML
+    private Tab bookRenewTab;
+
+    @FXML
+    private Tab bookIssueTab;
 
     @FXML
     private HBox memberinfo;
@@ -132,6 +136,16 @@ public class MainController implements Initializable {
     @FXML
     private AnchorPane rootAnchorPane;
 
+    @FXML
+    private StackPane bookInfoContainer;
+
+    @FXML
+    private StackPane memberInfoContainer;
+
+    PieChart bookChart;
+
+    PieChart memberChart;
+
     Boolean isReadyForSubmission = false;
 
     DataBaseHandler dataBaseHandler;
@@ -144,6 +158,63 @@ public class MainController implements Initializable {
         dataBaseHandler = DataBaseHandler.getInstance();
 
         initDrawer();
+        intiGraphs();
+    }
+
+    private void intiGraphs() {
+        bookChart = new PieChart(dataBaseHandler.getBookGraphicStatics());
+        memberChart = new PieChart(dataBaseHandler.getMemberGraphicStatics());
+        bookInfoContainer.getChildren().add(bookChart);
+        memberInfoContainer.getChildren().add(memberChart);
+
+        bookIssueTab.setOnSelectionChanged((Event event) -> {
+            clearIssueEntries();
+            if (bookIssueTab.isSelected()) {
+                refreshGraph();
+
+                // Xóa biểu đồ hiện tại và thêm lại biểu đồ mới để đảm bảo nó được khởi tạo lại hoàn toàn
+                bookInfoContainer.getChildren().clear();
+                memberInfoContainer.getChildren().clear();
+
+                bookChart = new PieChart(dataBaseHandler.getBookGraphicStatics());
+                memberChart = new PieChart(dataBaseHandler.getMemberGraphicStatics());
+
+                bookInfoContainer.getChildren().add(bookChart);
+                memberInfoContainer.getChildren().add(memberChart);
+
+                //displayData(true);
+            }
+        });
+    }
+
+    private void displayData(Boolean status) {
+        if (status) {
+            bookChart.setOpacity(1);
+            memberChart.setOpacity(1);
+        } else {
+            bookChart.setOpacity(0);
+            memberChart.setOpacity(0);
+        }
+//        bookChart.setVisible(status);
+//        memberChart.setVisible(status);
+
+        // Optionally, remove from layout when not visible
+//        if (status) {
+//            if (!bookInfoContainer.getChildren().contains(bookChart)) {
+//                bookInfoContainer.getChildren().add(bookChart);
+//            }
+//            if (!memberInfoContainer.getChildren().contains(memberChart)) {
+//                memberInfoContainer.getChildren().add(memberChart);
+//            }
+//        } else {
+//            bookInfoContainer.getChildren().remove(bookChart);
+//            memberInfoContainer.getChildren().remove(memberChart);
+//        }
+    }
+
+    private void refreshGraph() {
+        memberChart.setData(dataBaseHandler.getMemberGraphicStatics());
+        bookChart.setData(dataBaseHandler.getBookGraphicStatics());
     }
 
     private void initDrawer() {
@@ -174,6 +245,7 @@ public class MainController implements Initializable {
     private void loadBookInfo(ActionEvent event) {
 
         clearBookCache();
+        displayData(false);
 
         String id = bookIDInput.getText();
         // SQL query to get some information of book from BOOK TABLE in SQL
@@ -287,6 +359,7 @@ public class MainController implements Initializable {
         bookStatus.setText("");
         memberPhone.setText("");
         memberName.setText("");
+        displayData(true);
     }
 
     private void disableEnableControls(Boolean enableFlag) {
@@ -309,7 +382,7 @@ public class MainController implements Initializable {
     private void loadMemberInfo(ActionEvent event) {
 
         clearMemberCache();
-
+        displayData(false);
         String id = memberIDInput.getText();
         // SQL query to get some information of book from BOOK TABLE in SQL
         String qu = "SELECT * FROM MEMBER WHERE id = '" + id + "'";
@@ -356,6 +429,7 @@ public class MainController implements Initializable {
             if (dataBaseHandler.execAction(str) && dataBaseHandler.execAction(str2)) {
                 JFXButton button = new JFXButton("OK");
                 AlertMaker.showMaterialDialog(rootPane, rootAnchorPane, Arrays.asList(button), "Book Issue Complete!", null);
+                refreshGraph();
             } else {
                 JFXButton button = new JFXButton("OK");
                 AlertMaker.showMaterialDialog(rootPane, rootAnchorPane, Arrays.asList(button), "Book Issue Failed!", null);

@@ -1,5 +1,8 @@
 package database;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.chart.PieChart;
 import ui.listbook.ListBookController;
 import ui.listmember.ListMemberController;
 
@@ -258,6 +261,48 @@ public class DataBaseHandler {
             Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
         }
         return false;
+    }
+
+    public ObservableList<PieChart.Data> getBookGraphicStatics() {
+        ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
+        try {
+            String st1 = "SELECT COUNT(*) FROM BOOK";
+            String st2 = "SELECT COUNT(*) FROM ISSUE";
+            ResultSet res = execQuery(st1);
+            if (res.next()) {
+                int cnt = res.getInt(1);
+                data.add(new PieChart.Data("Total Books (" + cnt + ")", cnt));
+            }
+            res = execQuery(st2);
+            if (res.next()) {
+                int cnt = res.getInt(1);
+                data.add(new PieChart.Data("Issued Books (" + cnt + ")", cnt));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return data;
+    }
+
+    public ObservableList<PieChart.Data> getMemberGraphicStatics() {
+        ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
+        try {
+            String st1 = "SELECT COUNT(*) FROM MEMBER";
+            String st2 = "SELECT COUNT(DISTINCT memberID) FROM ISSUE";
+            ResultSet res = execQuery(st1);
+            if (res.next()) {
+                int cnt = res.getInt(1);
+                data.add(new PieChart.Data("Total Members (" + cnt + ")", cnt));
+            }
+            res = execQuery(st2);
+            if (res.next()) {
+                int cnt = res.getInt(1);
+                data.add(new PieChart.Data("Issuing Members (" + cnt + ")", cnt));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return data;
     }
 
 }
