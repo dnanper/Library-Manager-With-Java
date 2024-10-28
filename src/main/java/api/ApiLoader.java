@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class ApiLoader extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/api.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/apisearch.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
