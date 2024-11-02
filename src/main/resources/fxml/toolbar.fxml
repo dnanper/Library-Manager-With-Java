@@ -11,22 +11,27 @@
             <FontAwesomeIcon glyphName="USER" size="25" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loadAddBook" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="Add Book">
+      <JFXButton contentDisplay="TOP" mnemonicParsing="false" onAction="#loadAddBook" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="Add Book">
          <graphic>
             <FontAwesomeIcon glyphName="BOOK" size="25" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#loadMemberTable" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="View Members">
+      <JFXButton contentDisplay="TOP" mnemonicParsing="false" onAction="#loadAddBookISBN" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="Add Book by ISBN">
+         <graphic>
+            <FontAwesomeIcon glyphName="BARCODE" size="25" />
+         </graphic>
+      </JFXButton>
+      <JFXButton contentDisplay="TOP" mnemonicParsing="false" onAction="#loadMemberTable" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="View Members">
          <graphic>
             <FontAwesomeIcon glyphName="TABLE" size="25" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="TOP" layoutX="10.0" layoutY="86.0" mnemonicParsing="false" onAction="#loadBookTable" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="View Books">
+      <JFXButton contentDisplay="TOP" mnemonicParsing="false" onAction="#loadBookTable" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="View Books">
          <graphic>
             <FontAwesomeIcon glyphName="LIST" size="25" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="TOP" layoutX="10.0" layoutY="238.0" mnemonicParsing="false" onAction="#loadSettings" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="Settings">
+      <JFXButton contentDisplay="TOP" mnemonicParsing="false" onAction="#loadSettings" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="Settings">
          <graphic>
             <FontAwesomeIcon glyphName="COG" size="25" />
          </graphic>

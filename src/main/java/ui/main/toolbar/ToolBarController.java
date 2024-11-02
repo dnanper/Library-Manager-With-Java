@@ -21,6 +21,11 @@ public class ToolBarController implements Initializable {
     }
 
     @FXML
+    private void loadAddBookISBN(ActionEvent event) {
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/apisearch.fxml"), "Add Book by ISBN", null);
+    }
+
+    @FXML
     private void loadAddMember(ActionEvent event) {
         LibraryUtil.loadWindow(getClass().getResource("/fxml/addmember.fxml"), "Add New Member", null);
     }
@@ -39,5 +44,4 @@ public class ToolBarController implements Initializable {
     private void loadSettings(ActionEvent event) {
         LibraryUtil.loadWindow(getClass().getResource("/fxml/settings.fxml"), "Settings", null);
     }
-
 }

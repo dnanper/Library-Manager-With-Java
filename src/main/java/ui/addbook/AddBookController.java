@@ -58,11 +58,6 @@ public class AddBookController implements Initializable{
     @FXML
     private JFXTextField title;
 
-    @FXML
-    private JFXTextField searchField;
-
-
-
     private Boolean isEditMod = Boolean.FALSE;
 
     DataBaseHandler dataBaseHandler;
@@ -184,54 +179,5 @@ public class AddBookController implements Initializable{
         } else {
             AlertMaker.showErrorMessage("Failed", "Can Update Book");
         }
-    }
-    
-    @FXML
-    void searchBookByAPI(ActionEvent event) {
-        String query = searchField.getText().trim();
-        if (query.isEmpty()) {
-            AlertMaker.showSimpleAlert("Error", "Search field cannot be empty.");
-            return;
-        }
-
-        // Gửi yêu cầu tìm kiếm qua Google Books API
-        String apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" + query.replace(" ", "+");
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(apiUrl))
-                .build();
-
-        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(HttpResponse::body)
-                .thenAccept(this::parseAndDisplayBookInfo)
-                .exceptionally(e -> {
-                    AlertMaker.showSimpleAlert("Error", "Failed to retrieve data from API.");
-                    return null;
-                });
-    }
-
-    // Phương thức phân tích JSON và hiển thị thông tin sách
-    private void parseAndDisplayBookInfo(String responseBody) {
-        JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
-        JsonArray items = jsonObject.getAsJsonArray("items");
-
-        if (items == null || items.size() == 0) {
-            AlertMaker.showSimpleAlert("No Results", "No books found for the search query.");
-            return;
-        }
-
-        JsonObject bookInfo = items.get(0).getAsJsonObject().getAsJsonObject("volumeInfo");
-
-        String bookTitle = bookInfo.has("title") ? bookInfo.get("title").getAsString() : "N/A";
-        String bookAuthor = bookInfo.has("authors") ? String.join(", ", bookInfo.getAsJsonArray("authors").toString()) : "N/A";
-        String bookPublisher = bookInfo.has("publisher") ? bookInfo.get("publisher").getAsString() : "N/A";
-        String bookId = items.get(0).getAsJsonObject().get("id").getAsString();
-
-        // Cập nhật giao diện với thông tin sách
-        title.setText(bookTitle);
-        author.setText(bookAuthor);
-        publisher.setText(bookPublisher);
-        id.setText(bookId);
     }
 }

@@ -9,25 +9,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <StackPane fx:id="stackRootPane" stylesheets="@../dark-theme.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.addbook.AddBookController">
    <children>
-      <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="417.0" prefWidth="600.0" stylesheets="@../dark-theme.css">
+      <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="384.0" prefWidth="600.0" stylesheets="@../dark-theme.css">
          <children>
             <VBox prefHeight="326.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-      
-                  <!-- New HBox for Search by API -->
-                  <HBox alignment="CENTER_LEFT" prefWidth="637.0" spacing="10">
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                     <JFXTextField fx:id="searchField" labelFloat="true" prefWidth="480.0" promptText="Search Book by Google API" />
-                     <JFXButton fx:id="searchButton" onAction="#searchBookByAPI" text="Search" />
-                     <VBox.margin>
-                        <Insets left="10.0" top="10.0" />
-                     </VBox.margin>
-                  </HBox>
       
                   <JFXTextField fx:id="title" labelFloat="true" promptText="Book Title">
                      <padding>
@@ -80,6 +67,9 @@
                            </HBox.margin>
                         </JFXButton>
                      </children>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
                   </HBox>
                </children>
             </VBox>
