@@ -3,11 +3,13 @@ package api;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import alert.AlertMaker;
 import database.DataBaseHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 
 public class ApiSearchController {
@@ -16,7 +18,7 @@ public class ApiSearchController {
     private DataBaseHandler dataBaseHandler = DataBaseHandler.getInstance();
 
     @FXML
-    private TextField nameField; // For searching by book name
+    private TextField nameField;
 
     @FXML
     private ListView<String> searchResultsList; // To display matching books
@@ -25,8 +27,7 @@ public class ApiSearchController {
 
     @FXML
     private void initialize() {
-        // Bind the ListView to the searchResults observable list
-        searchResultsList.setItems(FXCollections.observableArrayList()); // Clear initial items
+        searchResultsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     @FXML
@@ -35,19 +36,17 @@ public class ApiSearchController {
         if (!searchText.isEmpty()) {
             JsonObject response = apiHandle.getBookByTitle(searchText);
 
-            // Clear previous search results from the observable list and ListView
             searchResults.clear();
-            searchResultsList.getItems().clear(); // Clear items in the ListView
+            searchResultsList.getItems().clear();
 
             if (response != null && response.has("items")) {
                 JsonArray items = response.getAsJsonArray("items");
 
-                // Process the items array and populate the observable list
                 for (JsonElement item : items) {
                     JsonObject volumeInfo = item.getAsJsonObject().getAsJsonObject("volumeInfo");
 
                     // Add the JsonObject to the searchResults list
-                    searchResults.add(volumeInfo); // Add the whole JsonObject
+                    searchResults.add(volumeInfo);
 
                     // Create a display string and add it to the ListView
                     String title = getBookTitle(volumeInfo);
@@ -59,53 +58,46 @@ public class ApiSearchController {
                     searchResultsList.getItems().add(displayString); // Add display string to ListView
                 }
             } else {
-                System.out.println("No books found for: " + searchText);
+                AlertMaker.showSimpleAlert("Search Result", "No books found for: " + searchText); // Use AlertMaker
             }
         } else {
-            System.out.println("Please enter a search term.");
+            AlertMaker.showSimpleAlert("Input Error", "Please enter a search term."); // Use AlertMaker
         }
     }
 
-    // Method to add the selected book to the database
     @FXML
     private void onAddSelectedBook() {
-        int selectedIndex = searchResultsList.getSelectionModel().getSelectedIndex();
+        ObservableList<Integer> selectedIndices = searchResultsList.getSelectionModel().getSelectedIndices();
 
-        // Debug: Print the selected index
-        System.out.println("Selected Index: " + selectedIndex);
+        if (!selectedIndices.isEmpty()) {
+            for (int selectedIndex : selectedIndices) {
+                if (selectedIndex >= 0 && selectedIndex < searchResults.size()) {
+                    JsonObject selectedBook = searchResults.get(selectedIndex);
 
-        // Ensure the selected index is valid
-        if (selectedIndex >= 0 && selectedIndex < searchResults.size()) {
-            JsonObject selectedBook = searchResults.get(selectedIndex); // Get the selected JsonObject
+                    // Extract book details and escape single quotes for SQL
+                    String title = getBookTitle(selectedBook).replace("'", "''");
+                    String author = getBookAuthor(selectedBook).replace("'", "''");
+                    String publisher = getBookPublisher(selectedBook).replace("'", "''");
+                    String bookID = getBookISBN(selectedBook);
 
-            // Extract book details
-            String title = getBookTitle(selectedBook);
-            String author = getBookAuthor(selectedBook);
-            String publisher = getBookPublisher(selectedBook);
-            String bookID = getBookISBN(selectedBook); // Use ISBN as the book ID
+                    // Insert into the database
+                    String insertQuery = "INSERT INTO BOOK (id, title, author, publisher, isAvail) VALUES (" +
+                            "'" + bookID + "'," +
+                            "'" + title + "'," +
+                            "'" + author + "'," +
+                            "'" + publisher + "'," +
+                            "true)";
 
-            // Debug: Print extracted details
-            System.out.println("Selected Book - Title: " + title + ", Author: " + author + ", Publisher: " + publisher + ", ISBN: " + bookID);
-
-            // Insert into the database
-            String insertQuery = "INSERT INTO BOOK (id, title, author, publisher, isAvail) VALUES (" +
-                    "'" + bookID + "'," +
-                    "'" + title + "'," +
-                    "'" + author + "'," +
-                    "'" + publisher + "'," +
-                    "true)";
-
-            // Debug: Print the insert query
-            System.out.println("Insert Query: " + insertQuery);
-
-            // Execute the database action and log the result
-            if (dataBaseHandler.execAction(insertQuery)) {
-                System.out.println("Book added successfully: " + title + " by " + author);
-            } else {
-                System.out.println("Failed to add the book to the database.");
+                    // Execute the database action and log the result
+                    if (dataBaseHandler.execAction(insertQuery)) {
+                        AlertMaker.showSimpleAlert("Success", "Book added successfully: " + title + " by " + author); // Use AlertMaker
+                    } else {
+                        AlertMaker.showErrorMessage("Database Error", "Failed to add the book to the database."); // Use AlertMaker
+                    }
+                }
             }
         } else {
-            System.out.println("No book selected.");
+            AlertMaker.showSimpleAlert("Selection Error", "No book selected."); // Use AlertMaker
         }
     }
 
@@ -114,23 +106,19 @@ public class ApiSearchController {
         return bookJson.has("title") ? bookJson.get("title").getAsString() : "No Title Found";
     }
 
-    private String getBookISBN(JsonObject bookJson) {
-        // Access the volumeInfo object
-        JsonObject volumeInfo = bookJson.getAsJsonObject("volumeInfo");
-        if (volumeInfo != null && volumeInfo.has("industryIdentifiers")) {
+    private String getBookISBN(JsonObject volumeInfo) {
+        if (volumeInfo.has("industryIdentifiers")) {
             JsonArray identifiers = volumeInfo.getAsJsonArray("industryIdentifiers");
             for (JsonElement idElement : identifiers) {
-                // Check if the current element is a JsonObject
                 if (idElement.isJsonObject()) {
                     JsonObject identifier = idElement.getAsJsonObject();
-                    // Check for ISBN_13 type
-                    if (identifier.has("type") && identifier.get("type").getAsString().equals("ISBN_13")) {
+                    if (identifier.has("type") && "ISBN_13".equals(identifier.get("type").getAsString())) {
                         return identifier.get("identifier").getAsString();
                     }
                 }
             }
         }
-        return "No ISBN Found"; // Fallback if no ISBN is found
+        return "No ISBN Found";
     }
 
     private String getBookAuthor(JsonObject bookJson) {

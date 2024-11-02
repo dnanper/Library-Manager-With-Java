@@ -211,7 +211,6 @@ public class AddBookController implements Initializable{
                 });
     }
 
-    // Phương thức phân tích JSON và hiển thị thông tin sách
     private void parseAndDisplayBookInfo(String responseBody) {
         JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
         JsonArray items = jsonObject.getAsJsonArray("items");
@@ -228,7 +227,6 @@ public class AddBookController implements Initializable{
         String bookPublisher = bookInfo.has("publisher") ? bookInfo.get("publisher").getAsString() : "N/A";
         String bookId = items.get(0).getAsJsonObject().get("id").getAsString();
 
-        // Cập nhật giao diện với thông tin sách
         title.setText(bookTitle);
         author.setText(bookAuthor);
         publisher.setText(bookPublisher);
