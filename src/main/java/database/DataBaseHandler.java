@@ -267,6 +267,10 @@ public class DataBaseHandler {
         return false;
     }
 
+//    public static void main(String[] args) throws Exception {
+//        DataBaseHandler.getInstance();
+//    }
+
     public ObservableList<PieChart.Data> getBookGraphicStatics() {
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
         try {
