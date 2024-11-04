@@ -30,7 +30,7 @@ module controller {
 
 
     exports util;
-    //exports ui.settings;
+    exports ui.settings;
     exports ui.main.toolbar;
     exports ui.main;
     exports ui.listmember;

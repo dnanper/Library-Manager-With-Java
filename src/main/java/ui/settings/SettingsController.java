@@ -1,5 +1,6 @@
 package ui.settings;
 
+import alert.AlertMaker;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXSpinner;
@@ -30,18 +31,30 @@ public class SettingsController implements Initializable {
     }
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
-        int ndays = Integer.parseInt(nDaysWithoutFine.getText());
-        float fine = Float.parseFloat(finePerDay.getText());
-        String uname = username.getText();
-        String pass = password.getText();
+        try {
+            int ndays = Integer.parseInt(nDaysWithoutFine.getText());
+            float fine = Float.parseFloat(finePerDay.getText());
+            String uname = username.getText();
+            String pass = password.getText();
 
-        Preferences preferences = Preferences.getPreferences();
-        preferences.setnDaysWithoutFine(ndays);
-        preferences.setFinePerDay(fine);
-        preferences.setUsername(uname);
-        preferences.setPassword(pass);
+            Preferences preferences = Preferences.getPreferences();
+            preferences.setnDaysWithoutFine(ndays);
+            preferences.setFinePerDay(fine);
+            preferences.setUsername(uname);
+            preferences.setPassword(pass);
 
-        Preferences.writePreferenceToFile(preferences);
+            Preferences.writePreferenceToFile(preferences);
+
+            // Show success alert
+            AlertMaker.showSimpleAlert("Success", "Settings have been saved successfully.");
+
+            // Close the settings window
+            ((Stage) nDaysWithoutFine.getScene().getWindow()).close();
+
+        } catch (NumberFormatException e) {
+            // Show error alert if input is invalid
+            AlertMaker.showErrorMessage("Invalid Input", "Please enter valid numbers for days and fine.");
+        }
     }
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {

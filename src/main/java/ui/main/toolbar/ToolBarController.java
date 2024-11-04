@@ -42,6 +42,6 @@ public class ToolBarController implements Initializable {
 
     @FXML
     private void loadSettings(ActionEvent event) {
-        LibraryUtil.loadWindow(getClass().getResource("/fxml/settings.fxml"), "Settings", null);
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/mainsettings.fxml"), "Settings", null);
     }
 }
