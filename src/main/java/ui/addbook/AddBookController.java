@@ -1,65 +1,47 @@
 package ui.addbook;
 
 import alert.AlertMaker;
-import com.google.gson.JsonParser;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
-
-import java.net.URI;
-import java.net.URL;
 import database.DataBaseHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import ui.listbook.ListBookController;
 
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
-public class AddBookController implements Initializable{
+public class AddBookController implements Initializable {
     @FXML
     private JFXTextField author;
-
     @FXML
     private JFXButton cancelButton;
-
     @FXML
     private JFXTextField id;
-
     @FXML
     private JFXTextField publisher;
-
+    @FXML
+    private JFXTextField genre; // New genre field
     @FXML
     private AnchorPane rootPane;
-
     @FXML
     private StackPane stackRootPane;
-
     @FXML
     private JFXButton saveButton;
-
     @FXML
     private JFXTextField title;
 
     private Boolean isEditMod = Boolean.FALSE;
-
     DataBaseHandler dataBaseHandler;
 
     @Override
@@ -76,7 +58,6 @@ public class AddBookController implements Initializable{
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 int count = rs.getInt(1);
-                System.out.println(count);
                 return (count > 0);
             }
         } catch (SQLException ex) {
@@ -85,15 +66,16 @@ public class AddBookController implements Initializable{
         return false;
     }
 
-    // run whenever user press save
+    // Run whenever user presses save
     @FXML
     public void addBook(ActionEvent event) {
         String bookID = id.getText();
         String bookPublisher = publisher.getText();
         String bookAuthor = author.getText();
         String bookTitle = title.getText();
+        String bookGenre = genre.getText(); // Get genre from the new field
 
-        if (bookID.isEmpty() || bookAuthor.isEmpty() || bookTitle.isEmpty()) {
+        if (bookID.isEmpty() || bookAuthor.isEmpty() || bookTitle.isEmpty() || bookGenre.isEmpty()) {
             AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "Insufficient Data", "Please enter data in all fields.");
             return;
         }
@@ -108,28 +90,25 @@ public class AddBookController implements Initializable{
             return;
         }
 
-        // create SQL statement to save new book.
-        //        stmt.execute("CREATE TABLE " + TABLE_NAME + "("
-        //        + "         id varchar(200) primary key,\n"
-        //        + "         title varchar(200),\n"
-        //        + "         author varchar(200),\n"
-        //        + "         publisher varchar(100),\n"
-        //        + "         isAvail boolean default true"
-        //        + " )");
-        String qu = "INSERT INTO BOOK VALUES ("+
-                "'" + bookID + "'," +
-                "'" + bookTitle + "'," +
-                "'" + bookAuthor + "'," +
-                "'" + bookPublisher + "'," +
-                "" +  true + "" +
-                " )";
-
-        // Check if statement work well with database
-        if (dataBaseHandler.execAction(qu)) {
-            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "New book added", bookTitle + " has been added");
-            clearEntries();
-        } else { // Error
-            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "Failed to add new book", "Check all the entries and try again");
+        // Create SQL statement to save new book with genre
+        String qu = "INSERT INTO BOOK (id, title, author, publisher, genre, isAvail) VALUES (?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement stmt = dataBaseHandler.getConnection().prepareStatement(qu);
+            stmt.setString(1, bookID);
+            stmt.setString(2, bookTitle);
+            stmt.setString(3, bookAuthor);
+            stmt.setString(4, bookPublisher);
+            stmt.setString(5, bookGenre); // Set genre
+            stmt.setBoolean(6, true);
+            if (stmt.executeUpdate() > 0) {
+                AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "New book added", bookTitle + " has been added");
+                clearEntries();
+            } else {
+                AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "Failed to add new book", "Check all the entries and try again");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AddBookController.class.getName()).log(Level.SEVERE, null, ex);
+            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "Database Error", "Could not connect to database.");
         }
     }
 
@@ -138,16 +117,15 @@ public class AddBookController implements Initializable{
         id.clear();
         author.clear();
         publisher.clear();
+        genre.clear(); // Clear genre field
     }
 
-    // function to clean screen
     @FXML
     public void cancel(ActionEvent event) {
         Stage stage = (Stage) rootPane.getScene().getWindow();
         stage.close();
     }
 
-    // function to display all the book has been added
     private void checkData() {
         String qu = "SELECT title FROM BOOK";
         ResultSet res = dataBaseHandler.execQuery(qu);
@@ -160,20 +138,19 @@ public class AddBookController implements Initializable{
         }
     }
 
-    // Function to feed the information of required book from ListBookController
     public void inflateUI(ListBookController.Book book) {
         title.setText(book.getTitle());
         id.setText(book.getId());
         author.setText(book.getAuthor());
         publisher.setText(book.getPublisher());
+        genre.setText(book.getGenre()); // Set genre in edit mode
         id.setEditable(false);
         isEditMod = Boolean.TRUE;
     }
 
     private void handleEditMod() {
-        // push data after edit to new book and use that book to update
-        ListBookController.Book book = new ListBookController.Book(title.getText(), id.getText(), author.getText(), publisher.getText(), true);
-        // update here
+        ListBookController.Book book = new ListBookController.Book(title.getText(), id.getText(), author.getText(), publisher.getText(), genre.getText(),true);
+        // Update book details
         if (dataBaseHandler.updateBook(book)) {
             AlertMaker.showSimpleAlert("Success", "Book Updated");
         } else {

@@ -57,6 +57,9 @@ public class ListBookController implements Initializable {
     private TableColumn<Book, String> publisherCol;
 
     @FXML
+    private TableColumn<Book, String> genreCol; // Thêm cột genre
+
+    @FXML
     private AnchorPane rootPane;
 
     // tables contain books
@@ -78,6 +81,7 @@ public class ListBookController implements Initializable {
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
         publisherCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
+        genreCol.setCellValueFactory(new PropertyValueFactory<>("genre")); // Kết nối cột genre
         availabilityCol.setCellValueFactory(new PropertyValueFactory<>("availability"));
     }
 
@@ -94,10 +98,11 @@ public class ListBookController implements Initializable {
                 String aut = res.getString("author");
                 String idx = res.getString("id");
                 String pub = res.getString("publisher");
+                String gen = res.getString("genre"); // Lấy genre từ kết quả truy vấn
                 Boolean ava = res.getBoolean("isAvail");
 
                 // add data of book to list
-                list.add(new Book(tit, idx, aut, pub, ava));
+                list.add(new Book(tit, idx, aut, pub, gen, ava));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ListBookController.class.getName()).log(Level.SEVERE, null, ex);
@@ -112,13 +117,15 @@ public class ListBookController implements Initializable {
         private final SimpleStringProperty id;
         private final SimpleStringProperty author;
         private final SimpleStringProperty publisher;
+        private final SimpleStringProperty genre;
         private final SimpleBooleanProperty availability;
 
-        public Book(String title, String id, String author, String publisher, Boolean avail) {
+        public Book(String title, String id, String author, String publisher, String genre, Boolean avail) {
             this.title = new SimpleStringProperty(title);
             this.id = new SimpleStringProperty(id);
             this.author = new SimpleStringProperty(author);
             this.publisher = new SimpleStringProperty(publisher);
+            this.genre = new SimpleStringProperty(genre);
             this.availability = new SimpleBooleanProperty(avail);
         }
 
@@ -138,6 +145,10 @@ public class ListBookController implements Initializable {
             return publisher.get();
         }
 
+        public String getGenre() { // Thêm phương thức getGenre
+            return genre.get();
+        }
+
         public Boolean getAvailability() {
             return availability.get();
         }
@@ -147,7 +158,6 @@ public class ListBookController implements Initializable {
     @FXML
     void handleBookDeleteOption(ActionEvent event) {
         // Fetch the chosen row ( book )
-        // return selected book objects
         Book selectDel = tableView.getSelectionModel().getSelectedItem();
         if (selectDel == null) {
             AlertMaker.showErrorMessage("No book selected", "Please select a book for deletion!");
@@ -155,12 +165,10 @@ public class ListBookController implements Initializable {
         }
 
         // If the book was issued before and hasn't been returned
-        if (DataBaseHandler.getInstance().isIssued(selectDel))
-        {
+        if (DataBaseHandler.getInstance().isIssued(selectDel)) {
             AlertMaker.showErrorMessage("This book is not available", "Please select another book for deletion!");
             return;
         }
-        // else
 
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Deleting Book");
@@ -171,11 +179,9 @@ public class ListBookController implements Initializable {
             Boolean flag = DataBaseHandler.getInstance().deleteBook(selectDel);
             if (flag) {
                 list.remove(selectDel);
-                AlertMaker.showSimpleAlert("Book Deleted ", selectDel.getTitle() + " was delete successfully! ");
-
+                AlertMaker.showSimpleAlert("Book Deleted ", selectDel.getTitle() + " was delete successfully!");
             } else {
                 AlertMaker.showSimpleAlert("Failed ", selectDel.getTitle() + " could not be delete");
-
             }
         } else {
             AlertMaker.showSimpleAlert("Deletion Cancelled", "Deletion process cancelled");
@@ -185,15 +191,14 @@ public class ListBookController implements Initializable {
     @FXML
     void handleBookEditOption(ActionEvent event) {
         // Fetch the chosen row ( book )
-        // return selected book objects
         Book selectEdit = tableView.getSelectionModel().getSelectedItem();
         if (selectEdit == null) {
             AlertMaker.showErrorMessage("No book selected", "Please select a book for edition");
+            return;
         }
 
         // Display Edit Book Window
         try {
-            // Load window
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addbook.fxml"));
             Parent parent = loader.load();
 
@@ -202,13 +207,12 @@ public class ListBookController implements Initializable {
 
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.setTitle("Edit Book");
-            // Create scene from FXML file that stored in parent
             stage.setScene(new Scene(parent));
             stage.show();
             LibraryUtil.setStageIcon(stage);
 
             // Refresh after Edit
-            stage.setOnCloseRequest((e)->{
+            stage.setOnCloseRequest((e) -> {
                 handleBookRefreshOption(new ActionEvent());
             });
         } catch (IOException ex) {

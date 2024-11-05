@@ -56,9 +56,10 @@ public class ApiSearchController {
                             String title = getBookTitle(volumeInfo);
                             String author = getBookAuthor(volumeInfo);
                             String publisher = getBookPublisher(volumeInfo);
+                            String genre = getBookGenre(volumeInfo); // Retrieve genre
 
                             // Format the string to be displayed in the ListView
-                            String displayString = title + " by " + author + " (Publisher: " + publisher + ")";
+                            String displayString = title + " by " + author + " (Publisher: " + publisher + ", Genre: " + genre + ")";
                             searchResultsList.getItems().add(displayString); // Add display string to ListView
                         }
                     } else {
@@ -84,15 +85,18 @@ public class ApiSearchController {
                     String title = getBookTitle(selectedBook).replace("'", "''");
                     String author = getBookAuthor(selectedBook).replace("'", "''");
                     String publisher = getBookPublisher(selectedBook).replace("'", "''");
+                    String genre = getBookGenre(selectedBook).replace("'", "''"); // Get genre
                     String bookID = getBookISBN(selectedBook);
 
                     // Insert into the database
-                    String insertQuery = "INSERT INTO BOOK (id, title, author, publisher, isAvail) VALUES (" +
+                    String insertQuery = "INSERT INTO BOOK (id, title, author, publisher, isAvail, genre) VALUES (" +
                             "'" + bookID + "'," +
                             "'" + title + "'," +
                             "'" + author + "'," +
                             "'" + publisher + "'," +
-                            "true)";
+                            "true," +  // Assuming the book is available
+                            "'" + genre + "'" + // Include genre in the insert statement
+                            ")";
 
                     // Execute the database action and log the result
                     if (dataBaseHandler.execAction(insertQuery)) {
@@ -134,5 +138,10 @@ public class ApiSearchController {
 
     private String getBookPublisher(JsonObject bookJson) {
         return bookJson.has("publisher") ? bookJson.get("publisher").getAsString() : "No Publisher Found";
+    }
+
+    private String getBookGenre(JsonObject bookJson) {
+        JsonArray categories = bookJson.has("categories") ? bookJson.getAsJsonArray("categories") : null;
+        return (categories != null && categories.size() > 0) ? categories.get(0).getAsString() : "No Genre Found"; // Get first genre if available
     }
 }

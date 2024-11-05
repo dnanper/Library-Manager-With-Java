@@ -12,10 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -53,12 +50,43 @@ public class ListMemberController implements Initializable {
     @FXML
     private TableView<Member> tableView;
 
+    @FXML
+    private ListView<String> booksIssuedListView;
+
     // SAME AS LISTBOOK
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initCol();
         loadData();
+
+
+        tableView.setOnMouseClicked(event -> {
+            Member selectedMember = tableView.getSelectionModel().getSelectedItem();
+            if (selectedMember != null) {
+                loadBooksIssued(selectedMember.getId());
+            }
+        });
+    }
+
+    private void loadBooksIssued(String memberId) {
+        DataBaseHandler handler = DataBaseHandler.getInstance();
+
+
+        ObservableList<String> borrowedBooks = handler.getBooksIssuedToMember(memberId);
+
+
+        ObservableList<String> recommendedBooks = handler.getRecommendedBooksForMember(memberId);
+
+
+        ObservableList<String> booksToShow = FXCollections.observableArrayList();
+        booksToShow.add("Sách đã mượn:");
+        booksToShow.addAll(borrowedBooks);
+        booksToShow.add("Sách gợi ý:");
+        booksToShow.addAll(recommendedBooks);
+
+        // Hiển thị trong ListView
+        booksIssuedListView.setItems(booksToShow);
     }
 
     private void initCol() {
