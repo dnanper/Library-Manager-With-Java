@@ -7,18 +7,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="416.0" prefWidth="603.0" stylesheets="@../dark-theme.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="api.ApiSearchController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="416.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="api.ApiSearchController">
     <VBox alignment="CENTER_RIGHT" prefHeight="400" prefWidth="560" spacing="10" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
 
-        <Label stylesheets="@../dark-theme.css" text="Search for a Book by Name" textFill="#0f0f0f" />
+        <Label stylesheets="@../darkmode.css" text="Search for a Book by Name" textFill="#0f0f0f" />
 
         <JFXTextField fx:id="nameField" onKeyReleased="#onSearchByName" promptText="Enter Book Name" style="-fx-background-color: #3c3f41; -fx-text-fill: white; -fx-prompt-text-fill: #aaaaaa; -fx-font-size: 14px; -fx-padding: 5px; -fx-border-color: #555555; -fx-border-radius: 5px; -fx-background-radius: 5px;" />
 
-        <Label stylesheets="@../dark-theme.css" text="Search Results" textFill="#0f0f0f" />
+        <Label stylesheets="@../darkmode.css" text="Search Results" textFill="#0f0f0f" />
 
         <ListView fx:id="searchResultsList" prefHeight="200" prefWidth="560" style="-fx-background-color: #3c3f41; -fx-control-inner-background: #3c3f41; -fx-text-fill: white; -fx-border-color: #555555; -fx-border-radius: 5px; -fx-background-radius: 5px;" />
 
-        <JFXButton onAction="#onAddSelectedBook" styleClass="button-bar" stylesheets="@../dark-theme.css" text="Add Selected Book" textFill="#0f0f0f" />
+        <JFXButton onAction="#onAddSelectedBook" styleClass="button-bar" text="Add Selected Book" textFill="#0f0f0f" />
 
     </VBox>
 </AnchorPane>

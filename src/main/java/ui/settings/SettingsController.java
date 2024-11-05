@@ -12,7 +12,12 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import ui.addbook.AddBookController;
+import ui.main.MainController;
+import ui.theme.ThemeManager;
 
 public class SettingsController implements Initializable {
 
@@ -24,6 +29,12 @@ public class SettingsController implements Initializable {
     private JFXTextField username;
     @FXML
     private JFXPasswordField password;
+
+    @FXML
+    private AnchorPane rootAnchorPane;
+
+    @FXML
+    private StackPane rootPane;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -67,5 +78,13 @@ public class SettingsController implements Initializable {
         username.setText(String.valueOf(preferences.getUsername()));
         password.setText(String.valueOf(preferences.getPassword()));
 
+    }
+
+    @FXML
+    void handleTheme(ActionEvent event) {
+        System.out.println("Receive");
+        ThemeManager.toggleTheme();
+        ThemeManager.setTheme(rootPane.getScene());
+        ThemeManager.setTheme(MainController.getInstance().getRoot().getScene());
     }
 }
