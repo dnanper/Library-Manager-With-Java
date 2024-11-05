@@ -13,8 +13,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import ui.main.MainController;
 import ui.settings.Preferences;
 import org.apache.commons.codec.digest.DigestUtils;
+import ui.theme.ThemeManager;
 import util.LibraryUtil;
 
 
@@ -53,10 +55,13 @@ public class LoginController implements Initializable{
     private void closeStage() {
         ((Stage) username.getScene().getWindow()).close();
     }
+
     void loadMain() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
+        MainController main = MainController.getInstance();
+        main.setRoot(FXMLLoader.load(getClass().getResource("/fxml/main.fxml")));
         Stage stage = new Stage(StageStyle.DECORATED);
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(main.getRoot());
+        ThemeManager.setTheme(scene);
         stage.setScene(scene);
         stage.show();
         LibraryUtil.setStageIcon(stage);

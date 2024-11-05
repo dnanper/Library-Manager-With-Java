@@ -26,10 +26,12 @@ module controller {
     opens ui.listbook to javafx.fxml, com.google.gson;
     opens ui.main to javafx.fxml;
     opens ui.main.toolbar to javafx.fxml;
+    opens ui.theme to javafx.fxml;
     opens api to org.apache.httpcomponents.httpclient, org.apache.httpcomponents.httpcore, commons.logging, javafx.fxml;
 
 
     exports util;
+    exports ui.theme;
     exports ui.settings;
     exports ui.main.toolbar;
     exports ui.main;

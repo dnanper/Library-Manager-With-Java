@@ -16,9 +16,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../dark-theme.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.settings.SettingsController">
+<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.settings.SettingsController">
     <children>
-        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+        <AnchorPane fx:id="rootAnchorPane" prefHeight="200.0" prefWidth="200.0">
             <children>
                 <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
                     <tabs>
@@ -30,7 +30,7 @@
                                  <children>
                                     <HBox prefHeight="100.0" prefWidth="200.0">
                                        <children>
-                                          <Label prefHeight="43.0" prefWidth="205.0" text="Change to Dark Mode" textAlignment="CENTER">
+                                          <Label prefHeight="43.0" prefWidth="205.0" text="Change to Dark Mode" textAlignment="CENTER" textFill="#f20000">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
@@ -38,7 +38,7 @@
                                                 <Insets top="30.0" />
                                              </HBox.margin>
                                           </Label>
-                                          <JFXCheckBox>
+                                          <JFXCheckBox onAction="#handleTheme">
                                              <HBox.margin>
                                                 <Insets left="90.0" top="43.0" />
                                              </HBox.margin>
@@ -53,7 +53,7 @@
                                     </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0">
                                        <children>
-                                          <Label prefHeight="43.0" prefWidth="148.0" text="Volume">
+                                          <Label prefHeight="43.0" prefWidth="148.0" text="Volume" textFill="#f20000">
                                              <HBox.margin>
                                                 <Insets top="30.0" />
                                              </HBox.margin>
@@ -73,7 +73,7 @@
                                     </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0">
                                        <children>
-                                          <Label prefHeight="43.0" prefWidth="148.0" text="Music Background">
+                                          <Label prefHeight="43.0" prefWidth="148.0" text="Music Background" textFill="#f20000">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
@@ -186,7 +186,7 @@
                                  <children>
                                     <HBox alignment="CENTER" prefHeight="120.0" prefWidth="200.0">
                                        <children>
-                                          <Label prefHeight="60.0" prefWidth="244.0" text="Guilde">
+                                          <Label prefHeight="60.0" prefWidth="244.0" text="Guilde" textFill="RED">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
@@ -195,7 +195,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="120.0" prefWidth="200.0">
                                        <children>
-                                          <Label prefHeight="60.0" prefWidth="244.0" text="Connect With Us">
+                                          <Label prefHeight="60.0" prefWidth="244.0" text="Connect With Us" textFill="RED">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
@@ -204,7 +204,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER" layoutX="10.0" layoutY="110.0" prefHeight="120.0" prefWidth="200.0">
                                        <children>
-                                          <Label prefHeight="60.0" prefWidth="244.0" text="Source Code">
+                                          <Label prefHeight="60.0" prefWidth="244.0" text="Source Code" textFill="RED">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>

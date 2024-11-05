@@ -44,7 +44,7 @@
       <FontAwesomeIcon glyphName="LOCK" layoutX="199.0" layoutY="84.0" size="40" />
    </children>
    <stylesheets>
-      <URL value="@d" />
-      <URL value="@../dark-theme.css" />
+<!--      <URL value="@d" />-->
+<!--      <URL value="@../darkmode.css" />-->
    </stylesheets>
 </AnchorPane>

@@ -29,6 +29,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import javafx.event.ActionEvent;
+import org.apache.derby.impl.tools.sysinfo.Main;
+import ui.addbook.AddBookController;
 import util.LibraryUtil;
 //import org.apache.derby.impl.tools.sysinfo.Main;
 //import org.apache.derby.iapi.sql.dictionary.OptionalTool;
@@ -150,6 +152,11 @@ public class MainController implements Initializable {
 
     DataBaseHandler dataBaseHandler;
 
+    private Parent rootMain;
+
+    private static MainController instance;
+
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         JFXDepthManager.setDepth(bookinfo, 1);
@@ -159,6 +166,21 @@ public class MainController implements Initializable {
 
         initDrawer();
         intiGraphs();
+    }
+
+    public static MainController getInstance() {
+        if (instance == null) {
+            instance = new MainController();
+        }
+        return instance;
+    }
+
+    public void setRoot(Parent par) {
+        rootMain = par;
+    }
+
+    public Parent getRoot() {
+        return rootMain;
     }
 
     private void intiGraphs() {

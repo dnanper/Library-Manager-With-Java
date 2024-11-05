@@ -59,28 +59,47 @@ public class DataBaseHandler {
     void setupBookTable() {
         String TABLE_NAME = "BOOK";
         try {
-            // Create a variable to store the introduction that user give to database to execute
             stmt = conn.createStatement();
             DatabaseMetaData dbm = conn.getMetaData();
             ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
 
-            // If exist a table already, then return table, else create new table with SQL introduction
             if (tables.next()) {
-                System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
+                System.out.println("Table " + TABLE_NAME + " already exists. Checking for genre column...");
+
+                ResultSet columns = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "GENRE");
+                if (!columns.next()) {
+                    String alterTableSQL = "ALTER TABLE " + TABLE_NAME + " ADD genre VARCHAR(100)";
+                    stmt.execute(alterTableSQL);
+                    System.out.println("Column 'genre' added to table " + TABLE_NAME + ".");
+                } else {
+                    System.out.println("Column 'genre' already exists in table " + TABLE_NAME + ".");
+                }
             } else {
+
                 stmt.execute("CREATE TABLE " + TABLE_NAME + "("
-                        + "         id varchar(200) primary key,\n"
-                        + "         title varchar(200),\n"
-                        + "         author varchar(200),\n"
-                        + "         publisher varchar(100),\n"
-                        + "         isAvail boolean default true"
+                        + "         id VARCHAR(200) PRIMARY KEY,\n"
+                        + "         title VARCHAR(200),\n"
+                        + "         author VARCHAR(200),\n"
+                        + "         publisher VARCHAR(100),\n"
+                        + "         isAvail BOOLEAN DEFAULT TRUE,\n"
+                        + "         genre VARCHAR(100)"
                         + " )");
+                System.out.println("Table " + TABLE_NAME + " created with genre column.");
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage() + " ... setupDatabase");
         } finally {
+
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 
     void setupMemberTable() {
         String TABLE_NAME = "MEMBER";
@@ -237,12 +256,13 @@ public class DataBaseHandler {
 
     public boolean updateBook(ListBookController.Book book) {
         try {
-            String update = "UPDATE BOOK SET TITLE = ?, AUTHOR = ?, PUBLISHER = ? WHERE ID = ?";
+            String update = "UPDATE BOOK SET TITLE = ?, AUTHOR = ?, PUBLISHER = ?, GENRE = ? WHERE ID = ?";
             PreparedStatement stmt = conn.prepareStatement(update);
             stmt.setString(1, book.getTitle());
             stmt.setString(2, book.getAuthor());
             stmt.setString(3, book.getPublisher());
-            stmt.setString(4, book.getId());
+            stmt.setString(4, book.getGenre());
+            stmt.setString(5, book.getId());
             int res = stmt.executeUpdate();
             return (res > 0);
         } catch (SQLException e) {
@@ -311,6 +331,52 @@ public class DataBaseHandler {
             ex.printStackTrace();
         }
         return data;
+    }
+
+    public ObservableList<String> getBooksIssuedToMember(String memberId) {
+        ObservableList<String> issuedBooks = FXCollections.observableArrayList();
+        String query = "SELECT BOOK.title FROM BOOK INNER JOIN ISSUE ON BOOK.id = ISSUE.bookID WHERE ISSUE.memberID = ?";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, memberId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                issuedBooks.add(rs.getString("title"));
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return issuedBooks;
+    }
+
+    public ObservableList<String> getRecommendedBooksForMember(String memberId) {
+        ObservableList<String> recommendedBooks = FXCollections.observableArrayList();
+
+        String query = "SELECT title FROM BOOK WHERE genre = " +
+                "(SELECT genre FROM ( " +
+                "   SELECT B.genre, COUNT(*) AS count " +
+                "   FROM ISSUE I " +
+                "   INNER JOIN BOOK B ON I.bookID = B.id " +
+                "   WHERE I.memberID = ? " +
+                "   GROUP BY B.genre " +
+                "   ORDER BY count DESC " +
+                "   FETCH FIRST 1 ROW ONLY " +
+                ") AS top_genre) " +
+                "FETCH FIRST 5 ROWS ONLY";
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
+            stmt.setString(1, memberId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String title = rs.getString("title");
+                recommendedBooks.add(title);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle exception appropriately
+        }
+
+        return recommendedBooks;
     }
 
 }

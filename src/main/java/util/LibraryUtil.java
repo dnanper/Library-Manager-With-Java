@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ui.main.MainController;
 import ui.settings.Preferences;
+import ui.theme.ThemeManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -42,6 +43,7 @@ public class LibraryUtil {
             stage.setTitle(title);
             // Create scene from FXML file that stored in parent
             stage.setScene(new Scene(parent));
+            ThemeManager.setTheme(stage.getScene());
             stage.show();
             setStageIcon(stage);
 

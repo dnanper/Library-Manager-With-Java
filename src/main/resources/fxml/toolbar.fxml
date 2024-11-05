@@ -4,7 +4,7 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="489.0" prefWidth="200.0" stylesheets="@../dark-theme.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.main.toolbar.ToolBarController">
+<VBox prefHeight="489.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.main.toolbar.ToolBarController">
    <children>
       <JFXButton contentDisplay="TOP" mnemonicParsing="false" onAction="#loadAddMember" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="Add Member">
          <graphic>
