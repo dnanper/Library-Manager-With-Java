@@ -2,6 +2,8 @@ package ui.login;
 
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -11,6 +13,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.Media;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ui.main.MainController;
@@ -25,6 +29,8 @@ public class LoginController implements Initializable{
     private JFXTextField username;
     @FXML
     private JFXPasswordField password;
+
+    public static MediaPlayer mediaPlayer;
 
     Preferences preference;
 
@@ -56,12 +62,24 @@ public class LoginController implements Initializable{
         ((Stage) username.getScene().getWindow()).close();
     }
 
+    public static MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
     void loadMain() throws IOException {
         MainController main = MainController.getInstance();
         main.setRoot(FXMLLoader.load(getClass().getResource("/fxml/main.fxml")));
         Stage stage = new Stage(StageStyle.DECORATED);
         Scene scene = new Scene(main.getRoot());
+
         ThemeManager.setTheme(scene);
+
+        String bmpath = getClass().getResource("/MB1.mp3").getPath();
+        Media media = new Media(getClass().getResource("/MB1.mp3").toExternalForm());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.play();
+
         stage.setScene(scene);
         stage.show();
         LibraryUtil.setStageIcon(stage);

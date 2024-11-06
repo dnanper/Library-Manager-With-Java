@@ -1,0 +1,8 @@
+.jfx-combo-box {
+	-fx-background-color:  #B7E892;
+}
+
+.jfx-combo-box .label {
+	-fx-background-color:  WHITE;
+	-fx-text-fill: RED;
+}

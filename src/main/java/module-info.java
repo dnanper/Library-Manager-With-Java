@@ -1,5 +1,7 @@
 module controller {
     requires javafx.fxml;
+    requires javafx.base;
+    requires javafx.media;
     requires javafx.graphics;
     requires javafx.controls;
     requires com.dlsc.formsfx;
@@ -18,8 +20,8 @@ module controller {
     requires org.apache.commons.codec;
     requires java.net.http;
 
-    opens ui.login to javafx.fxml;
-    opens ui.settings to javafx.fxml, com.google.gson;
+    opens ui.login to javafx.fxml, javafx.media;
+    opens ui.settings to javafx.fxml, com.google.gson, javafx.media;
     opens ui.listmember to javafx.fxml;
     opens ui.addbook to javafx.fxml, com.google.gson;
     opens ui.addmember to javafx.fxml;
@@ -30,6 +32,7 @@ module controller {
     opens api to org.apache.httpcomponents.httpclient, org.apache.httpcomponents.httpcore, commons.logging, javafx.fxml;
 
 
+    exports ui.login;
     exports util;
     exports ui.theme;
     exports ui.settings;

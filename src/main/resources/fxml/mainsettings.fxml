@@ -61,7 +61,7 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <JFXSlider prefHeight="14.0" prefWidth="287.0">
+                                          <JFXSlider fx:id="volumeSlider" prefHeight="14.0" prefWidth="287.0">
                                              <HBox.margin>
                                                 <Insets left="40.0" top="45.0" />
                                              </HBox.margin>
@@ -81,7 +81,7 @@
                                                 <Insets top="30.0" />
                                              </HBox.margin>
                                           </Label>
-                                          <JFXComboBox prefHeight="25.0" prefWidth="166.0">
+                                          <JFXComboBox fx:id="audioComboBox" focusColor="#7fd847" prefHeight="25.0" prefWidth="166.0" stylesheets="@../comboBox.css" unFocusColor="#34c439">
                                              <HBox.margin>
                                                 <Insets left="100.0" top="40.0" />
                                              </HBox.margin>
