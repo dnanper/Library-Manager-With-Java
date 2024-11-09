@@ -51,7 +51,10 @@ public class ListMemberController implements Initializable {
     private TableView<Member> tableView;
 
     @FXML
-    private ListView<String> booksIssuedListView;
+    private ListView<String> borrowedBooksListView;
+
+    @FXML
+    private ListView<String> recommendedBooksListView;
 
     // SAME AS LISTBOOK
 
@@ -69,24 +72,18 @@ public class ListMemberController implements Initializable {
         });
     }
 
+
+
     private void loadBooksIssued(String memberId) {
         DataBaseHandler handler = DataBaseHandler.getInstance();
 
 
         ObservableList<String> borrowedBooks = handler.getBooksIssuedToMember(memberId);
-
-
         ObservableList<String> recommendedBooks = handler.getRecommendedBooksForMember(memberId);
 
 
-        ObservableList<String> booksToShow = FXCollections.observableArrayList();
-        booksToShow.add("Sách đã mượn:");
-        booksToShow.addAll(borrowedBooks);
-        booksToShow.add("Sách gợi ý:");
-        booksToShow.addAll(recommendedBooks);
-
-        // Hiển thị trong ListView
-        booksIssuedListView.setItems(booksToShow);
+        borrowedBooksListView.setItems(borrowedBooks);
+        recommendedBooksListView.setItems(recommendedBooks);
     }
 
     private void initCol() {
