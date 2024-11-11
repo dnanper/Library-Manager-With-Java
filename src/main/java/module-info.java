@@ -31,6 +31,8 @@ module controller {
     opens ui.theme to javafx.fxml;
     opens api to org.apache.httpcomponents.httpclient, org.apache.httpcomponents.httpcore, commons.logging, javafx.fxml;
 
+    opens user to javafx.fxml;
+    exports user;
 
     exports ui.login;
     exports util;

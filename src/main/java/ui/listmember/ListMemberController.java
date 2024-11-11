@@ -77,10 +77,8 @@ public class ListMemberController implements Initializable {
     private void loadBooksIssued(String memberId) {
         DataBaseHandler handler = DataBaseHandler.getInstance();
 
-
         ObservableList<String> borrowedBooks = handler.getBooksIssuedToMember(memberId);
         ObservableList<String> recommendedBooks = handler.getRecommendedBooksForMember(memberId);
-
 
         borrowedBooksListView.setItems(borrowedBooks);
         recommendedBooksListView.setItems(recommendedBooks);

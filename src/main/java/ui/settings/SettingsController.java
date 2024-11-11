@@ -73,7 +73,7 @@ public class SettingsController implements Initializable {
             Preferences.writePreferenceToFile(preferences);
 
             // Show success alert
-            AlertMaker.showSimpleAlert("Success", "Settings have been saved successfully.");
+            //AlertMaker.showSimpleAlert("Success", "Settings have been saved successfully.");
 
             // Close the settings window
             ((Stage) nDaysWithoutFine.getScene().getWindow()).close();

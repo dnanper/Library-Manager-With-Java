@@ -11,26 +11,22 @@ import database.DataBaseHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import javafx.event.ActionEvent;
-import org.apache.derby.impl.tools.sysinfo.Main;
-import ui.addbook.AddBookController;
+import ui.listmember.ListMemberController;
 import util.LibraryUtil;
 //import org.apache.derby.impl.tools.sysinfo.Main;
 //import org.apache.derby.iapi.sql.dictionary.OptionalTool;
@@ -38,11 +34,9 @@ import util.LibraryUtil;
 //import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -144,6 +138,33 @@ public class MainController implements Initializable {
     @FXML
     private StackPane memberInfoContainer;
 
+    @FXML
+    private TableView<ListMemberController.Member> OTTableView;
+
+    @FXML
+    private ListView<String> OTBookList;
+
+    @FXML
+    private Text OTMemBook;
+
+    @FXML
+    private Text OTMemFine;
+
+    @FXML
+    private Tab issueCheckTab;
+
+    @FXML
+    private TableColumn<ListMemberController.Member, String> emailCol;
+
+    @FXML
+    private TableColumn<ListMemberController.Member, String> idCol;
+
+    @FXML
+    private TableColumn<ListMemberController.Member, String> nameCol;
+
+    @FXML
+    private TableColumn<ListMemberController.Member, String> phoneCol;
+
     PieChart bookChart;
 
     PieChart memberChart;
@@ -156,6 +177,56 @@ public class MainController implements Initializable {
 
     private static MainController instance;
 
+    ObservableList<ListMemberController.Member> list = FXCollections.observableArrayList();
+
+//    @FXML
+//    void loadOTInfo(ActionEvent event) {
+//    }
+
+    private void initCol() {
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+    }
+
+    @FXML
+    void handleMemberDelete(ActionEvent event) {
+        // Fetch the chosen row ( member )
+        // return selected member objects
+        ListMemberController.Member selectDel = OTTableView.getSelectionModel().getSelectedItem();
+        if (selectDel == null) {
+            AlertMaker.showErrorMessage("No member selected", "Please select a member for deletion!");
+            return;
+        }
+
+        // If the member currently issue some books
+        if (DataBaseHandler.getInstance().isMemberHasAnyBooks(selectDel))
+        {
+            AlertMaker.showErrorMessage("This Member has some books", "Please select another member for deletion!");
+            return;
+        }
+        // else
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Deleting Member");
+        alert.setContentText("Are you sure want to delete this member " + selectDel.getName() + "?");
+        Optional<ButtonType> ans = alert.showAndWait();
+        // If user agree to delete
+        if (ans.get() == ButtonType.OK) {
+            Boolean flag = DataBaseHandler.getInstance().deleteMember(selectDel);
+            if (flag) {
+                list.remove(selectDel);
+                AlertMaker.showSimpleAlert("Member Deleted ", selectDel.getName() + " was delete successfully! ");
+
+            } else {
+                AlertMaker.showSimpleAlert("Failed ", selectDel.getName() + " could not be delete");
+
+            }
+        } else {
+            AlertMaker.showSimpleAlert("Deletion Cancelled", "Deletion process cancelled");
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -166,6 +237,26 @@ public class MainController implements Initializable {
 
         initDrawer();
         intiGraphs();
+        initCol();
+        loadOTData();
+
+        OTTableView.setOnMouseClicked(event -> {
+            ListMemberController.Member selectedMember = OTTableView.getSelectionModel().getSelectedItem();
+            if (selectedMember != null) {
+                loadOTBooks(selectedMember.getId());
+            }
+        });
+    }
+
+    private void loadOTBooks(String memberId) {
+        ObservableList<String> OTBooks = dataBaseHandler.getOTBooks(memberId);
+        OTBookList.setItems(OTBooks);
+    }
+
+    void loadOTData() {
+        list.clear();
+        list = DataBaseHandler.getInstance().getOTData();
+        OTTableView.getItems().setAll(list);
     }
 
     public static MainController getInstance() {
@@ -217,8 +308,8 @@ public class MainController implements Initializable {
             bookChart.setOpacity(0);
             memberChart.setOpacity(0);
         }
-//        bookChart.setVisible(status);
-//        memberChart.setVisible(status);
+        bookChart.setVisible(status);
+        memberChart.setVisible(status);
 
         // Optionally, remove from layout when not visible
 //        if (status) {

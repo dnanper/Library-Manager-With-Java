@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
 import ui.listbook.ListBookController;
 import ui.listmember.ListMemberController;
+import ui.main.MainController;
+import ui.settings.Preferences;
 
 import javax.swing.*;
 import java.sql.*;
@@ -331,6 +333,51 @@ public class DataBaseHandler {
             ex.printStackTrace();
         }
         return data;
+    }
+
+    public ObservableList<ListMemberController.Member> getOTData() {
+        ObservableList<ListMemberController.Member> list = FXCollections.observableArrayList();
+        int n = Preferences.getPreferences().getnDaysWithoutFine();
+        System.out.println(n);
+        String qu = "SELECT MEMBER.id, MEMBER.name, MEMBER.phone, MEMBER.email FROM MEMBER INNER JOIN ISSUE ON MEMBER.id = ISSUE.memberID";
+//                + " WHERE (CONVERT(date,CURRENT_TIMESTAMP) - CONVERT(date, ISSUE.issueTime)) >= ?";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(qu);
+            //stmt.setString(1, String.valueOf(n));
+            ResultSet res = stmt.executeQuery();
+            // get all attributes of each book from database
+            while (res != null && res.next()) {
+                String nam = res.getString("name");
+                String pho = res.getString("phone");
+                String idx = res.getString("id");
+                String ema = res.getString("email");
+
+                // add data of book to list
+                list.add(new ListMemberController.Member(nam, idx, pho, ema));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public ObservableList<String> getOTBooks(String memberId) {
+        ObservableList<String> otBooks = FXCollections.observableArrayList();
+        int n = Preferences.getPreferences().getnDaysWithoutFine();
+        String query = "SELECT BOOK.title FROM BOOK INNER JOIN ISSUE ON BOOK.id = ISSUE.bookID WHERE ISSUE.memberID = ?";
+        // + "AND CURRENT_TIMESTAMP - ISSUE.issueTime >= ?";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, memberId);
+            //stmt.setString(1, String.valueOf(n));
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                otBooks.add(rs.getString("title"));
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return otBooks;
     }
 
     public ObservableList<String> getBooksIssuedToMember(String memberId) {
