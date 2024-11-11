@@ -4,7 +4,6 @@
 <?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
-<?import java.net.URL?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.paint.Color?>
@@ -36,12 +35,13 @@
          </textFill>
       </Label>
       <JFXTextField fx:id="username" labelFloat="true" layoutX="63.0" layoutY="103.0" prefHeight="30.0" prefWidth="295.0" promptText="username" />
-      <JFXPasswordField fx:id="password" labelFloat="true" layoutX="64.0" layoutY="157.0" onAction="#handleLoginButtonAction" prefHeight="30.0" prefWidth="295.0" promptText="password" />
-      <JFXButton layoutX="67.0" layoutY="211.0" onAction="#handleLoginButtonAction" prefHeight="38.0" prefWidth="110.0" text="Login" />
-      <JFXButton layoutX="253.0" layoutY="211.0" onAction="#handleCancelButtonAction" prefHeight="38.0" text="Cancel" />
+      <JFXPasswordField fx:id="password" labelFloat="true" layoutX="64.0" layoutY="157.0" prefHeight="30.0" prefWidth="295.0" promptText="password" />
+      <JFXButton layoutX="43.0" layoutY="211.0" onAction="#handleLoginAdminButtonAction" prefHeight="40.0" prefWidth="110.0" text="Admin" />
+      <JFXButton layoutX="307.0" layoutY="212.0" onAction="#handleCancelButtonAction" prefHeight="38.0" text="Cancel" />
       <FontAwesomeIcon glyphName="KEY" layoutX="25.0" layoutY="180.0" size="30" wrappingWidth="18.114249229431152" />
       <FontAwesomeIcon glyphName="USER" layoutX="25.0" layoutY="132.0" size="30" wrappingWidth="9.428571701049805" />
       <FontAwesomeIcon glyphName="LOCK" layoutX="199.0" layoutY="84.0" size="40" />
+      <JFXButton layoutX="157.0" layoutY="211.0" onAction="#handleLoginUserButtonAction" prefHeight="40.0" prefWidth="110.0" text="User" />
    </children>
    <stylesheets>
 <!--      <URL value="@d" />-->

@@ -1,0 +1,2 @@
+{"username":"user1","password":"d033e22ae348aeb5660fc2140aec35850c4da997","nDaysWithoutFine":14}
+{"username":"admin","password":"f0c7e74bc14a362d1b7f5a302b79c13b","nDaysWithoutFine":7}

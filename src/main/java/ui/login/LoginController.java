@@ -20,6 +20,7 @@ import javafx.stage.StageStyle;
 import ui.main.MainController;
 import ui.settings.Preferences;
 import org.apache.commons.codec.digest.DigestUtils;
+import ui.settings.UserPreferences;
 import ui.theme.ThemeManager;
 import util.LibraryUtil;
 
@@ -40,7 +41,7 @@ public class LoginController implements Initializable{
     }
 
     @FXML
-    private void handleLoginButtonAction(ActionEvent event) throws IOException {
+    private void handleLoginAdminButtonAction(ActionEvent event) throws IOException {
         String uname = (username.getText());
         String pword = DigestUtils.shaHex(password.getText());
 
@@ -53,6 +54,22 @@ public class LoginController implements Initializable{
             password.getStyleClass().add("wrong-credentials");
         }
     }
+
+    @FXML
+    void handleLoginUserButtonAction(ActionEvent event) throws IOException {
+        String uname = (username.getText());
+        String pword = DigestUtils.shaHex(password.getText());
+
+        if (UserPreferences.checkUser(uname, pword)) {
+            closeStage();
+            loadUserMain();
+        } else {
+            System.out.println("false");
+            username.getStyleClass().add("wrong-credentials");
+            password.getStyleClass().add("wrong-credentials");
+        }
+    }
+
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
         System.exit(0);
@@ -67,6 +84,25 @@ public class LoginController implements Initializable{
     }
 
     void loadMain() throws IOException {
+        MainController main = MainController.getInstance();
+        main.setRoot(FXMLLoader.load(getClass().getResource("/fxml/main.fxml")));
+        Stage stage = new Stage(StageStyle.DECORATED);
+        Scene scene = new Scene(main.getRoot());
+
+        ThemeManager.setTheme(scene);
+
+        String bmpath = getClass().getResource("/MB1.mp3").getPath();
+        Media media = new Media(getClass().getResource("/MB1.mp3").toExternalForm());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.play();
+
+        stage.setScene(scene);
+        stage.show();
+        LibraryUtil.setStageIcon(stage);
+    }
+
+    void loadUserMain() throws IOException {
         MainController main = MainController.getInstance();
         main.setRoot(FXMLLoader.load(getClass().getResource("/fxml/main.fxml")));
         Stage stage = new Stage(StageStyle.DECORATED);
