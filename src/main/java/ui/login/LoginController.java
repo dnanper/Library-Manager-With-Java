@@ -104,7 +104,7 @@ public class LoginController implements Initializable{
 
     void loadUserMain() throws IOException {
         MainController main = MainController.getInstance();
-        main.setRoot(FXMLLoader.load(getClass().getResource("/fxml/main.fxml")));
+        main.setRoot(FXMLLoader.load(getClass().getResource("/fxml/user.fxml")));
         Stage stage = new Stage(StageStyle.DECORATED);
         Scene scene = new Scene(main.getRoot());
 
