@@ -50,11 +50,6 @@ public class ListMemberController implements Initializable {
     @FXML
     private TableView<Member> tableView;
 
-    @FXML
-    private ListView<String> borrowedBooksListView;
-
-    @FXML
-    private ListView<String> recommendedBooksListView;
 
     // SAME AS LISTBOOK
 
@@ -64,25 +59,10 @@ public class ListMemberController implements Initializable {
         loadData();
 
 
-        tableView.setOnMouseClicked(event -> {
-            Member selectedMember = tableView.getSelectionModel().getSelectedItem();
-            if (selectedMember != null) {
-                loadBooksIssued(selectedMember.getId());
-            }
-        });
     }
 
 
 
-    private void loadBooksIssued(String memberId) {
-        DataBaseHandler handler = DataBaseHandler.getInstance();
-
-        ObservableList<String> borrowedBooks = handler.getBooksIssuedToMember(memberId);
-        ObservableList<String> recommendedBooks = handler.getRecommendedBooksForMember(memberId);
-
-        borrowedBooksListView.setItems(borrowedBooks);
-        recommendedBooksListView.setItems(recommendedBooks);
-    }
 
     private void initCol() {
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
