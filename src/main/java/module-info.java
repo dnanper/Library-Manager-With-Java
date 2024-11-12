@@ -1,6 +1,7 @@
 module controller {
     requires javafx.fxml;
     requires javafx.base;
+    requires java.mail;
     requires javafx.media;
     requires javafx.graphics;
     requires javafx.controls;
@@ -26,7 +27,7 @@ module controller {
     opens ui.addbook to javafx.fxml, com.google.gson;
     opens ui.addmember to javafx.fxml;
     opens ui.listbook to javafx.fxml, com.google.gson;
-    opens ui.main to javafx.fxml;
+    opens ui.main to javafx.fxml, java.mail;
     opens ui.main.toolbar to javafx.fxml;
     opens ui.theme to javafx.fxml;
     opens api to org.apache.httpcomponents.httpclient, org.apache.httpcomponents.httpcore, commons.logging, javafx.fxml;

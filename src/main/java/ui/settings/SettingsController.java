@@ -33,6 +33,13 @@ public class SettingsController implements Initializable {
     private JFXTextField username;
     @FXML
     private JFXPasswordField password;
+
+    @FXML
+    private JFXTextField email;
+
+    @FXML
+    private JFXPasswordField emailpassword;
+
     @FXML
     private JFXSlider volumeSlider;
     @FXML
@@ -63,12 +70,16 @@ public class SettingsController implements Initializable {
             float fine = Float.parseFloat(finePerDay.getText());
             String uname = username.getText();
             String pass = password.getText();
+            String em = email.getText();
+            String epass = emailpassword.getText();
 
             Preferences preferences = Preferences.getPreferences();
             preferences.setnDaysWithoutFine(ndays);
             preferences.setFinePerDay(fine);
             preferences.setUsername(uname);
             preferences.setPassword(pass);
+            preferences.setEmail(em);
+            preferences.setEmailPassword(epass);
 
             Preferences.writePreferenceToFile(preferences);
 
@@ -95,7 +106,8 @@ public class SettingsController implements Initializable {
         finePerDay.setText(String.valueOf(preferences.getFinePerDay()));
         username.setText(String.valueOf(preferences.getUsername()));
         password.setText(String.valueOf(preferences.getPassword()));
-
+        email.setText(String.valueOf(preferences.getEmail()));
+        emailpassword.setText(String.valueOf(preferences.getEmailPassword()));
     }
 
     @FXML

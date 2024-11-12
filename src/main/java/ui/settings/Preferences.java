@@ -19,12 +19,17 @@ public class Preferences {
     float finePerDay;
     String username;
     String password;
+    String email;
+    String emailpassword;
 
     public Preferences() {
         nDaysWithoutFine = 14;
         finePerDay = 2;
         username = "admin";
         setPassword("admin");
+        email = "";
+        setEmailPassword("");
+
     }
 
     public int getnDaysWithoutFine() {
@@ -47,12 +52,24 @@ public class Preferences {
         return username;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public String getEmailPassword() {
+        return emailpassword;
     }
 
     public void setPassword(String password) {
@@ -61,6 +78,14 @@ public class Preferences {
         }else
             this.password = password;
     }
+
+    public void setEmailPassword(String emailpassword) {
+        if (emailpassword.length() < 16) {
+            this.emailpassword = DigestUtils.shaHex(emailpassword);
+        }else
+            this.emailpassword = emailpassword;
+    }
+
     public static void initConfig() {
         Writer writer = null;
         try {

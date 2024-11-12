@@ -333,10 +333,27 @@
                                                             <Insets bottom="10.0" top="40.0" />
                                                          </VBox.margin>
                                                       </Label>
-                                                      <ListView fx:id="OTBookList" prefHeight="347.0" prefWidth="367.0">
+                                                      <ListView fx:id="OTBookList" prefHeight="228.0" prefWidth="367.0">
                                                          <VBox.margin>
                                                             <Insets bottom="10.0" />
                                                          </VBox.margin></ListView>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                                         <children>
+                                                            <JFXButton fx:id="warnButton" disable="true" onAction="#warningHandle" prefHeight="50.0" prefWidth="130.0" text="Warning Mail">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </JFXButton>
+                                                            <JFXButton fx:id="banButton" disable="true" layoutX="10.0" layoutY="10.0" onAction="#baningHandle" prefHeight="50.0" prefWidth="130.0" text="Ban">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                               <HBox.margin>
+                                                                  <Insets left="30.0" />
+                                                               </HBox.margin>
+                                                            </JFXButton>
+                                                         </children>
+                                                      </HBox>
                                                    </children>
                                                    <padding>
                                                       <Insets left="10.0" right="10.0" top="10.0" />

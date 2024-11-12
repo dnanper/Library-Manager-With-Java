@@ -1,5 +1,7 @@
 package user;
 
+import com.jfoenix.controls.JFXButton;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
@@ -54,6 +56,12 @@ public class UserController implements Initializable {
     private Pane settingPane;
 
     @FXML
+    private JFXButton mailButton;
+
+    @FXML
+    private Pane mailPane;
+
+    @FXML
     private TableView<?> tableView;
 
     @FXML
@@ -67,6 +75,11 @@ public class UserController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
+
+    @FXML
+    void confirmEmailHandle(ActionEvent event) {
 
     }
 }

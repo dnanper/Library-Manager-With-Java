@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
 import ui.listmember.ListMemberController;
+import ui.settings.Preferences;
 import util.LibraryUtil;
 //import org.apache.derby.impl.tools.sysinfo.Main;
 //import org.apache.derby.iapi.sql.dictionary.OptionalTool;
@@ -42,8 +43,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.input.MouseEvent;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 // Main Window to Manage Add/View Object
 public class MainController implements Initializable {
+
+    @FXML
+    private JFXButton banButton;
+
+    @FXML
+    private JFXButton warnButton;
 
     @FXML
     private Text bookAuthor;
@@ -179,6 +190,14 @@ public class MainController implements Initializable {
 
     ObservableList<ListMemberController.Member> list = FXCollections.observableArrayList();
 
+    private String targetEmail;
+
+    private String adminEmail;
+
+    private String adminPass;
+
+    Preferences preference;
+
 //    @FXML
 //    void loadOTInfo(ActionEvent event) {
 //    }
@@ -230,6 +249,14 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        preference = Preferences.getPreferences();
+
+        adminEmail = preference.getEmail();
+        adminPass = preference.getEmailPassword();
+
+        System.out.println(adminEmail);
+        System.out.println(adminPass);
+
         JFXDepthManager.setDepth(bookinfo, 1);
         JFXDepthManager.setDepth(memberinfo, 1);
 
@@ -244,8 +271,48 @@ public class MainController implements Initializable {
             ListMemberController.Member selectedMember = OTTableView.getSelectionModel().getSelectedItem();
             if (selectedMember != null) {
                 loadOTBooks(selectedMember.getId());
+                disableEnableControls2(true);
+                targetEmail = dataBaseHandler.getTargetEmail(selectedMember.getId());
             }
         });
+    }
+
+    @FXML
+    void baningHandle(ActionEvent event) {
+
+    }
+
+    @FXML
+    void warningHandle(ActionEvent event) {
+        String host = "smtp.gmail.com";
+        Runnable emailSendTask = () -> {
+            Properties properties = new Properties();
+            properties.put("mail.smtp.auth", "true");
+            properties.put("mail.smtp.starttls.enable", "true");
+            properties.put("mail.smtp.host", host);
+            properties.put("mail.smtp.port", "587");
+
+            Session session = Session.getInstance(properties, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(adminEmail, adminPass);
+                }
+            });
+
+            try {
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(adminEmail));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(targetEmail));
+                message.setSubject("Library Warning");
+                message.setText("Hi,\n\nIf you won't return borrowed books, you will get banned.");
+                Transport.send(message);
+                System.out.println("Email send Successfully.");
+            } catch (MessagingException e) {
+                System.out.println("Send Mail Failed: " + e.getMessage());
+            }
+        };
+        Thread mailSender = new Thread(emailSendTask, "EMAIL-SENDER");
+        mailSender.start();
     }
 
     private void loadOTBooks(String memberId) {
@@ -482,6 +549,16 @@ public class MainController implements Initializable {
         } else {
             renewButton.setDisable(true);
             submissionButton.setDisable(true);
+        }
+    }
+
+    private void disableEnableControls2(Boolean enableFlag) {
+        if (enableFlag) {
+            banButton.setDisable(false);
+            warnButton.setDisable(false);
+        } else {
+            banButton.setDisable(true);
+            warnButton.setDisable(true);
         }
     }
 

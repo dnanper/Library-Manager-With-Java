@@ -426,4 +426,20 @@ public class DataBaseHandler {
         return recommendedBooks;
     }
 
+    public String getTargetEmail(String memberId) {
+        String res = "";
+        String qu = "SELECT email FROM MEMBER WHERE id = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(qu)) {
+            stmt.setString(1, memberId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                res = rs.getString("email");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle exception appropriately
+        }
+        return  res;
+    }
+
 }
