@@ -320,7 +320,7 @@ public class MainController implements Initializable {
         OTBookList.setItems(OTBooks);
     }
 
-    void loadOTData() {
+    public void loadOTData() {
         list.clear();
         list = DataBaseHandler.getInstance().getOTData();
         OTTableView.getItems().setAll(list);
@@ -606,13 +606,18 @@ public class MainController implements Initializable {
         String memberID = memberIDInput.getText();
         String bookID = bookIDInput.getText();
 
+
+        String issueTime = java.time.LocalDateTime.now().toString();  // Get the current timestamp
+
         // If issue book
         JFXButton buttonT = new JFXButton("YES");
         buttonT.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event1) -> {
-            // Add this book-member to ISSUE table to manager this relationship
-            String str = "INSERT INTO ISSUE(memberID,bookID) VALUES ( "
+
+            String str = "INSERT INTO ISSUE(memberID, bookID, issueTime) VALUES ( "
                     + "'" + memberID + "',"
-                    + "'" + bookID + "')";
+                    + "'" + bookID + "',"
+                    + "'" + issueTime + "')";
+
             // Now the book is unavailable
             String str2 = "UPDATE BOOK SET isAvail = false WHERE id = '" + bookID + "'";
 
@@ -636,7 +641,9 @@ public class MainController implements Initializable {
         });
 
         // Display the 2 buttons
-        AlertMaker.showMaterialDialog(rootPane, rootAnchorPane, Arrays.asList(buttonT, buttonF), "Confirm", "Are you sure want to issue the book" + bookTitle.getText() + "\n to " + memberName.getText() + "?");
+        AlertMaker.showMaterialDialog(rootPane, rootAnchorPane, Arrays.asList(buttonT, buttonF),
+                "Confirm", "Are you sure want to issue the book " + bookTitle.getText() +
+                        "\n to " + memberName.getText() + "?");
     }
 
     void clearMemberCache() {

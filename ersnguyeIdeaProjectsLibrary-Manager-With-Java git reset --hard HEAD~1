@@ -1,0 +1,224 @@
+[33mcommit db2a1caab95a88fe19b65d661c5414fe3d63530b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 9326169 5402980
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Thu Nov 7 01:28:51 2024 +0700
+
+    n
+
+[33mcommit 9326169bcea54ae5e6d93ae48ad0b10de34aaa9d[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Thu Nov 7 01:11:28 2024 +0700
+
+    background music
+
+[33mcommit 5402980ff2baf03ef6bd708f03db97450f2398bb[m
+Merge: ad72642 2b810f3
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Tue Nov 5 19:53:05 2024 +0700
+
+    dynamic theme2
+
+[33mcommit e01ac4af2fe51749a97c4d11bfb2a43dbb30bf70[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Tue Nov 5 19:51:58 2024 +0700
+
+    dynamic theme
+
+[33mcommit ad726423173319f474caa5394e4476eac8fae367[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Tue Nov 5 17:07:03 2024 +0700
+
+    n
+
+[33mcommit 2b810f34fcc3e278e5e29c0099d5cb866a5c6c12[m
+Author: cuong912005~ <nguyenthaccuong91@gmail.com>
+Date:   Tue Nov 5 16:29:20 2024 +0700
+
+    add genre to BOOK table for recommendation
+
+[33mcommit 440de74d0bc55da423b9ac2e2bbb7dc20b822578[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Tue Nov 5 01:27:35 2024 +0700
+
+    mainsettings
+
+[33mcommit 7e7e546bc89eb650c8cf24fcb7a82b9482db1c14[m
+Merge: dfdb76f 84ca0c0
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Sat Nov 2 21:35:10 2024 +0700
+
+    Complete API Search
+
+[33mcommit dfdb76fd80e76883818bed237cdf4f8afc36a479[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Sat Nov 2 20:55:39 2024 +0700
+
+    nothing
+
+[33mcommit 84ca0c0ce952682d0b27c82ee7697cf435bb8e57[m
+Author: cuong912005~ <nguyenthaccuong91@gmail.com>
+Date:   Sat Nov 2 20:20:30 2024 +0700
+
+    fix api search
+
+[33mcommit bab8e47201dead0554da1f72e7a30cb4aa8e4efa[m
+Merge: 32dcef7 6ea57e9
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Mon Oct 28 21:06:25 2024 +0700
+
+    Test API 2
+
+[33mcommit 32dcef7fdb3220bb3ee76c77310b44481d73861f[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Mon Oct 28 20:49:02 2024 +0700
+
+    Test API
+
+[33mcommit 6ea57e9b8730bf2d4d811404c13a32c2d33d1c87[m
+Author: cuong912005~ <nguyenthaccuong91@gmail.com>
+Date:   Sun Oct 27 23:37:13 2024 +0700
+
+    add book by searching name
+
+[33mcommit 673dcfeb55001e9a1c04d880a410fc2c8e6f4ecb[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Sun Oct 27 21:46:51 2024 +0700
+
+    Check Dupplicate ID
+
+[33mcommit fe7e35b554ecd6476163801ef61cd1bb46ad069a[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Sun Oct 27 20:35:27 2024 +0700
+
+    Add Pie Chart
+
+[33mcommit caab0b5973d68e8b0c9356147aeb5aa1a6612521[m
+Merge: b7f540b d4cfa04
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Tue Oct 22 11:30:46 2024 +0700
+
+    resolve conflict
+
+[33mcommit b7f540bba05ddaf826d57206f0557ce5d81d5f1e[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Tue Oct 22 11:21:58 2024 +0700
+
+    Update desing
+
+[33mcommit d4cfa04ce33517b37891199429c80d95d41dde2b[m
+Author: cuong912005~ <nguyenthaccuong91@gmail.com>
+Date:   Mon Oct 21 17:55:01 2024 +0700
+
+    add addbook by ISBN
+
+[33mcommit 541a588c55faa46e4bb0d859a0ff1142f71b287f[m
+Merge: ede3952 10f1ac5
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Sat Oct 19 23:24:32 2024 +0700
+
+    Merge branch 'master' of https://github.com/dnanper/Library-Manager-With-Java
+
+[33mcommit ede39528700208a88f5bfa15ca724844e4aca6a7[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Sat Oct 19 23:22:58 2024 +0700
+
+    Update design
+
+[33mcommit 10f1ac5672153690cc9cf79f8fc13e3793463146[m
+Author: cuong912005~ <nguyenthaccuong91@gmail.com>
+Date:   Sat Oct 19 15:35:18 2024 +0700
+
+    api
+
+[33mcommit d6553b83bd5c740385240e79f7df138eaaddf247[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Tue Oct 15 01:18:27 2024 +0700
+
+    Material Design
+
+[33mcommit adf717c22d67415044cd0d03ae5bfc0c3190ad27[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Sun Oct 13 23:30:02 2024 +0700
+
+    Add dark theme. Add delete, edit and refresh option for book and member
+
+[33mcommit c7d4901a6f3a7e9e4cc7762943417f34e0a2627f[m
+Merge: e3130d8 d0c9a01
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Fri Oct 11 00:12:38 2024 +0700
+
+    resolve conflicts, add task bar, fix image don't display bug
+
+[33mcommit e3130d840b008efad01b57f50f96dfe47b69b8d9[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Thu Oct 10 23:23:27 2024 +0700
+
+    fix image bug, add icon
+
+[33mcommit d0c9a013765f994af6396e1a051992532df557a3[m
+Author: cuong912005~ <nguyenthaccuong91@gmail.com>
+Date:   Thu Oct 10 22:50:53 2024 +0700
+
+    login update
+
+[33mcommit 031d12f8392e8e54e6ca93f0dfa5330342f3ccad[m
+Author: cuong912005~ <nguyenthaccuong91@gmail.com>
+Date:   Thu Oct 10 20:32:51 2024 +0700
+
+    fix conflict
+
+[33mcommit ee61540e6db221327752c53597b4e24c86695b0a[m
+Merge: e56f9c0 c6b6ff6
+Author: cuong912005~ <nguyenthaccuong91@gmail.com>
+Date:   Thu Oct 10 18:13:02 2024 +0700
+
+    Merge branch 'master' of https://github.com/dnanper/Library-Manager-With-Java
+    
+    # Conflicts:
+    #       database/db.lck
+    #       database/log/log.ctrl
+    #       database/log/log1.dat
+    #       database/log/logmirror.ctrl
+    #       derby.log
+
+[33mcommit e56f9c01bae4b9fa363954c46d3aff1d736b65e8[m
+Author: cuong912005~ <nguyenthaccuong91@gmail.com>
+Date:   Thu Oct 10 18:11:49 2024 +0700
+
+    setting
+
+[33mcommit 3e2f958019fac049701fc0faa2899bdec58c6174[m
+Author: cuong912005~ <nguyenthaccuong91@gmail.com>
+Date:   Thu Oct 10 16:17:38 2024 +0700
+
+    setting
+
+[33mcommit c6b6ff6ec7e214f5ebde0e896f232483ab13fc8d[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Wed Oct 9 23:42:02 2024 +0700
+
+    add borrow book, return and renew function. Finish basic features
+
+[33mcommit d1e009f167db162a3a515ecbb6a7a0dfdaea0f03[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Wed Oct 9 01:40:15 2024 +0700
+
+    Search book, member, little multithreading
+
+[33mcommit 73e1202419ec1db31c57322aca9af5beca8046de[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Tue Oct 8 18:29:20 2024 +0700
+
+    create main window, member view list - bug:images dont display
+
+[33mcommit 3b6d5ee713f2426a869b1e76c0cf9079543f1855[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Tue Oct 8 01:04:41 2024 +0700
+
+    add member function, display booklist function
+
+[33mcommit fc5041106c5d939649e929ef793c312a1f3ae686[m
+Author: dnanper <anvocuc05@gmail.com>
+Date:   Mon Oct 7 01:51:12 2024 +0700
+
+    First Commmit, install javafx, derby for database

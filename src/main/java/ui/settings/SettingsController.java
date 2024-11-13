@@ -83,6 +83,8 @@ public class SettingsController implements Initializable {
 
             Preferences.writePreferenceToFile(preferences);
 
+//            MainController.getInstance().loadOTData();
+
             // Show success alert
             //AlertMaker.showSimpleAlert("Success", "Settings have been saved successfully.");
 
