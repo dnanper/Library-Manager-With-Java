@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="351.0" prefWidth="535.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.pscfController">
    <children>
       <VBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -30,7 +29,7 @@
                   <Font size="18.0" />
                </font>
             </JFXTextField>
-            <JFXTextField fx:id="emailPasInput" layoutX="10.0" layoutY="27.0" onAction="#handleConfirm" promptText="PassWord">
+            <JFXTextField fx:id="emailPasInput" layoutX="10.0" layoutY="27.0" onAction="#handleConfirm" promptText="Email PassWord">
                <VBox.margin>
                   <Insets left="20.0" right="20.0" top="40.0" />
                </VBox.margin>

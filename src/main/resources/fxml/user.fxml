@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -209,7 +211,52 @@
                               </VBox>
                            </children>
                         </Pane>
-                        <Pane fx:id="mailPane" prefHeight="200.0" prefWidth="200.0" />
+                        <Pane fx:id="mailPane" prefHeight="536.0" prefWidth="731.0">
+                           <children>
+                              <HBox layoutY="-8.0" prefHeight="547.0" prefWidth="730.0">
+                                 <children>
+                                    <JFXListView fx:id="emailListView" onMouseClicked="#handleEmailClick" prefHeight="547.0" prefWidth="508.0">
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </JFXListView>
+                                    <ScrollPane prefHeight="547.0" prefWidth="223.0">
+                                       <content>
+                                          <VBox alignment="TOP_CENTER" prefHeight="656.0" prefWidth="195.0">
+                                             <children>
+                                                <Label text="Sender">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                   <VBox.margin>
+                                                      <Insets bottom="20.0" top="30.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <Label text="Library Manager">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                   <VBox.margin>
+                                                      <Insets bottom="30.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <Line endX="51.0" startX="-100.0" />
+                                                <Label text="Email Content">
+                                                   <VBox.margin>
+                                                      <Insets bottom="20.0" top="30.0" />
+                                                   </VBox.margin>
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextArea fx:id="contentTextArea" prefHeight="444.0" prefWidth="178.0" />
+                                             </children>
+                                          </VBox>
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                              </HBox>
+                           </children></Pane>
                      </children>
                   </StackPane>
                </children>
