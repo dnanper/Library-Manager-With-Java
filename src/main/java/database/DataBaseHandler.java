@@ -337,39 +337,42 @@ public class DataBaseHandler {
 
     public ObservableList<ListMemberController.Member> getOTData() {
         ObservableList<ListMemberController.Member> list = FXCollections.observableArrayList();
-        int n = Preferences.getPreferences().getnDaysWithoutFine();
+        int n = 0;
         System.out.println(n);
-        String qu = "SELECT MEMBER.id, MEMBER.name, MEMBER.phone, MEMBER.email FROM MEMBER INNER JOIN ISSUE ON MEMBER.id = ISSUE.memberID";
-//                + " WHERE (CONVERT(date,CURRENT_TIMESTAMP) - CONVERT(date, ISSUE.issueTime)) >= ?";
+
+        String qu = "SELECT MEMBER.id, MEMBER.name, MEMBER.phone, MEMBER.email " +
+                "FROM MEMBER INNER JOIN ISSUE ON MEMBER.id = ISSUE.memberID " +
+                "WHERE {fn TIMESTAMPDIFF(SQL_TSI_DAY, CAST(ISSUE.issueTime AS DATE), CURRENT_DATE)} >= ?";
         try {
             PreparedStatement stmt = conn.prepareStatement(qu);
-            //stmt.setString(1, String.valueOf(n));
+            stmt.setInt(1, n);  // Set the overdue days threshold
             ResultSet res = stmt.executeQuery();
-            // get all attributes of each book from database
-            while (res != null && res.next()) {
+
+            while (res.next()) {
+                // Retrieve member data from the result set
                 String nam = res.getString("name");
                 String pho = res.getString("phone");
                 String idx = res.getString("id");
                 String ema = res.getString("email");
 
-                // add data of book to list
+                // Add the member to the list
                 list.add(new ListMemberController.Member(nam, idx, pho, ema));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return list;
     }
 
     public ObservableList<String> getOTBooks(String memberId) {
         ObservableList<String> otBooks = FXCollections.observableArrayList();
-        int n = Preferences.getPreferences().getnDaysWithoutFine();
-        String query = "SELECT BOOK.title FROM BOOK INNER JOIN ISSUE ON BOOK.id = ISSUE.bookID WHERE ISSUE.memberID = ?";
-        // + "AND CURRENT_TIMESTAMP - ISSUE.issueTime >= ?";
+        String query = "SELECT BOOK.title FROM BOOK INNER JOIN ISSUE ON BOOK.id = ISSUE.bookID " +
+                "WHERE ISSUE.memberID = ? AND {fn TIMESTAMPDIFF(SQL_TSI_DAY, ISSUE.issueTime, CURRENT_TIMESTAMP)} >= ?";
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, memberId);
-            //stmt.setString(1, String.valueOf(n));
+            stmt.setInt(2, 0);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 otBooks.add(rs.getString("title"));
