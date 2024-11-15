@@ -5,6 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -13,6 +18,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Api {
     // Base URL for Google Books API
@@ -39,65 +46,6 @@ public class Api {
         }
     }
 
-    public String getBookCoverImageUrl(JsonObject bookData) {
-        try {
-            JsonObject volumeInfo = bookData.getAsJsonObject("volumeInfo");
-            if (volumeInfo != null) {
-                JsonObject imageLinks = volumeInfo.getAsJsonObject("imageLinks");
-                if (imageLinks != null) {
-                    JsonElement thumbnail = imageLinks.get("thumbnail");
-                    if (thumbnail != null) {
-                        return thumbnail.getAsString();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public BufferedImage getQRCode(String bookUrl) {
-        int size = 200;
-        int qrCodeSize = 21;
-        int scale = size / qrCodeSize;
-
-
-        BitSet qrMatrix = encodeToQRMatrix(bookUrl, qrCodeSize);
-
-
-        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = image.createGraphics();
-
-
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, size, size);
-        g.setColor(Color.BLACK);
-
-        for (int y = 0; y < qrCodeSize; y++) {
-            for (int x = 0; x < qrCodeSize; x++) {
-                if (qrMatrix.get(y * qrCodeSize + x)) {
-                    g.fillRect(x * scale, y * scale, scale, scale);
-                }
-            }
-        }
-
-        g.dispose();
-        return image;
-    }
-
-
-    private BitSet encodeToQRMatrix(String data, int size) {
-        BitSet matrix = new BitSet(size * size);
-
-        // Fake encoding (just alternating for simplicity)
-        // You would need to implement a full QR encoding algorithm here
-        for (int i = 0; i < size * size; i++) {
-            matrix.set(i, (i % 2 == 0));
-        }
-
-        return matrix;
-    }
 
     private String sendGetRequest(String urlString) {
         StringBuilder result = new StringBuilder();

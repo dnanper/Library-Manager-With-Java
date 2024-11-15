@@ -14,12 +14,14 @@ module controller {
     requires org.apache.httpcomponents.httpcore;
     requires commons.logging;
     requires derby;
+
     //requires com.google.gson;
 
     opens util to javafx.fxml;
     requires com.google.gson;
     requires org.apache.commons.codec;
     requires java.net.http;
+    requires com.google.zxing;
 
     opens ui.login to javafx.fxml, javafx.media;
     opens ui.settings to javafx.fxml, com.google.gson, javafx.media;
@@ -30,7 +32,8 @@ module controller {
     opens ui.main to javafx.fxml, java.mail;
     opens ui.main.toolbar to javafx.fxml;
     opens ui.theme to javafx.fxml;
-    opens api to org.apache.httpcomponents.httpclient, org.apache.httpcomponents.httpcore, commons.logging, javafx.fxml;
+    opens api to org.apache.httpcomponents.httpclient, org.apache.httpcomponents.httpcore, commons.logging, javafx.fxml, zxing;
+
 
     opens user to javafx.fxml, java.mail;
     exports user;
