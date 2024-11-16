@@ -107,7 +107,7 @@ public class ListBookController implements Initializable {
                 Boolean ava = res.getBoolean("isAvail");
 
                 // add data of book to list
-                list.add(new Book(tit, idx, aut, pub, gen, ava));
+                list.add(new Book(tit, idx, aut, pub, gen, ava,null));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ListBookController.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,14 +124,18 @@ public class ListBookController implements Initializable {
         private final SimpleStringProperty publisher;
         private final SimpleStringProperty genre;
         private final SimpleBooleanProperty availability;
+        private final SimpleStringProperty url;
+        private final SimpleStringProperty description;
 
-        public Book(String title, String id, String author, String publisher, String genre, Boolean avail) {
+        public Book(String title, String id, String author, String publisher, String genre, Boolean avail, String url, String description) {
             this.title = new SimpleStringProperty(title);
             this.id = new SimpleStringProperty(id);
             this.author = new SimpleStringProperty(author);
             this.publisher = new SimpleStringProperty(publisher);
             this.genre = new SimpleStringProperty(genre);
             this.availability = new SimpleBooleanProperty(avail);
+            this.url = new SimpleStringProperty(url);
+            this.description = new SimpleStringProperty(description);
         }
 
         public String getTitle() {
@@ -150,7 +154,7 @@ public class ListBookController implements Initializable {
             return publisher.get();
         }
 
-        public String getGenre() { // Thêm phương thức getGenre
+        public String getGenre() {
             return genre.get();
         }
 
@@ -158,7 +162,15 @@ public class ListBookController implements Initializable {
             return availability.get();
         }
 
+        public String getUrl() {
+            return url.get();
+        }
+
+        public String getDescription() {
+            return description.get();
+        }
     }
+
 
     @FXML
     void handleBookDeleteOption(ActionEvent event) {

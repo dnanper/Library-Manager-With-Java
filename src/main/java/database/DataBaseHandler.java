@@ -29,6 +29,7 @@ public class DataBaseHandler {
         setupBookTable();
         setupMemberTable();
         setupIssueTable();
+        setupReviewTable();
     }
 
     // Singleton
@@ -66,32 +67,24 @@ public class DataBaseHandler {
             ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
 
             if (tables.next()) {
-                System.out.println("Table " + TABLE_NAME + " already exists. Checking for genre column...");
-
-                ResultSet columns = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "GENRE");
-                if (!columns.next()) {
-                    String alterTableSQL = "ALTER TABLE " + TABLE_NAME + " ADD genre VARCHAR(100)";
-                    stmt.execute(alterTableSQL);
-                    System.out.println("Column 'genre' added to table " + TABLE_NAME + ".");
-                } else {
-                    System.out.println("Column 'genre' already exists in table " + TABLE_NAME + ".");
-                }
+                System.out.println("Table " + TABLE_NAME + " already exists.");
             } else {
-
+                // Tạo bảng với cột description
                 stmt.execute("CREATE TABLE " + TABLE_NAME + "("
                         + "         id VARCHAR(200) PRIMARY KEY,\n"
                         + "         title VARCHAR(200),\n"
                         + "         author VARCHAR(200),\n"
                         + "         publisher VARCHAR(100),\n"
                         + "         isAvail BOOLEAN DEFAULT TRUE,\n"
-                        + "         genre VARCHAR(100)"
+                        + "         genre VARCHAR(100),\n"
+                        + "         url VARCHAR(500),\n"
+                        + "         description TEXT"
                         + " )");
-                System.out.println("Table " + TABLE_NAME + " created with genre column.");
+                System.out.println("Table " + TABLE_NAME + " created with all columns.");
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage() + " ... setupDatabase");
         } finally {
-
             try {
                 if (stmt != null) {
                     stmt.close();
@@ -101,6 +94,7 @@ public class DataBaseHandler {
             }
         }
     }
+
 
 
     void setupMemberTable() {
@@ -153,6 +147,40 @@ public class DataBaseHandler {
         } catch (SQLException e) {
             System.err.println(e.getMessage() + " ... setupDatabase");
         } finally {
+        }
+    }
+
+    void setupReviewTable() {
+        String TABLE_NAME = "REVIEW";
+        try {
+            stmt = conn.createStatement();
+            DatabaseMetaData dbm = conn.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
+
+            if (tables.next()) {
+                System.out.println("Table " + TABLE_NAME + " already exists.");
+            } else {
+                stmt.execute("CREATE TABLE " + TABLE_NAME + "("
+                        + "         userID VARCHAR(200),\n"
+                        + "         bookID VARCHAR(200),\n"
+                        + "         review TEXT,\n"
+                        + "         rating DOUBLE CHECK (rating >= 0 AND rating <= 5),\n"
+                        + "         PRIMARY KEY (userID, bookID),\n"
+                        + "         FOREIGN KEY (userID) REFERENCES MEMBER(id),\n"
+                        + "         FOREIGN KEY (bookID) REFERENCES BOOK(id)"
+                        + " )");
+                System.out.println("Table " + TABLE_NAME + " created.");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage() + " ... setupReviewTable");
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -258,13 +286,16 @@ public class DataBaseHandler {
 
     public boolean updateBook(ListBookController.Book book) {
         try {
-            String update = "UPDATE BOOK SET TITLE = ?, AUTHOR = ?, PUBLISHER = ?, GENRE = ? WHERE ID = ?";
+            String update = "UPDATE BOOK SET TITLE = ?, AUTHOR = ?, PUBLISHER = ?, GENRE = ?, URL = ?, description = ? WHERE ID = ?";
             PreparedStatement stmt = conn.prepareStatement(update);
             stmt.setString(1, book.getTitle());
             stmt.setString(2, book.getAuthor());
             stmt.setString(3, book.getPublisher());
             stmt.setString(4, book.getGenre());
-            stmt.setString(5, book.getId());
+            stmt.setString(5, book.getUrl());
+            stmt.setString(7, book.getDescription());
+            stmt.setString(6, book.getId());
+
             int res = stmt.executeUpdate();
             return (res > 0);
         } catch (SQLException e) {

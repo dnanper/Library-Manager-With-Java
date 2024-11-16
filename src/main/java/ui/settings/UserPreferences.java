@@ -14,19 +14,16 @@ public class UserPreferences {
 
     public class User {
 
-        private int nDaysWithoutFine;
         private final String username;
         private String password;
 
-        public User(String username, String password, int nDaysWithoutFine) {
+        public User(String username, String password) {
             this.username = username;
             this.password = DigestUtils.shaHex(password);
-            this.nDaysWithoutFine = nDaysWithoutFine;
+
         }
 
-        public int getnDaysWithoutFine() {
-            return nDaysWithoutFine;
-        }
+
 
         public String getUsername() {
             return username;

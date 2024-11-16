@@ -84,7 +84,7 @@ public class ApiSearchController {
     /**
      * Converts a BufferedImage to a JavaFX Image.
      */
-    private Image convertToJavaFXImage(BufferedImage bufferedImage) {
+    public Image convertToJavaFXImage(BufferedImage bufferedImage) {
         try {
             // Convert BufferedImage to ByteArrayOutputStream
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -124,20 +124,6 @@ public class ApiSearchController {
         return null;
     }
 
-    private String getBookUrl(JsonObject bookJson) {
-        try {
-            // Directly access canonicalVolumeLink since it's at the root level
-            String url = (bookJson.has("canonicalVolumeLink")) ?
-                    bookJson.get("canonicalVolumeLink").getAsString() : "";
-            System.out.println("Book URL: " + url); // Debugging line
-            return url;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
     public BufferedImage getQRCode(String bookUrl) {
         if (bookUrl == null || bookUrl.trim().isEmpty()) {
             // Handle invalid input (empty or null URL)
@@ -172,7 +158,7 @@ public class ApiSearchController {
             e.printStackTrace();
             return null;
         }
-    }
+        }
 
     @FXML
     private void onSearchByName() {
@@ -228,29 +214,33 @@ public class ApiSearchController {
                     String title = getBookTitle(selectedBook).replace("'", "''");
                     String author = getBookAuthor(selectedBook).replace("'", "''");
                     String publisher = getBookPublisher(selectedBook).replace("'", "''");
-                    String genre = getBookGenre(selectedBook).replace("'", "''"); // Get genre
+                    String genre = getBookGenre(selectedBook).replace("'", "''");
                     String bookID = getBookISBN(selectedBook);
+                    String bookUrl = getBookUrl(selectedBook).replace("'", "''");
+                    String description = getBookDescription(selectedBook).replace("'", "''");
 
                     // Insert into the database
-                    String insertQuery = "INSERT INTO BOOK (id, title, author, publisher, isAvail, genre) VALUES (" +
+                    String insertQuery = "INSERT INTO BOOK (id, title, author, publisher, isAvail, genre, url, description) VALUES (" +
                             "'" + bookID + "'," +
                             "'" + title + "'," +
                             "'" + author + "'," +
                             "'" + publisher + "'," +
-                            "true," +  // Assuming the book is available
-                            "'" + genre + "'" + // Include genre in the insert statement
+                            "true," +
+                            "'" + genre + "'," +
+                            "'" + bookUrl + "'," +
+                            "'" + description + "'" +
                             ")";
 
-                    // Execute the database action and log the result
+
                     if (dataBaseHandler.execAction(insertQuery)) {
-                        AlertMaker.showSimpleAlert("Success", "Book added successfully: " + title + " by " + author); // Use AlertMaker
+                        AlertMaker.showSimpleAlert("Success", "Book added successfully: " + title + " by " + author);
                     } else {
-                        AlertMaker.showErrorMessage("Database Error", "Failed to add the book to the database."); // Use AlertMaker
+                        AlertMaker.showErrorMessage("Database Error", "Failed to add the book to the database.");
                     }
                 }
             }
         } else {
-            AlertMaker.showSimpleAlert("Selection Error", "No book selected."); // Use AlertMaker
+            AlertMaker.showSimpleAlert("Selection Error", "No book selected.");
         }
     }
 
@@ -286,5 +276,22 @@ public class ApiSearchController {
     private String getBookGenre(JsonObject bookJson) {
         JsonArray categories = bookJson.has("categories") ? bookJson.getAsJsonArray("categories") : null;
         return (categories != null && categories.size() > 0) ? categories.get(0).getAsString() : "No Genre Found"; // Get first genre if available
+    }
+
+    private String getBookUrl(JsonObject bookJson) {
+        try {
+            // Directly access canonicalVolumeLink since it's at the root level
+            String url = (bookJson.has("canonicalVolumeLink")) ?
+                    bookJson.get("canonicalVolumeLink").getAsString() : "";
+            System.out.println("Book URL: " + url); // Debugging line
+            return url;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private String getBookDescription(JsonObject bookJson) {
+        return bookJson.has("description") ? bookJson.get("description").getAsString() : "No Description Available";
     }
 }
