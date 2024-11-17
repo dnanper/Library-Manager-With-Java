@@ -22,12 +22,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Api {
-    // Base URL for Google Books API
     private static final String GOOGLE_BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
     private final String apiKey = "AIzaSyAp6Bgoq3o06qefC_qQEP8I_yDSPhjy8lk"; // Replace with your actual API key
     private Gson gson = new Gson();
 
-    // Search for books by ISBN
+    // search for books by ISBN
     public JsonObject getBookByISBN(String isbn) {
         String urlString = GOOGLE_BOOKS_API_URL + "isbn:" + isbn + "&key=" + apiKey;
         String jsonResponse = sendGetRequest(urlString);

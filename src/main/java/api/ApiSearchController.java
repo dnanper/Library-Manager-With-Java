@@ -29,13 +29,16 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ApiSearchController {
 
-    private Api apiHandle = new Api();
-    private DataBaseHandler dataBaseHandler = DataBaseHandler.getInstance();
+    private final Api apiHandle = new Api();
+    private final DataBaseHandler dataBaseHandler = DataBaseHandler.getInstance();
 
     @FXML
     private TextField nameField;
@@ -178,16 +181,16 @@ public class ApiSearchController {
                         for (JsonElement item : items) {
                             JsonObject volumeInfo = item.getAsJsonObject().getAsJsonObject("volumeInfo");
 
-                            // Add the JsonObject to the searchResults list
+
                             searchResults.add(volumeInfo);
 
-                            // Create a display string and add it to the ListView
+
                             String title = getBookTitle(volumeInfo);
                             String author = getBookAuthor(volumeInfo);
                             String publisher = getBookPublisher(volumeInfo);
-                            String genre = getBookGenre(volumeInfo); // Retrieve genre
+                            String genre = getBookGenre(volumeInfo);
 
-                            // Format the string to be displayed in the ListView
+
                             String displayString = title + " by " + author + " (Publisher: " + publisher + ", Genre: " + genre + ")";
                             searchResultsList.getItems().add(displayString); // Add display string to ListView
                         }
@@ -210,17 +213,24 @@ public class ApiSearchController {
                 if (selectedIndex >= 0 && selectedIndex < searchResults.size()) {
                     JsonObject selectedBook = searchResults.get(selectedIndex);
 
-                    // Extract book details and escape single quotes for SQL
+                    String bookID = getBookISBN(selectedBook);
+
+
+                    if (isBookExists(bookID)) {
+                        AlertMaker.showSimpleAlert("Duplicate Book", "This book already exists in the database.");
+                        return;
+                    }
+
+
                     String title = getBookTitle(selectedBook).replace("'", "''");
                     String author = getBookAuthor(selectedBook).replace("'", "''");
                     String publisher = getBookPublisher(selectedBook).replace("'", "''");
                     String genre = getBookGenre(selectedBook).replace("'", "''");
-                    String bookID = getBookISBN(selectedBook);
                     String bookUrl = getBookUrl(selectedBook).replace("'", "''");
+                    String urlCoverImage = getBookCoverImageUrl(selectedBook).replace("'", "''");
                     String description = getBookDescription(selectedBook).replace("'", "''");
 
-                    // Insert into the database
-                    String insertQuery = "INSERT INTO BOOK (id, title, author, publisher, isAvail, genre, url, description) VALUES (" +
+                    String insertQuery = "INSERT INTO BOOK (id, title, author, publisher, isAvail, genre, URL, urlCoverImage, description) VALUES (" +
                             "'" + bookID + "'," +
                             "'" + title + "'," +
                             "'" + author + "'," +
@@ -228,14 +238,14 @@ public class ApiSearchController {
                             "true," +
                             "'" + genre + "'," +
                             "'" + bookUrl + "'," +
+                            "'" + urlCoverImage + "'," +
                             "'" + description + "'" +
                             ")";
 
-
                     if (dataBaseHandler.execAction(insertQuery)) {
-                        AlertMaker.showSimpleAlert("Success", "Book added successfully: " + title + " by " + author);
+                        System.out.println("sucess");
                     } else {
-                        AlertMaker.showErrorMessage("Database Error", "Failed to add the book to the database.");
+                        System.out.println("fail");
                     }
                 }
             }
@@ -243,6 +253,30 @@ public class ApiSearchController {
             AlertMaker.showSimpleAlert("Selection Error", "No book selected.");
         }
     }
+
+
+    private boolean isBookExists(String bookID) {
+
+        String checkQuery = "SELECT COUNT(*) FROM BOOK WHERE id = ?";
+
+
+        try (PreparedStatement preparedStatement = dataBaseHandler.getConnection().prepareStatement(checkQuery)) {
+            preparedStatement.setString(1, bookID);
+
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
 
     // Helper methods to get book details remain unchanged
     private String getBookTitle(JsonObject bookJson) {
@@ -292,6 +326,17 @@ public class ApiSearchController {
     }
 
     private String getBookDescription(JsonObject bookJson) {
-        return bookJson.has("description") ? bookJson.get("description").getAsString() : "No Description Available";
+        if (bookJson.has("description")) {
+            String description = bookJson.get("description").getAsString();
+
+
+            String[] sentences = description.split("\\.");
+
+
+            if (sentences.length > 0) {
+                return sentences[0].trim() + (sentences[0].endsWith(".") ? "" : ".");
+            }
+        }
+        return "No Description Available";
     }
 }

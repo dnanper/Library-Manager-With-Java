@@ -19,6 +19,7 @@ public class UserLoader extends Application {
 
         LibraryUtil.setStageIcon(stage);
 
+
         // A little multithreading to reduce latency
         new Thread(() -> {
             DataBaseHandler.getInstance();

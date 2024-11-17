@@ -119,7 +119,7 @@ public class AddBookController implements Initializable {
         id.clear();
         author.clear();
         publisher.clear();
-        genre.clear(); // Clear genre field
+        genre.clear();
     }
 
     @FXML
@@ -145,13 +145,13 @@ public class AddBookController implements Initializable {
         id.setText(book.getId());
         author.setText(book.getAuthor());
         publisher.setText(book.getPublisher());
-        genre.setText(book.getGenre()); // Set genre in edit mode
+        genre.setText(book.getGenre());
         id.setEditable(false);
         isEditMod = Boolean.TRUE;
     }
 
     private void handleEditMod() {
-        ListBookController.Book book = new ListBookController.Book(title.getText(), id.getText(), author.getText(), publisher.getText(), genre.getText(),true);
+        ListBookController.Book book = new ListBookController.Book(title.getText(), id.getText(), author.getText(), publisher.getText(), genre.getText(),true, null,null,null);
         // Update book details
         if (dataBaseHandler.updateBook(book)) {
             AlertMaker.showSimpleAlert("Success", "Book Updated");

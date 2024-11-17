@@ -107,7 +107,7 @@ public class ListBookController implements Initializable {
                 Boolean ava = res.getBoolean("isAvail");
 
                 // add data of book to list
-                list.add(new Book(tit, idx, aut, pub, gen, ava,null));
+                list.add(new Book(tit, idx, aut, pub, gen, ava,null,null,null));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ListBookController.class.getName()).log(Level.SEVERE, null, ex);
@@ -125,9 +125,11 @@ public class ListBookController implements Initializable {
         private final SimpleStringProperty genre;
         private final SimpleBooleanProperty availability;
         private final SimpleStringProperty url;
+        private final SimpleStringProperty urlCoverImage;
         private final SimpleStringProperty description;
 
-        public Book(String title, String id, String author, String publisher, String genre, Boolean avail, String url, String description) {
+
+        public Book(String title, String id, String author, String publisher, String genre, Boolean avail, String url, String urlCoverImage, String description) {
             this.title = new SimpleStringProperty(title);
             this.id = new SimpleStringProperty(id);
             this.author = new SimpleStringProperty(author);
@@ -135,7 +137,9 @@ public class ListBookController implements Initializable {
             this.genre = new SimpleStringProperty(genre);
             this.availability = new SimpleBooleanProperty(avail);
             this.url = new SimpleStringProperty(url);
+            this.urlCoverImage = new SimpleStringProperty(urlCoverImage);
             this.description = new SimpleStringProperty(description);
+
         }
 
         public String getTitle() {
@@ -164,6 +168,10 @@ public class ListBookController implements Initializable {
 
         public String getUrl() {
             return url.get();
+        }
+
+        public String getUrlCoverImage() {
+            return urlCoverImage.get();
         }
 
         public String getDescription() {

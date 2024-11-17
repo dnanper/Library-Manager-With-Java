@@ -62,28 +62,55 @@ public class DataBaseHandler {
     void setupBookTable() {
         String TABLE_NAME = "BOOK";
         try {
+
             stmt = conn.createStatement();
             DatabaseMetaData dbm = conn.getMetaData();
             ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
 
             if (tables.next()) {
-                System.out.println("Table " + TABLE_NAME + " already exists.");
+                System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
+
+
+                ResultSet columns = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "URL");
+                if (!columns.next()) {
+
+                    stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN url VARCHAR(500)");
+                    System.out.println("Column 'url' added to the table.");
+                }
+
+                // Check if 'urlCoverImage' column exists
+                ResultSet urlCoverImageColumn = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "URLCOVERIMAGE");
+                if (!urlCoverImageColumn.next()) {
+
+                    stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN urlCoverImage VARCHAR(500)");
+                    System.out.println("Column 'urlCoverImage' added to the table.");
+                }
+
+                // Check if 'description' column exists
+                ResultSet descriptionColumn = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "DESCRIPTION");
+                if (!descriptionColumn.next()) {
+                    // If the 'description' column doesn't exist, add it
+                    stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN description VARCHAR(1000)");
+                    System.out.println("Column 'description' added to the table.");
+                }
+
             } else {
-                // Tạo bảng với cột description
-                stmt.execute("CREATE TABLE " + TABLE_NAME + "("
-                        + "         id VARCHAR(200) PRIMARY KEY,\n"
-                        + "         title VARCHAR(200),\n"
-                        + "         author VARCHAR(200),\n"
-                        + "         publisher VARCHAR(100),\n"
-                        + "         isAvail BOOLEAN DEFAULT TRUE,\n"
-                        + "         genre VARCHAR(100),\n"
-                        + "         url VARCHAR(500),\n"
-                        + "         description TEXT"
-                        + " )");
-                System.out.println("Table " + TABLE_NAME + " created with all columns.");
+                // If the table doesn't exist, create the table with all columns
+                stmt.execute("CREATE TABLE " + TABLE_NAME + " ("
+                        + "id VARCHAR(200) PRIMARY KEY, "
+                        + "title VARCHAR(200), "
+                        + "author VARCHAR(200), "
+                        + "publisher VARCHAR(100), "
+                        + "isAvail BOOLEAN DEFAULT TRUE, "
+                        + "genre VARCHAR(100), "
+                        + "url VARCHAR(500), "
+                        + "urlCoverImage VARCHAR(500), "
+                        + "description VARCHAR(3000)"
+                        + ")");
+                System.out.println("Table " + TABLE_NAME + " created successfully.");
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage() + " ... setupDatabase");
+            System.err.println("Error setting up the database: " + e.getMessage());
         } finally {
             try {
                 if (stmt != null) {
@@ -94,6 +121,8 @@ public class DataBaseHandler {
             }
         }
     }
+
+
 
 
 
@@ -163,7 +192,7 @@ public class DataBaseHandler {
                 stmt.execute("CREATE TABLE " + TABLE_NAME + "("
                         + "         userID VARCHAR(200),\n"
                         + "         bookID VARCHAR(200),\n"
-                        + "         review TEXT,\n"
+                        + "         review VARCHAR(1000),\n"
                         + "         rating DOUBLE CHECK (rating >= 0 AND rating <= 5),\n"
                         + "         PRIMARY KEY (userID, bookID),\n"
                         + "         FOREIGN KEY (userID) REFERENCES MEMBER(id),\n"
@@ -286,15 +315,16 @@ public class DataBaseHandler {
 
     public boolean updateBook(ListBookController.Book book) {
         try {
-            String update = "UPDATE BOOK SET TITLE = ?, AUTHOR = ?, PUBLISHER = ?, GENRE = ?, URL = ?, description = ? WHERE ID = ?";
+            String update = "UPDATE BOOK SET TITLE = ?, AUTHOR = ?, PUBLISHER = ?, GENRE = ?, url = ?, urlCoverImage = ?, description = ? WHERE ID = ?";
             PreparedStatement stmt = conn.prepareStatement(update);
             stmt.setString(1, book.getTitle());
             stmt.setString(2, book.getAuthor());
             stmt.setString(3, book.getPublisher());
             stmt.setString(4, book.getGenre());
             stmt.setString(5, book.getUrl());
+            stmt.setString(6, book.getUrlCoverImage());
             stmt.setString(7, book.getDescription());
-            stmt.setString(6, book.getId());
+            stmt.setString(8, book.getId());
 
             int res = stmt.executeUpdate();
             return (res > 0);
