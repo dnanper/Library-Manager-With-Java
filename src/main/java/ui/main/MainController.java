@@ -36,6 +36,8 @@ import util.LibraryUtil;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -607,7 +609,8 @@ public class MainController implements Initializable {
         String bookID = bookIDInput.getText();
 
 
-        String issueTime = java.time.LocalDateTime.now().toString();  // Get the current timestamp
+        //String issueTime = java.time.LocalDateTime.now().toString();  // Get the current timestamp
+        String issueTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         // If issue book
         JFXButton buttonT = new JFXButton("YES");
@@ -620,15 +623,14 @@ public class MainController implements Initializable {
 
             // Now the book is unavailable
             String str2 = "UPDATE BOOK SET isAvail = false WHERE id = '" + bookID + "'";
-
             if (dataBaseHandler.execAction(str) && dataBaseHandler.execAction(str2)) {
                 JFXButton button = new JFXButton("OK");
                 AlertMaker.showMaterialDialog(rootPane, rootAnchorPane, Arrays.asList(button), "Book Issue Complete!", null);
-                refreshGraph();
             } else {
                 JFXButton button = new JFXButton("OK");
                 AlertMaker.showMaterialDialog(rootPane, rootAnchorPane, Arrays.asList(button), "Book Issue Failed!", null);
             }
+            refreshGraph();
             clearIssueEntries();
         });
 

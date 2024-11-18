@@ -3,6 +3,7 @@ package user;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,14 +12,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import database.DataBaseHandler;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import ui.listbook.ListBookController;
 import ui.theme.ThemeManager;
 import util.LibraryUtil;
 
@@ -26,6 +31,8 @@ import javax.mail.*;
 import javax.mail.internet.MimeMessage;
 import javax.mail.search.FlagTerm;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -33,6 +40,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserController implements Initializable {
 
@@ -43,10 +52,16 @@ public class UserController implements Initializable {
     private TableColumn<?, ?> authorCol1;
 
     @FXML
+    private TableColumn<?, ?> authorCol2;
+
+    @FXML
     private TableColumn<?, ?> availabilityCol;
 
     @FXML
     private TableColumn<?, ?> availabilityCol1;
+
+    @FXML
+    private TableColumn<?, ?> availabilityCol2;
 
     @FXML
     private Pane borrowPane;
@@ -61,13 +76,22 @@ public class UserController implements Initializable {
     private TableColumn<?, ?> genreCol1;
 
     @FXML
+    private TableColumn<?, ?> genreCol2;
+
+    @FXML
     private TableColumn<?, ?> idCol;
 
     @FXML
     private TableColumn<?, ?> idCol1;
 
     @FXML
+    private TableColumn<?, ?> idCol2;
+
+    @FXML
     private Pane libraryPane;
+
+    @FXML
+    private Pane recommendPane;
 
     @FXML
     private TableColumn<?, ?> publisherCol;
@@ -76,19 +100,37 @@ public class UserController implements Initializable {
     private TableColumn<?, ?> publisherCol1;
 
     @FXML
+    private TableColumn<?, ?> publisherCol2;
+
+    @FXML
     private Pane settingPane;
 
     @FXML
     private JFXButton mailButton;
 
     @FXML
+    private JFXButton settingButton;
+
+    @FXML
+    private JFXButton libraryButton;
+
+    @FXML
+    private JFXButton borrowButton;
+
+    @FXML
+    private JFXButton recommendButton;
+
+    @FXML
     private Pane mailPane;
 
     @FXML
-    private TableView<?> tableView;
+    private TableView<ListBookController.Book> tableView;
 
     @FXML
-    private TableView<?> tableView1;
+    private TableView<ListBookController.Book> tableView2;
+
+    @FXML
+    private TableView<ListBookController.Book> tableView1;
 
     @FXML
     private TableColumn<?, ?> titleCol;
@@ -97,16 +139,54 @@ public class UserController implements Initializable {
     private TableColumn<?, ?> titleCol1;
 
     @FXML
+    private TableColumn<?, ?> titleCol2;
+
+    @FXML
     private TextArea contentTextArea;
+
+    @FXML
+    private JFXTextField favourGerne;
 
     @FXML
     private JFXListView<String> emailListView;
 
     private ObservableList<String> emailList = FXCollections.observableArrayList();
 
+    ObservableList<ListBookController.Book> list = FXCollections.observableArrayList();
+
+    private static String userName;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initCol();
+    }
 
+    private void initCol() {
+        // library
+        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
+        publisherCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
+        genreCol.setCellValueFactory(new PropertyValueFactory<>("genre")); // Kết nối cột genre
+        availabilityCol.setCellValueFactory(new PropertyValueFactory<>("availability"));
+        // borrow
+        titleCol1.setCellValueFactory(new PropertyValueFactory<>("title"));
+        idCol1.setCellValueFactory(new PropertyValueFactory<>("id"));
+        authorCol1.setCellValueFactory(new PropertyValueFactory<>("author"));
+        publisherCol1.setCellValueFactory(new PropertyValueFactory<>("publisher"));
+        genreCol1.setCellValueFactory(new PropertyValueFactory<>("genre")); // Kết nối cột genre
+        availabilityCol1.setCellValueFactory(new PropertyValueFactory<>("availability"));
+        // recommend
+        titleCol2.setCellValueFactory(new PropertyValueFactory<>("title"));
+        idCol2.setCellValueFactory(new PropertyValueFactory<>("id"));
+        authorCol2.setCellValueFactory(new PropertyValueFactory<>("author"));
+        publisherCol2.setCellValueFactory(new PropertyValueFactory<>("publisher"));
+        genreCol2.setCellValueFactory(new PropertyValueFactory<>("genre")); // Kết nối cột genre
+        availabilityCol2.setCellValueFactory(new PropertyValueFactory<>("availability"));
+    }
+
+    public static void setUsername(String username) {
+        userName = username;
     }
 
     @FXML
@@ -131,6 +211,8 @@ public class UserController implements Initializable {
     }
 
     public void receiveEmail(String email, String pass) {
+        showPane(mailPane);
+
         Properties props = new Properties();
         props.put("mail.store.protocol", "imaps");
         props.put("mail.imap.host", "imap.gmail.com");
@@ -187,7 +269,7 @@ public class UserController implements Initializable {
     }
 
     @FXML
-    void handleEmailClick(MouseEvent event) {
+    public void handleEmailClick(MouseEvent event) {
         String selectedEmail = emailListView.getSelectionModel().getSelectedItem();
         if (selectedEmail != null) {
             try {
@@ -197,6 +279,72 @@ public class UserController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @FXML
+    public void settingHandle(ActionEvent event) {
+        showPane(settingPane);
+    }
+
+    @FXML
+    public void viewBorrowBookHandle(ActionEvent event) {
+        list.clear();
+        showPane(borrowPane);
+        DataBaseHandler handler = DataBaseHandler.getInstance();
+        list = handler.getBooksIssuedToMember(userName);
+        tableView1.setItems(list);
+    }
+
+    @FXML
+    public void ViewLibraryHandle(ActionEvent event) {
+        list.clear();
+        showPane(libraryPane);
+        DataBaseHandler handler = DataBaseHandler.getInstance();
+        String qu = "SELECT * FROM BOOK";
+        ResultSet res = handler.execQuery(qu);
+        try {
+            // get all attributes of each book from database
+            while (res.next()) {
+                String tit = res.getString("title");
+                String aut = res.getString("author");
+                String idx = res.getString("id");
+                String pub = res.getString("publisher");
+                String gen = res.getString("genre"); // Lấy genre từ kết quả truy vấn
+                Boolean ava = res.getBoolean("isAvail");
+
+                // add data of book to list
+                list.add(new ListBookController.Book(tit, idx, aut, pub, gen, ava,null,null,null));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // push all elements in list to table
+        tableView.setItems(list);
+    }
+
+    @FXML
+    public void recommendHandle(ActionEvent event) {
+        list.clear();
+        showPane(recommendPane);
+        String favGene = favourGerne.getText();
+        if (favGene.equals("Recently") || favGene.isEmpty()) {
+            DataBaseHandler handler = DataBaseHandler.getInstance();
+            list = handler.getRecommendedBooksForMember(userName);
+        } else {
+            DataBaseHandler handler = DataBaseHandler.getInstance();
+            list = handler.getRecommendedBooksForMember(userName, favGene);
+        }
+        tableView2.setItems(list);
+    }
+
+    private void showPane(Pane paneToShow) {
+        // List of all panes
+        List<Pane> allPanes = List.of(libraryPane, borrowPane, mailPane, settingPane, recommendPane);
+
+        // Show the specified pane and hide others
+        for (Pane pane : allPanes) {
+            pane.setVisible(pane == paneToShow);
         }
     }
 

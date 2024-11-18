@@ -122,10 +122,6 @@ public class DataBaseHandler {
         }
     }
 
-
-
-
-
     void setupMemberTable() {
         String TABLE_NAME = "MEMBER";
         try {
@@ -445,15 +441,21 @@ public class DataBaseHandler {
         return otBooks;
     }
 
-    public ObservableList<String> getBooksIssuedToMember(String memberId) {
-        ObservableList<String> issuedBooks = FXCollections.observableArrayList();
-        String query = "SELECT BOOK.title FROM BOOK INNER JOIN ISSUE ON BOOK.id = ISSUE.bookID WHERE ISSUE.memberID = ?";
+    public ObservableList<ListBookController.Book> getBooksIssuedToMember(String memberId) {
+        ObservableList<ListBookController.Book> issuedBooks = FXCollections.observableArrayList();
+        String query = "SELECT * FROM BOOK INNER JOIN ISSUE ON BOOK.id = ISSUE.bookID WHERE ISSUE.memberID = ?";
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, memberId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                issuedBooks.add(rs.getString("title"));
+                String tit = rs.getString("title");
+                String aut = rs.getString("author");
+                String idx = rs.getString("id");
+                String pub = rs.getString("publisher");
+                String gen = rs.getString("genre"); // Lấy genre từ kết quả truy vấn
+                Boolean ava = rs.getBoolean("isAvail");
+                issuedBooks.add(new ListBookController.Book(tit, idx, aut, pub, gen, ava,null,null,null));
             }
         } catch (SQLException e) {
             Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
@@ -461,10 +463,10 @@ public class DataBaseHandler {
         return issuedBooks;
     }
 
-    public ObservableList<String> getRecommendedBooksForMember(String memberId) {
-        ObservableList<String> recommendedBooks = FXCollections.observableArrayList();
+    public ObservableList<ListBookController.Book> getRecommendedBooksForMember(String memberId) {
+        ObservableList<ListBookController.Book> recommendedBooks = FXCollections.observableArrayList();
 
-        String query = "SELECT title FROM BOOK WHERE genre = " +
+        String query = "SELECT * FROM BOOK WHERE genre = " +
                 "(SELECT genre FROM ( " +
                 "   SELECT B.genre, COUNT(*) AS count " +
                 "   FROM ISSUE I " +
@@ -473,16 +475,45 @@ public class DataBaseHandler {
                 "   GROUP BY B.genre " +
                 "   ORDER BY count DESC " +
                 "   FETCH FIRST 1 ROW ONLY " +
-                ") AS top_genre) " +
-                "FETCH FIRST 5 ROWS ONLY";
+                ") AS top_genre) ";
 
         try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
             stmt.setString(1, memberId);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                String title = rs.getString("title");
-                recommendedBooks.add(title);
+                String tit = rs.getString("title");
+                String aut = rs.getString("author");
+                String idx = rs.getString("id");
+                String pub = rs.getString("publisher");
+                String gen = rs.getString("genre"); // Lấy genre từ kết quả truy vấn
+                Boolean ava = rs.getBoolean("isAvail");
+                recommendedBooks.add(new ListBookController.Book(tit, idx, aut, pub, gen, ava,null,null,null));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle exception appropriately
+        }
+
+        return recommendedBooks;
+    }
+
+    public ObservableList<ListBookController.Book> getRecommendedBooksForMember(String memberId, String genr) {
+        ObservableList<ListBookController.Book> recommendedBooks = FXCollections.observableArrayList();
+
+        String query = "SELECT * FROM BOOK WHERE genre = ?";
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
+            stmt.setString(1, genr);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String tit = rs.getString("title");
+                String aut = rs.getString("author");
+                String idx = rs.getString("id");
+                String pub = rs.getString("publisher");
+                String gen = rs.getString("genre"); // Lấy genre từ kết quả truy vấn
+                Boolean ava = rs.getBoolean("isAvail");
+                recommendedBooks.add(new ListBookController.Book(tit, idx, aut, pub, gen, ava,null,null,null));
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Handle exception appropriately

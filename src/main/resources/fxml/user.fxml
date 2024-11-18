@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -28,8 +29,11 @@
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </VBox.margin>
+                     <image>
+                        <Image url="@../useravatar.png" />
+                     </image>
                   </ImageView>
-                  <JFXButton prefHeight="100.0" prefWidth="150.0" text="View Library">
+                  <JFXButton fx:id="libraryButton" onAction="#ViewLibraryHandle" prefHeight="100.0" prefWidth="150.0" text="View Library">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="20.0" />
                      </VBox.margin>
@@ -37,7 +41,7 @@
                         <Font size="18.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton layoutX="10.0" layoutY="160.0" prefHeight="100.0" prefWidth="150.0" text="Borrowed Book">
+                  <JFXButton fx:id="borrowButton" layoutX="10.0" layoutY="160.0" onAction="#viewBorrowBookHandle" prefHeight="100.0" prefWidth="150.0" text="Borrowed Book">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="20.0" />
                      </VBox.margin>
@@ -53,7 +57,7 @@
                         <Font size="18.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton layoutX="20.0" layoutY="440.0" prefHeight="100.0" prefWidth="150.0" text="Settings">
+                  <JFXButton fx:id="settingButton" layoutX="20.0" layoutY="440.0" onAction="#settingHandle" prefHeight="100.0" prefWidth="150.0" text="Settings">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -72,35 +76,54 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="81.0" layoutY="65.0" text="Favourite Gerne">
+                        <Label layoutX="149.0" layoutY="61.0" text="Favourite Gerne">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label layoutX="495.0" layoutY="65.0" text="Favourite Author">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <JFXTextField layoutX="81.0" layoutY="91.0">
+                        <JFXTextField fx:id="favourGerne" layoutX="149.0" layoutY="93.0" prefHeight="29.0" prefWidth="221.0">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </JFXTextField>
-                        <JFXTextField layoutX="495.0" layoutY="91.0">
+                        <JFXButton fx:id="recommendButton" layoutX="422.0" layoutY="71.0" onAction="#recommendHandle" prefHeight="63.0" prefWidth="186.0" text="Show Recommend">
                            <font>
                               <Font size="14.0" />
                            </font>
-                        </JFXTextField>
+                        </JFXButton>
                      </children>
                   </Pane>
                   <StackPane prefHeight="539.0" prefWidth="680.0">
                      <children>
+                        <Pane fx:id="recommendPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+                           <children>
+                              <HBox prefHeight="537.0" prefWidth="730.0">
+                                 <children>
+                                    <TableView fx:id="tableView2" prefHeight="537.0" prefWidth="732.0">
+                                       <columns>
+                                          <TableColumn fx:id="titleCol2" prefWidth="100.0" text="Title" />
+                                          <TableColumn fx:id="idCol2" prefWidth="100.0" text="Book ID" />
+                                          <TableColumn fx:id="authorCol2" prefWidth="100.0" text="Author" />
+                                          <TableColumn fx:id="publisherCol2" prefWidth="100.0" text="Publisher" />
+                                          <TableColumn fx:id="availabilityCol2" prefWidth="100.0" text="Availability" />
+                                          <TableColumn fx:id="genreCol2" prefWidth="100.0" text="Genre" />
+                                       </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </TableView>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </Pane>
                         <Pane fx:id="libraryPane" prefHeight="200.0" prefWidth="200.0" visible="false">
                            <children>
                               <HBox prefHeight="537.0" prefWidth="730.0">
                                  <children>
-                                    <TableView fx:id="tableView" prefHeight="537.0" prefWidth="573.0">
+                                    <TableView fx:id="tableView" prefHeight="527.0" prefWidth="741.0">
                                        <columns>
                                           <TableColumn fx:id="titleCol" prefWidth="100.0" text="Title" />
                                           <TableColumn fx:id="idCol" prefWidth="100.0" text="Book ID" />
@@ -113,56 +136,35 @@
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                        </columnResizePolicy>
                                        <HBox.margin>
-                                          <Insets bottom="10.0" />
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </HBox.margin>
                                     </TableView>
-                                    <VBox prefHeight="537.0" prefWidth="160.0">
-                                       <children>
-                                          <ImageView fitHeight="193.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
-                                             <VBox.margin>
-                                                <Insets left="10.0" right="10.0" top="20.0" />
-                                             </VBox.margin>
-                                          </ImageView>
-                                          <Line endX="390.0" startX="260.0">
-                                             <VBox.margin>
-                                                <Insets left="15.0" top="20.0" />
-                                             </VBox.margin>
-                                          </Line>
-                                          <Label text="Description">
-                                             <VBox.margin>
-                                                <Insets left="40.0" top="20.0" />
-                                             </VBox.margin>
-                                             <font>
-                                                <Font size="15.0" />
-                                             </font>
-                                          </Label>
-                                          <TextArea prefHeight="220.0" prefWidth="160.0">
-                                             <VBox.margin>
-                                                <Insets left="10.0" right="10.0" top="10.0" />
-                                             </VBox.margin>
-                                          </TextArea>
-                                       </children>
-                                    </VBox>
                                  </children>
                               </HBox>
                            </children>
                         </Pane>
-                        <Pane fx:id="borrowPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+                        <Pane fx:id="borrowPane" prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <TableView fx:id="tableView1" prefHeight="537.0" prefWidth="730.0">
-                                 <columns>
-                                    <TableColumn fx:id="titleCol1" prefWidth="100.0" text="Title" />
-                                    <TableColumn fx:id="idCol1" prefWidth="100.0" text="Book ID" />
-                                    <TableColumn fx:id="authorCol1" prefWidth="100.0" text="Author" />
-                                    <TableColumn fx:id="publisherCol1" prefWidth="100.0" text="Publisher" />
-                                    <TableColumn fx:id="availabilityCol1" prefWidth="100.0" text="Availability" />
-                                    <TableColumn fx:id="genreCol1" prefWidth="116.0" text="Genre" />
-                                    <TableColumn fx:id="dayCol" prefWidth="73.0" text="Days Left" />
-                                 </columns>
-                                 <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                 </columnResizePolicy>
-                              </TableView>
+                              <HBox prefHeight="537.0" prefWidth="730.0">
+                                 <children>
+                                    <TableView fx:id="tableView1" prefHeight="537.0" prefWidth="730.0">
+                                       <columns>
+                                          <TableColumn fx:id="titleCol1" prefWidth="138.0" text="Title" />
+                                          <TableColumn fx:id="idCol1" prefWidth="135.5" text="Book ID" />
+                                          <TableColumn fx:id="authorCol1" prefWidth="132.5" text="Author" />
+                                          <TableColumn fx:id="publisherCol1" prefWidth="119.0" text="Publisher" />
+                                          <TableColumn fx:id="availabilityCol1" prefWidth="84.0" text="Availability" />
+                                          <TableColumn fx:id="genreCol1" prefWidth="96.0" text="Genre" />
+                                       </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </TableView>
+                                 </children>
+                              </HBox>
                            </children>
                         </Pane>
                         <Pane fx:id="settingPane" prefHeight="200.0" prefWidth="200.0" visible="false">
@@ -211,7 +213,7 @@
                               </VBox>
                            </children>
                         </Pane>
-                        <Pane fx:id="mailPane" prefHeight="536.0" prefWidth="731.0">
+                        <Pane fx:id="mailPane" prefHeight="536.0" prefWidth="731.0" visible="false">
                            <children>
                               <HBox layoutY="-8.0" prefHeight="547.0" prefWidth="730.0">
                                  <children>

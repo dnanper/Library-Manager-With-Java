@@ -22,6 +22,7 @@ import ui.settings.Preferences;
 import org.apache.commons.codec.digest.DigestUtils;
 import ui.settings.UserPreferences;
 import ui.theme.ThemeManager;
+import user.UserController;
 import util.LibraryUtil;
 
 
@@ -103,6 +104,9 @@ public class LoginController implements Initializable{
     }
 
     void loadUserMain() throws IOException {
+        String uname = username.getText();
+        UserController.setUsername(uname);
+
         MainController main = MainController.getInstance();
         main.setRoot(FXMLLoader.load(getClass().getResource("/fxml/user.fxml")));
         Stage stage = new Stage(StageStyle.DECORATED);
