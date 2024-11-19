@@ -4,6 +4,8 @@ import alert.AlertMaker;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextField;
 import database.DataBaseHandler;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -67,6 +69,12 @@ public class ListBookController implements Initializable {
     @FXML
     private StackPane rootPane;
 
+    @FXML
+    private JFXComboBox<String> searchTypeCBox;
+
+    @FXML
+    private JFXTextField searchText;
+
     // tables contain books
     @FXML
     private TableView<Book> tableView;
@@ -74,8 +82,11 @@ public class ListBookController implements Initializable {
     @FXML
     private TableColumn<Book, String> titleCol;
 
+    ObservableList<String> typeList = FXCollections.observableArrayList( "ID", "Title", "Author", "Genre");
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        searchTypeCBox.setItems(typeList);
         initCol();
         loadData();
     }
@@ -90,6 +101,34 @@ public class ListBookController implements Initializable {
         availabilityCol.setCellValueFactory(new PropertyValueFactory<>("availability"));
     }
 
+    private void filterBookList(String searchContent, String type) {
+        if (searchContent == null || searchContent.isEmpty()) {
+            tableView.setItems(list);
+            return;
+        }
+        ObservableList<ListBookController.Book> filterList = FXCollections.observableArrayList();
+        for (ListBookController.Book book : list) {
+            if (type.equals("ID")) {
+                if (book.getId().toLowerCase().contains(searchContent.toLowerCase())) {
+                    filterList.add(book);
+                }
+            } else if (type.equals("Title")) {
+                if (book.getTitle().toLowerCase().contains(searchContent.toLowerCase())) {
+                    filterList.add(book);
+                }
+            } else if (type.equals("Author")) {
+                if (book.getAuthor().toLowerCase().contains(searchContent.toLowerCase())) {
+                    filterList.add(book);
+                }
+            } else {
+                if (book.getGenre() != null && book.getGenre().toLowerCase().contains(searchContent.toLowerCase())) {
+                    filterList.add(book);
+                }
+            }
+
+        }
+        tableView.setItems(filterList);
+    }
     // function to extract data from database to put to table
     private void loadData() {
         list.clear();
@@ -112,9 +151,13 @@ public class ListBookController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(ListBookController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         // push all elements in list to table
         tableView.setItems(list);
+        // Search Book
+        searchText.textProperty().addListener((observable, oldValue, newValue) -> {
+            String type = searchTypeCBox.getValue();
+            filterBookList(newValue, type);
+        });
     }
 
     public static class Book {

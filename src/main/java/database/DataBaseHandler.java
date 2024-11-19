@@ -500,7 +500,7 @@ public class DataBaseHandler {
     public ObservableList<ListBookController.Book> getRecommendedBooksForMember(String memberId, String genr) {
         ObservableList<ListBookController.Book> recommendedBooks = FXCollections.observableArrayList();
 
-        String query = "SELECT * FROM BOOK WHERE genre = ?";
+        String query = "SELECT * FROM BOOK WHERE LOWER(genre) = LOWER(?)";
 
         try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
             stmt.setString(1, genr);

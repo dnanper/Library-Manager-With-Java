@@ -27,6 +27,9 @@ import ui.listbook.ListBookController;
 import ui.theme.ThemeManager;
 import util.LibraryUtil;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
 import javax.mail.search.FlagTerm;
@@ -150,6 +153,9 @@ public class UserController implements Initializable {
     @FXML
     private JFXListView<String> emailListView;
 
+    @FXML
+    private JFXTextField searchBookText;
+
     private ObservableList<String> emailList = FXCollections.observableArrayList();
 
     ObservableList<ListBookController.Book> list = FXCollections.observableArrayList();
@@ -187,6 +193,20 @@ public class UserController implements Initializable {
 
     public static void setUsername(String username) {
         userName = username;
+    }
+
+    private void filterBookList(String searchTitle) {
+        if (searchTitle == null || searchTitle.isEmpty()) {
+            tableView.setItems(list);
+            return;
+        }
+        ObservableList<ListBookController.Book> filterList = FXCollections.observableArrayList();
+        for (ListBookController.Book book : list) {
+            if (book.getTitle().toLowerCase().contains(searchTitle.toLowerCase())) {
+                filterList.add(book);
+            }
+        }
+        tableView.setItems(filterList);
     }
 
     @FXML
@@ -321,14 +341,18 @@ public class UserController implements Initializable {
         }
         // push all elements in list to table
         tableView.setItems(list);
+        // search Book
+        searchBookText.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterBookList(newValue);
+        });
     }
 
     @FXML
     public void recommendHandle(ActionEvent event) {
         list.clear();
         showPane(recommendPane);
-        String favGene = favourGerne.getText();
-        if (favGene.equals("Recently") || favGene.isEmpty()) {
+        String favGene = favourGerne.getText().toLowerCase();
+        if (favGene.equals("recent") || favGene.isEmpty()) {
             DataBaseHandler handler = DataBaseHandler.getInstance();
             list = handler.getRecommendedBooksForMember(userName);
         } else {

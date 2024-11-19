@@ -12,7 +12,7 @@ public class AddMemberLoader extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/addmember.fxml"));
         Scene scene = new Scene(root);
-//        ThemeManager.setTheme(scene);
+        ThemeManager.setTheme(scene);
         stage.setScene(scene);
         stage.show();
     }
