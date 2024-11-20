@@ -160,7 +160,7 @@ public class AlertMaker {
         LibraryUtil.setStageIcon(stage);
 
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(Objects.requireNonNull(AlertMaker.class.getResource("/dark-theme.css")).toExternalForm());
+        dialogPane.getStylesheets().add(Objects.requireNonNull(AlertMaker.class.getResource("/darkmode.css")).toExternalForm());
         dialogPane.getStyleClass().add("custom-alert");
     }
 }

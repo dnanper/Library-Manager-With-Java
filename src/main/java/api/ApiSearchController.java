@@ -243,9 +243,9 @@ public class ApiSearchController {
                             ")";
 
                     if (dataBaseHandler.execAction(insertQuery)) {
-                        System.out.println("sucess");
+                        AlertMaker.showSimpleAlert("Book added successfully", title + " has been added to library");
                     } else {
-                        System.out.println("fail");
+                        AlertMaker.showSimpleAlert("Book cannot be added", "fail to add book");
                     }
                 }
             }

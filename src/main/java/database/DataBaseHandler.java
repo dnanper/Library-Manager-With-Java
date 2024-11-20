@@ -538,4 +538,37 @@ public class DataBaseHandler {
         return  res;
     }
 
+    public ObservableList<String> getBookReview(String bookId) {
+        ObservableList<String> reviews = FXCollections.observableArrayList();
+        String query = "SELECT review, userID FROM REVIEW WHERE bookID = ?";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, bookId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                String review = rs.getString("review");
+                String userId = rs.getString("userID");
+                reviews.add("\"" + review + "\" by \"" + userId + "\"");
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return reviews;
+    }
+
+    public String getValueById(String bookId, String columnName) {
+        String query = "SELECT " + columnName + " FROM BOOK WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, bookId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString(columnName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }

@@ -161,12 +161,32 @@ public class UserController implements Initializable {
     ObservableList<ListBookController.Book> list = FXCollections.observableArrayList();
 
     private static String userName;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initCol();
+        setupTableClickHandlers();
+        
     }
 
+    private void setupTableClickHandlers() {
+        setupTableClickHandler(tableView);
+        setupTableClickHandler(tableView1);
+        setupTableClickHandler(tableView2);
+    }
+
+    private void setupTableClickHandler(TableView<ListBookController.Book> tableView) {
+        BookController loadBook = new BookController();
+        tableView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) {
+                ListBookController.Book selectedBook = tableView.getSelectionModel().getSelectedItem();
+                if (selectedBook != null) {
+                    loadBook.handleBookSelection(selectedBook.getId());
+                }
+            }
+        });
+    }
     private void initCol() {
         // library
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
