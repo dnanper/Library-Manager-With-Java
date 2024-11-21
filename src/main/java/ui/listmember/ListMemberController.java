@@ -1,6 +1,7 @@
 package ui.listmember;
 
 import alert.AlertMaker;
+import com.google.gson.Gson;
 import database.DataBaseHandler;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,12 +21,16 @@ import ui.addbook.AddBookController;
 import ui.addmember.AddMemberController;
 import ui.listbook.ListBookController;
 import ui.main.MainController;
+import ui.settings.UserPreferences;
 import util.LibraryUtil;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -155,8 +160,12 @@ public class ListMemberController implements Initializable {
             Boolean flag = DataBaseHandler.getInstance().deleteMember(selectDel);
             if (flag) {
                 list.remove(selectDel);
-                AlertMaker.showSimpleAlert("Member Deleted ", selectDel.getName() + " was delete successfully! ");
-                
+                boolean userDel = deleteUserByMemberID(selectDel.getId());
+                if (userDel) {
+                    AlertMaker.showSimpleAlert("Member Deleted", selectDel.getName() + " was deleted successfully, including their user account.");
+                } else {
+                    AlertMaker.showErrorMessage("Member Deleted", selectDel.getName() + " was deleted, but user account could not be removed.");
+                }
             } else {
                 AlertMaker.showSimpleAlert("Failed ", selectDel.getName() + " could not be delete");
 
@@ -165,6 +174,37 @@ public class ListMemberController implements Initializable {
             AlertMaker.showSimpleAlert("Deletion Cancelled", "Deletion process cancelled");
         }
     }
+
+    private boolean deleteUserByMemberID(String memberID) {
+        List<UserPreferences.User> users = UserPreferences.loadUsers(); // Load all users
+        boolean userFound = false;
+
+        // Delete target User from user List
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUsername().equals(memberID)) {
+                users.remove(i);
+                userFound = true;
+                break;
+            }
+        }
+
+        if (userFound) {
+            // Save the updated user list back to file
+            try (Writer writer = new FileWriter(UserPreferences.CONFIG_FILE)) {
+                Gson gson = new Gson();
+                for (UserPreferences.User user : users) {
+                    writer.write(gson.toJson(user) + System.lineSeparator());
+                }
+                return true;
+            } catch (IOException e) {
+                System.out.println("Error writing updated user data: " + e.getMessage());
+                return false;
+            }
+        }
+
+        return false;
+    }
+
 
     @FXML
     void handleMemberEdit(ActionEvent event) {

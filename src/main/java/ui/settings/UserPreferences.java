@@ -16,14 +16,15 @@ public class UserPreferences {
 
         private final String username;
         private String password;
+        private String nDaysWithoutFine;
 
-        public User(String username, String password) {
+        public User(String username, String password, String days) {
             this.username = username;
             this.password = DigestUtils.shaHex(password);
-
+            this.nDaysWithoutFine = days;
         }
 
-
+        public String getDays() { return nDaysWithoutFine; }
 
         public String getUsername() {
             return username;
@@ -123,5 +124,16 @@ public class UserPreferences {
             return user.getPassword().equals(password);
         }
         return false;
+    }
+
+    public static void appendUserToFile(User user) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CONFIG_FILE, true))) {
+            Gson gson = new Gson();
+            String userJson = gson.toJson(user);
+            writer.write(userJson);
+            writer.newLine();
+        } catch (IOException e) {
+            Logger.getLogger(UserPreferences.class.getName()).log(Level.SEVERE, "Error writing user to file", e);
+        }
     }
 }

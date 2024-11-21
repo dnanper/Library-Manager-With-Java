@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import ui.addbook.AddBookController;
 import ui.listbook.ListBookController;
 import ui.listmember.ListMemberController;
+import ui.settings.UserPreferences;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -114,6 +115,9 @@ public class AddMemberController implements Initializable {
                 " )";
         System.out.println(st);
         if (handler.execAction(st)) {
+            UserPreferences.User newUser = new UserPreferences().new User(mID, mID, "0");
+            UserPreferences.appendUserToFile(newUser);
+
             AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "New member added", mName + " has been added");
             clearEntries();
         } else {
