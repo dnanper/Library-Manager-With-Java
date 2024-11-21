@@ -160,7 +160,7 @@ public class UserController implements Initializable {
 
     ObservableList<ListBookController.Book> list = FXCollections.observableArrayList();
 
-    private static String userName;
+    public static String userName;
     
 
     @Override

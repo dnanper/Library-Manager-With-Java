@@ -1,47 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.BookController">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
+<AnchorPane prefHeight="600.0" prefWidth="626.0" xmlns="http://javafx.com/javafx/22.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.BookController">
 
-    <HBox alignment="CENTER" spacing="20.0" layoutY="10.0" layoutX="10.0">
-
-        <ImageView fx:id="bookCoverImageView" fitHeight="150.0" fitWidth="100.0" preserveRatio="true" />
-        <ImageView fx:id="qrCodeImageView" fitHeight="150.0" fitWidth="150.0" preserveRatio="true" />
+    <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="153.0" prefWidth="610.0" spacing="20.0">
+        <ImageView fx:id="bookCoverImageView" fitHeight="141.0" fitWidth="150.0" preserveRatio="true" />
+        <ImageView fx:id="qrCodeImageView" fitHeight="150.0" fitWidth="146.0" preserveRatio="true" />
     </HBox>
 
-
-    <VBox layoutY="170.0" layoutX="10.0" spacing="10.0" prefWidth="580.0">
-
-
+    <VBox layoutX="10.0" layoutY="170.0" prefWidth="580.0" spacing="10.0">
         <Label fx:id="bookTitleLabel" text="Book Title" wrapText="true">
             <font>
                 <Font name="Arial Bold" size="16" />
             </font>
         </Label>
 
-
         <HBox spacing="10.0">
+            <Label fx:id="bookIdLabel" text="Book ID: Book ID goes here" wrapText="true" />
             <Label fx:id="bookAuthorLabel" text="Author: Author Name" wrapText="true" />
             <Label fx:id="bookPublisherLabel" text="Publisher: Publisher Name" wrapText="true" />
         </HBox>
 
-
-        <Label fx:id="bookDescriptionLabel" text="Book description goes here..." wrapText="true" maxWidth="580.0">
+        <Label fx:id="bookDescriptionLabel" maxWidth="580.0" text="Book description goes here..." wrapText="true">
             <font>
                 <Font name="Arial" size="14" />
             </font>
         </Label>
 
+        <VBox layoutX="10.0" layoutY="350.0" prefWidth="580.0" spacing="10.0">
+            <Label text="Reviews:" />
+            <ScrollPane prefHeight="100.0" prefWidth="580.0">
+                <ListView fx:id="reviewListView" />
+            </ScrollPane>
+        </VBox>
 
         <VBox spacing="10.0">
             <Label text="Add Your Rating and Review:" />
             <TextField fx:id="ratingField" promptText="Rating (1-5)" />
-            <TextArea fx:id="reviewField" promptText="Write your review here..." prefHeight="50.0" />
-            <Button fx:id="submitReviewButton" text="Submit Review" alignment="CENTER" />
+            <TextArea fx:id="reviewField" prefHeight="50.0" promptText="Write your review here..." />
         </VBox>
     </VBox>
+
+
+
+    <Button fx:id="submitReviewButton" alignment="CENTER" layoutX="244.0" layoutY="550.0" text="Submit Review" />
 </AnchorPane>
