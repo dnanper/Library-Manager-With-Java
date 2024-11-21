@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
-Wed Nov 20 22:36:14 ICT 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0193-4a37-88fe-0000044ac228 
-on database directory C:\Users\nguye\IdeaProjects\Library-Manager-With-Java\database with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@bebdb06 
-Loaded from file:/C:/Users/nguye/Downloads/derby.jar
-java.vendor=Amazon.com Inc.
-java.runtime.version=22.0.2+9-FR
-user.dir=C:\Users\nguye\IdeaProjects\Library-Manager-With-Java
+Thu Nov 21 23:20:47 ICT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0193-4f86-af8f-000026b87698 
+on database directory C:\Users\admin\OneDrive\Desktop\UNI\1. COURSE\Kì III\LTHDT(OOP)\LIbraryManagement\database with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1698c449 
+Loaded from file:/C:/Users/admin/Downloads/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=22.0.2+9-70
+user.dir=C:\Users\admin\OneDrive\Desktop\UNI\1. COURSE\Kì III\LTHDT(OOP)\LIbraryManagement
 os.name=Windows 11
 os.arch=amd64
 os.version=10.0
