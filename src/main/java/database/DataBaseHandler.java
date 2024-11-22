@@ -178,21 +178,21 @@ public class DataBaseHandler {
     void setupReviewTable() {
         String TABLE_NAME = "REVIEW";
         try {
+
             stmt = conn.createStatement();
             DatabaseMetaData dbm = conn.getMetaData();
             ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
 
+
             if (tables.next()) {
-                System.out.println("Table " + TABLE_NAME + " already exists.");
+                System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
             } else {
-                stmt.execute("CREATE TABLE " + TABLE_NAME + "("
-                        + "         userID VARCHAR(200),\n"
-                        + "         bookID VARCHAR(200),\n"
-                        + "         review VARCHAR(1000),\n"
-                        + "         rating DOUBLE CHECK (rating >= 0 AND rating <= 5),\n"
-                        + "         PRIMARY KEY (userID, bookID),\n"
-                        + "         FOREIGN KEY (userID) REFERENCES MEMBER(id),\n"
-                        + "         FOREIGN KEY (bookID) REFERENCES BOOK(id)"
+                stmt.execute("CREATE TABLE " + TABLE_NAME + " ("
+                        + " reviewID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,"
+                        + " userID VARCHAR(200),"
+                        + " bookID VARCHAR(200),"
+                        + " review VARCHAR(1000),"
+                        + " rating DOUBLE CHECK (rating >= 0 AND rating <= 5)"
                         + " )");
                 System.out.println("Table " + TABLE_NAME + " created.");
             }
@@ -208,6 +208,8 @@ public class DataBaseHandler {
             }
         }
     }
+
+
 
     // return the pointer to the result table of statement "query"
     // execQuery: get something from SQL database

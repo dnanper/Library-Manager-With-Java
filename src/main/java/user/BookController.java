@@ -121,8 +121,9 @@ public class BookController {
         String rating = ratingField.getText();
         String review = reviewField.getText();
 
+
         if (bookId == null || bookId.isEmpty() || review == null || review.isEmpty()) {
-            AlertMaker.showSimpleAlert("Fail","You haven't entered a review and rating");
+            AlertMaker.showSimpleAlert("Thất bại", "Vui lòng nhập đủ thông tin đánh giá và xếp hạng.");
             return;
         }
 
@@ -133,30 +134,33 @@ public class BookController {
                 try {
                     ratingValue = Double.parseDouble(rating);
                     if (ratingValue < 0 || ratingValue > 5) {
-                        throw new NumberFormatException("Rating must be between 0 and 5");
+                        throw new NumberFormatException("Xếp hạng phải nằm trong khoảng 0 đến 5");
                     }
                 } catch (NumberFormatException e) {
-                    AlertMaker.showSimpleAlert("Invalid Rating", "Please enter a valid rating between 0 and 5.");
+                    AlertMaker.showSimpleAlert("Xếp hạng không hợp lệ", "Vui lòng nhập xếp hạng hợp lệ (0-5).");
                     return;
                 }
             }
 
-            String query = "INSERT INTO REVIEW (userID, bookID, review, rating) VALUES (?, ?, ?, ?)";
-            PreparedStatement stmt = dataBaseHandler.getConnection().prepareStatement(query);
-            stmt.setString(1, UserController.userName);
-            stmt.setString(2, bookId);
-            stmt.setString(3, review);
-            stmt.setDouble(4, ratingValue);
 
-            int rowsInserted = stmt.executeUpdate();
-            if (rowsInserted > 0) {
-                loadReviews(bookId);
-                ratingField.clear();
-                reviewField.clear();
+            String query = "INSERT INTO REVIEW (userID, bookID, review, rating) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement stmt = dataBaseHandler.getConnection().prepareStatement(query)) {
+                stmt.setString(1, UserController.userName);
+                stmt.setString(2, bookId);
+                stmt.setString(3, review);
+                stmt.setDouble(4, ratingValue);
+
+                int rowsInserted = stmt.executeUpdate();
+                if (rowsInserted > 0) {
+                    loadReviews(bookId);
+                    ratingField.clear();
+                    reviewField.clear();
+                    AlertMaker.showSimpleAlert("Thành công", "Đánh giá của bạn đã được gửi.");
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            AlertMaker.showSimpleAlert("Database Error", "Failed to submit your review.");
+            AlertMaker.showSimpleAlert("Lỗi cơ sở dữ liệu", "Không thể gửi đánh giá của bạn.");
         }
     }
 
