@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Fri Nov 22 23:38:29 ICT 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0193-54bd-3fdd-0000043fd040 
+Sun Nov 24 00:10:37 ICT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0193-5a01-071d-0000043b6210 
 on database directory C:\Users\nguye\IdeaProjects\Library-Manager-With-Java\database with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@bebdb06 
 Loaded from file:/C:/Users/nguye/Downloads/derby.jar
 java.vendor=Amazon.com Inc.

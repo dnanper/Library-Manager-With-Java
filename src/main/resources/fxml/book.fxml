@@ -39,6 +39,7 @@
         </Label>
 
         <VBox layoutX="10.0" layoutY="350.0" prefWidth="580.0" spacing="10.0">
+            <Label fx:id="bookRatingLabel" />
             <Label text="Reviews:" />
             <ScrollPane prefHeight="100.0" prefWidth="580.0">
                 <ListView fx:id="reviewListView" />

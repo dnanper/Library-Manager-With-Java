@@ -10,6 +10,8 @@ import ui.settings.Preferences;
 
 import javax.swing.*;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -556,6 +558,29 @@ public class DataBaseHandler {
             Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
         }
         return reviews;
+    }
+
+    public Map<String, Double> getBookRatings(String bookId) {
+        Map<String, Double> ratingsData = new HashMap<>();
+        String query = "SELECT AVG(rating) AS averageRating, COUNT(rating) AS totalRatings FROM REVIEW WHERE bookID = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, bookId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                double averageRating = rs.getDouble("averageRating");
+                int totalRatings = rs.getInt("totalRatings");
+
+                ratingsData.put("averageRating", averageRating);
+                ratingsData.put("totalRatings", (double) totalRatings);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
+            ratingsData.put("averageRating", 0.0);
+            ratingsData.put("totalRatings", 0.0);
+        }
+
+        return ratingsData;
     }
 
     public String getValueById(String bookId, String columnName) {

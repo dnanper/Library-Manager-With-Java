@@ -3,6 +3,8 @@ package user;
 import alert.AlertMaker;
 import database.DataBaseHandler;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,10 +19,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Map;
 
 public class BookController {
     private final ApiSearchController search = new ApiSearchController();
     private final DataBaseHandler dataBaseHandler = DataBaseHandler.getInstance();
+
+
 
 
     @FXML
@@ -37,6 +42,10 @@ public class BookController {
     private Label bookPublisherLabel;
     @FXML
     private Label bookDescriptionLabel;
+
+    @FXML
+    private Label bookRatingLabel;
+
     @FXML
     private ListView<String> reviewListView;
 
@@ -52,22 +61,25 @@ public class BookController {
         submitReviewButton.setOnAction(event -> handleSubmitReview());
     }
 
-    public void loadBookDetails(String bookId) {
+    public void loadBookData(String bookId) {
         if (bookId == null || bookId.isEmpty()) {
             System.err.println("No book ID provided.");
+            reviewListView.getItems().clear();
+            reviewListView.setPlaceholder(new Label("No review for this book yet"));
             return;
         }
 
 
-        String title = dataBaseHandler.getValueById(bookId, "title");
-        String author = dataBaseHandler.getValueById(bookId, "author");
-        String publisher = dataBaseHandler.getValueById(bookId, "publisher");
-        String description = dataBaseHandler.getValueById(bookId, "description");
-        String coverImageUrl = dataBaseHandler.getValueById(bookId, "urlCoverImage");
-        String url = dataBaseHandler.getValueById(bookId, "url");
+        String actualBookId = bookId.startsWith("Book ID: ") ? bookId.replace("Book ID: ", "").trim() : bookId;
 
+        String title = dataBaseHandler.getValueById(actualBookId, "title");
+        String author = dataBaseHandler.getValueById(actualBookId, "author");
+        String publisher = dataBaseHandler.getValueById(actualBookId, "publisher");
+        String description = dataBaseHandler.getValueById(actualBookId, "description");
+        String coverImageUrl = dataBaseHandler.getValueById(actualBookId, "urlCoverImage");
+        String url = dataBaseHandler.getValueById(actualBookId, "url");
 
-        bookIdLabel.setText("Book ID: " + bookId);
+        bookIdLabel.setText("Book ID: " + actualBookId);
         bookTitleLabel.setText(title != null ? title : "N/A");
         bookAuthorLabel.setText("Author: " + (author != null ? author : "N/A"));
         bookPublisherLabel.setText("Publisher: " + (publisher != null ? publisher : "N/A"));
@@ -87,7 +99,26 @@ public class BookController {
                 qrCodeImageView.setImage(null);
             }
         }
+        Map<String, Double> ratings = dataBaseHandler.getBookRatings(bookId);
+        double averageRating = ratings.getOrDefault("averageRating", 0.0);
+        int totalRatings = ratings.getOrDefault("totalRatings", 0.0).intValue();
+
+        if (averageRating > 0) {
+            bookRatingLabel.setText(String.format("Rating: %.2f (%d ratings)", averageRating, totalRatings));
+        } else {
+            bookRatingLabel.setText("No ratings available");
+        }
+
+        ObservableList<String> reviews = dataBaseHandler.getBookReview(actualBookId);
+        reviewListView.setItems(FXCollections.observableArrayList());
+        reviewListView.setItems(reviews);
+        if (reviews.isEmpty()) {
+            reviewListView.setPlaceholder(new Label("No review for this book yet"));
+        }
     }
+
+
+
 
 
     @FXML
@@ -97,7 +128,7 @@ public class BookController {
         try {
             Scene scene = new Scene(loader.load());
             BookController controller = loader.getController();
-            controller.loadBookDetails(bookId);
+            controller.loadBookData(bookId);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
@@ -105,64 +136,56 @@ public class BookController {
         }
     }
 
-    private void loadReviews(String bookId) {
-        if (bookId == null || bookId.isEmpty()) {
-            reviewListView.getItems().clear();
-            reviewListView.setPlaceholder(new Label("No review for this book yet"));
-            return;
-        }
 
-        reviewListView.setItems(dataBaseHandler.getBookReview(bookId));
-    }
 
     @FXML
     private void handleSubmitReview() {
         String bookId = bookIdLabel.getText();
+        String actualBookId = bookId.startsWith("Book ID: ") ? bookId.replace("Book ID: ", "").trim() : bookId;
+
         String rating = ratingField.getText();
         String review = reviewField.getText();
 
-
-        if (bookId == null || bookId.isEmpty() || review == null || review.isEmpty()) {
-            AlertMaker.showSimpleAlert("Thất bại", "Vui lòng nhập đủ thông tin đánh giá và xếp hạng.");
+        if (actualBookId.isEmpty() || review == null || review.isEmpty()) {
+            AlertMaker.showSimpleAlert("Fail", "Enter reviews and rating again");
             return;
         }
 
         try {
-
             double ratingValue = 0;
             if (!rating.isEmpty()) {
                 try {
                     ratingValue = Double.parseDouble(rating);
                     if (ratingValue < 0 || ratingValue > 5) {
-                        throw new NumberFormatException("Xếp hạng phải nằm trong khoảng 0 đến 5");
+                        throw new NumberFormatException("Rating must be from 0 to 5");
                     }
                 } catch (NumberFormatException e) {
-                    AlertMaker.showSimpleAlert("Xếp hạng không hợp lệ", "Vui lòng nhập xếp hạng hợp lệ (0-5).");
+                    AlertMaker.showSimpleAlert("Invalid rating", "Try again");
                     return;
                 }
             }
 
-
             String query = "INSERT INTO REVIEW (userID, bookID, review, rating) VALUES (?, ?, ?, ?)";
             try (PreparedStatement stmt = dataBaseHandler.getConnection().prepareStatement(query)) {
                 stmt.setString(1, UserController.userName);
-                stmt.setString(2, bookId);
+                stmt.setString(2, actualBookId);
                 stmt.setString(3, review);
                 stmt.setDouble(4, ratingValue);
 
                 int rowsInserted = stmt.executeUpdate();
                 if (rowsInserted > 0) {
-                    loadReviews(bookId);
+                    loadBookData(actualBookId); // Refresh data to include the new review
                     ratingField.clear();
                     reviewField.clear();
-                    AlertMaker.showSimpleAlert("Thành công", "Đánh giá của bạn đã được gửi.");
+                    AlertMaker.showSimpleAlert("Success", "Your reviews have been recorded");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            AlertMaker.showSimpleAlert("Lỗi cơ sở dữ liệu", "Không thể gửi đánh giá của bạn.");
+            AlertMaker.showSimpleAlert("Fail", "Cannot send your review");
         }
     }
+
 
 
 }
