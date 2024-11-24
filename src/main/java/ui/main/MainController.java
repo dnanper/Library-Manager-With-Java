@@ -26,8 +26,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
+import ui.listbook.ListBookController;
 import ui.listmember.ListMemberController;
 import ui.settings.Preferences;
+import ui.settings.UserPreferences;
 import util.LibraryUtil;
 //import org.apache.derby.impl.tools.sysinfo.Main;
 //import org.apache.derby.iapi.sql.dictionary.OptionalTool;
@@ -211,6 +213,45 @@ public class MainController implements Initializable {
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
     }
 
+    private void updateFineUser() {
+        try {
+            List<UserPreferences.User> uList = UserPreferences.loadUsers();
+            for (UserPreferences.User user : uList) {
+                String id = user.getUsername();
+                Long userFine = 0L;
+                ObservableList<ListBookController.Book> issueBook = dataBaseHandler.getBooksIssuedToMember(id);
+                for (ListBookController.Book tmp : issueBook) {
+                    String id2 = tmp.getId();
+                    String myQuery = "SELECT ISSUE.bookID, ISSUE.memberID, ISSUE.issueTime, ISSUE.renew_count,\n"
+                            + "MEMBER.name, MEMBER.phone, MEMBER.email,\n"
+                            + "BOOK.title, BOOK.author, BOOK.publisher\n"
+                            + "FROM ISSUE\n"
+                            + "LEFT JOIN MEMBER\n"
+                            + "ON ISSUE.memberID=MEMBER.ID\n"
+                            + "LEFT JOIN BOOK\n"
+                            + "ON ISSUE.bookID=BOOK.ID\n"
+                            + "WHERE ISSUE.bookID='" + id2 + "'";
+                    ResultSet rs = dataBaseHandler.execQuery(myQuery);
+                    if (rs.next()) {
+                        Timestamp mIssueTime = rs.getTimestamp("issueTime");
+                        Date dateOfIssue = new Date(mIssueTime.getTime());
+                        issueDateHolder.setText(LibraryUtil.formatDateTimeString(dateOfIssue));
+                        Long timeElapsed = System.currentTimeMillis() - mIssueTime.getTime();
+                        Long days = TimeUnit.DAYS.convert(timeElapsed, TimeUnit.MILLISECONDS) + 1;
+                        Float bfine = LibraryUtil.getFineAmount(days.intValue());
+                        if (bfine > 0) {
+                            userFine = (long) (userFine + bfine);
+                        }
+                    }
+                }
+                user.setFine(String.valueOf(userFine));
+            }
+            UserPreferences.updateUserList(uList);
+        } catch (Exception e) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
     @FXML
     void handleMemberDelete(ActionEvent event) {
         // Fetch the chosen row ( member )
@@ -264,6 +305,7 @@ public class MainController implements Initializable {
 
         dataBaseHandler = DataBaseHandler.getInstance();
 
+        updateFineUser();
         initDrawer();
         intiGraphs();
         initCol();
@@ -319,6 +361,8 @@ public class MainController implements Initializable {
 
     private void loadOTBooks(String memberId) {
         ObservableList<String> OTBooks = dataBaseHandler.getOTBooks(memberId);
+        OTMemBook.setText(String.valueOf(OTBooks.size()));
+        OTMemFine.setText(String.valueOf(UserPreferences.getFine(memberId)));
         OTBookList.setItems(OTBooks);
     }
 

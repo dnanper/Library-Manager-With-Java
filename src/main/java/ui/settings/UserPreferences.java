@@ -16,15 +16,15 @@ public class UserPreferences {
 
         private final String username;
         private String password;
-        private String nDaysWithoutFine;
+        private String fine;
 
-        public User(String username, String password, String days) {
+        public User(String username, String password, String fine) {
             this.username = username;
             this.password = DigestUtils.shaHex(password);
-            this.nDaysWithoutFine = days;
+            this.fine = fine;
         }
 
-        public String getDays() { return nDaysWithoutFine; }
+        public String getFine() { return fine; }
 
         public String getUsername() {
             return username;
@@ -40,6 +40,10 @@ public class UserPreferences {
             } else {
                 this.password = password;
             }
+        }
+
+        public void setFine(String fine) {
+            this.fine = fine;
         }
     }
 
@@ -136,4 +140,27 @@ public class UserPreferences {
             Logger.getLogger(UserPreferences.class.getName()).log(Level.SEVERE, "Error writing user to file", e);
         }
     }
+
+    public static String getFine(String memberID) {
+        User user = findUser(memberID);
+        if (user != null) {
+            return user.getFine();
+        }
+        return "0";
+    }
+
+    public static void updateUserList(List<User> updatedUsers) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
+            Gson gson = new Gson();
+            for (User user : updatedUsers) {
+                String userJson = gson.toJson(user);
+                writer.write(userJson);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            Logger.getLogger(UserPreferences.class.getName()).log(Level.SEVERE, "Error updating user list", e);
+        }
+    }
+
+
 }

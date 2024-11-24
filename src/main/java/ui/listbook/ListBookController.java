@@ -22,6 +22,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -96,7 +97,7 @@ public class ListBookController implements Initializable {
     private void setupTableClickHandler(TableView<ListBookController.Book> tableView) {
         BookController loadBook = new BookController();
         tableView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 1) {
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
                 ListBookController.Book selectedBook = tableView.getSelectionModel().getSelectedItem();
                 if (selectedBook != null) {
                     loadBook.handleBookSelection(selectedBook.getId());
