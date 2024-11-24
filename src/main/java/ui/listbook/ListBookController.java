@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 import javafx.scene.control.Alert.AlertType;
 import ui.main.MainController;
 import ui.theme.ThemeManager;
+import user.BookController;
 import util.LibraryUtil;
 
 public class ListBookController implements Initializable {
@@ -89,6 +90,19 @@ public class ListBookController implements Initializable {
         searchTypeCBox.setItems(typeList);
         initCol();
         loadData();
+        setupTableClickHandler(tableView);
+    }
+
+    private void setupTableClickHandler(TableView<ListBookController.Book> tableView) {
+        BookController loadBook = new BookController();
+        tableView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1) {
+                ListBookController.Book selectedBook = tableView.getSelectionModel().getSelectedItem();
+                if (selectedBook != null) {
+                    loadBook.handleBookSelection(selectedBook.getId());
+                }
+            }
+        });
     }
 
     // function to connect the columns in table with the tags of the book
