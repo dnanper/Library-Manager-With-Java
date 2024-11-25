@@ -30,6 +30,7 @@ import ui.listbook.ListBookController;
 import ui.listmember.ListMemberController;
 import ui.settings.Preferences;
 import ui.settings.UserPreferences;
+import user.UserController;
 import util.LibraryUtil;
 //import org.apache.derby.impl.tools.sysinfo.Main;
 //import org.apache.derby.iapi.sql.dictionary.OptionalTool;
@@ -194,6 +195,8 @@ public class MainController implements Initializable {
 
     ObservableList<ListMemberController.Member> list = FXCollections.observableArrayList();
 
+    private String targetmemID;
+
     private String targetEmail;
 
     private String adminEmail;
@@ -317,13 +320,44 @@ public class MainController implements Initializable {
                 loadOTBooks(selectedMember.getId());
                 disableEnableControls2(true);
                 targetEmail = dataBaseHandler.getTargetEmail(selectedMember.getId());
+                targetmemID = selectedMember.getId();
             }
         });
     }
 
     @FXML
     void baningHandle(ActionEvent event) {
-
+        if (targetmemID == null || targetmemID.isEmpty()) {
+            AlertMaker.showErrorMessage("Error", "No member selected for banning.");
+            return;
+        }
+        List<UserPreferences.User> uList = UserPreferences.loadUsers();
+        boolean found1 = false;
+        boolean found2 = false;
+        for (UserPreferences.User user : uList) {
+            if (user.getUsername().equals(targetmemID)) {
+                if (user.getBanned()) {
+                    user.setBanned(false);
+                    banButton.setText("Ban");
+                    found1 = true;
+                    break;
+                } else {
+                    user.setBanned(true);
+                    banButton.setText("Unban");
+                    found2 = true;
+                    break;
+                }
+            }
+        }
+        if (found1) {
+            UserPreferences.updateUserList(uList);
+            AlertMaker.showSimpleAlert("Success", "User " + targetmemID + " has been unbanned.");
+        } else if (found2) {
+            UserPreferences.updateUserList(uList);
+            AlertMaker.showSimpleAlert("Success", "User " + targetmemID + " has been banned.");
+        } else {
+            AlertMaker.showErrorMessage("Error", "User not found.");
+        }
     }
 
     @FXML
@@ -600,7 +634,22 @@ public class MainController implements Initializable {
 
     private void disableEnableControls2(Boolean enableFlag) {
         if (enableFlag) {
-            banButton.setDisable(false);
+            List<UserPreferences.User> uList = UserPreferences.loadUsers();
+            for (UserPreferences.User user : uList) {
+                if (user.getUsername().equals(targetmemID)) {
+                    if (user.getBanned()) {
+                        banButton.setText("Unban");
+                    } else {
+                        banButton.setText("Ban");
+                    }
+                    break;
+                }
+            }
+            String cntText = OTMemBook.getText();
+            int cnt = Integer.parseInt(cntText);
+            if (cnt >= 3) {
+                banButton.setDisable(false);
+            }
             warnButton.setDisable(false);
         } else {
             banButton.setDisable(true);

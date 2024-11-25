@@ -401,7 +401,7 @@ public class DataBaseHandler {
         int n = Preferences.getPreferences().getnDaysWithoutFine();
         System.out.println(n);
 
-        String qu = "SELECT MEMBER.id, MEMBER.name, MEMBER.phone, MEMBER.email " +
+        String qu = "SELECT DISTINCT MEMBER.id, MEMBER.name, MEMBER.phone, MEMBER.email " +
                 "FROM MEMBER INNER JOIN ISSUE ON MEMBER.id = ISSUE.memberID " +
                 "WHERE {fn TIMESTAMPDIFF(SQL_TSI_DAY, CAST(ISSUE.issueTime AS DATE), CURRENT_DATE)} >= ?";
         try {

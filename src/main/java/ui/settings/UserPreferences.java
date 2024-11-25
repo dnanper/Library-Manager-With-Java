@@ -17,11 +17,13 @@ public class UserPreferences {
         private final String username;
         private String password;
         private String fine;
+        private Boolean banned;
 
         public User(String username, String password, String fine) {
             this.username = username;
             this.password = DigestUtils.shaHex(password);
             this.fine = fine;
+            this.banned = false;
         }
 
         public String getFine() { return fine; }
@@ -34,12 +36,18 @@ public class UserPreferences {
             return password;
         }
 
+        public Boolean getBanned() { return banned; }
+
         public void setPassword() {
             if (password.length() < 16) {
                 this.password = DigestUtils.shaHex(password);
             } else {
                 this.password = password;
             }
+        }
+
+        public void setBanned(Boolean banned) {
+            this.banned = banned;
         }
 
         public void setFine(String fine) {

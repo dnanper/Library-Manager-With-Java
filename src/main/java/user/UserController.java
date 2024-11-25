@@ -19,11 +19,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import database.DataBaseHandler;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ui.listbook.ListBookController;
+import ui.settings.UserPreferences;
 import ui.theme.ThemeManager;
 import util.LibraryUtil;
 
@@ -156,19 +158,51 @@ public class UserController implements Initializable {
     @FXML
     private JFXTextField searchBookText;
 
+    @FXML
+    private Pane banPane;
+
+    @FXML
+    private AnchorPane normalPane;
+
     private ObservableList<String> emailList = FXCollections.observableArrayList();
 
     ObservableList<ListBookController.Book> list = FXCollections.observableArrayList();
 
     public static String userName;
-    
+
+    private Boolean banned = false;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         initCol();
         setupTableClickHandlers();
-        
+        setupPane();
     }
+
+    private void setupPane() {
+        List<UserPreferences.User> uList = UserPreferences.loadUsers();
+        for (UserPreferences.User user : uList) {
+            if (user.getUsername().equals(userName)) {
+                if (user.getBanned()) {
+                    banned = true;
+                }
+                break;
+            }
+        }
+        if (banned != null && banned) {
+            normalPane.setDisable(true);
+            normalPane.setVisible(false);
+            banPane.setDisable(false);
+            banPane.setVisible(true);
+        } else {
+            normalPane.setDisable(false);
+            normalPane.setVisible(true);
+            banPane.setDisable(true);
+            banPane.setVisible(false);
+        }
+    }
+
 
     private void setupTableClickHandlers() {
         setupTableClickHandler(tableView);
