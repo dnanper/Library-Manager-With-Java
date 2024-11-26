@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import database.DataBaseHandler;
+import database.GenericSearch;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -32,12 +33,10 @@ import javafx.event.ActionEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert.AlertType;
@@ -86,12 +85,17 @@ public class ListBookController implements Initializable {
 
     ObservableList<String> typeList = FXCollections.observableArrayList( "ID", "Title", "Author", "Genre");
 
+    DataBaseHandler handler = DataBaseHandler.getInstance();
+    Connection connection = handler.getConnection();
+    GenericSearch<ListBookController.Book> bookSearch = new GenericSearch<>(connection);
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         searchTypeCBox.setItems(typeList);
         initCol();
         loadData();
         setupTableClickHandler(tableView);
+
     }
 
     private void setupTableClickHandler(TableView<ListBookController.Book> tableView) {
@@ -112,38 +116,55 @@ public class ListBookController implements Initializable {
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
         publisherCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
-        genreCol.setCellValueFactory(new PropertyValueFactory<>("genre")); // Kết nối cột genre
+        genreCol.setCellValueFactory(new PropertyValueFactory<>("genre"));
         availabilityCol.setCellValueFactory(new PropertyValueFactory<>("availability"));
     }
 
     private void filterBookList(String searchContent, String type) {
-        if (searchContent == null || searchContent.isEmpty()) {
+        if (searchContent == null || searchContent.isEmpty() || type == null) {
             tableView.setItems(list);
             return;
         }
-        ObservableList<ListBookController.Book> filterList = FXCollections.observableArrayList();
-        for (ListBookController.Book book : list) {
-            if (type.equals("ID")) {
-                if (book.getId().toLowerCase().contains(searchContent.toLowerCase())) {
-                    filterList.add(book);
-                }
-            } else if (type.equals("Title")) {
-                if (book.getTitle().toLowerCase().contains(searchContent.toLowerCase())) {
-                    filterList.add(book);
-                }
-            } else if (type.equals("Author")) {
-                if (book.getAuthor().toLowerCase().contains(searchContent.toLowerCase())) {
-                    filterList.add(book);
-                }
-            } else {
-                if (book.getGenre() != null && book.getGenre().toLowerCase().contains(searchContent.toLowerCase())) {
-                    filterList.add(book);
-                }
-            }
 
+        String columnName = null;
+
+        switch (type) {
+            case "ID":
+                columnName = Book.getColumnName("id");
+                break;
+            case "Title":
+                columnName = Book.getColumnName("title");
+                break;
+            case "Author":
+                columnName = Book.getColumnName("author");
+                break;
+            case "Genre":
+                columnName = Book.getColumnName("genre");
+                break;
+            default:
+                Logger.getLogger(ListBookController.class.getName()).log(Level.WARNING,
+                        "Invalid search type: {0}", type);
+                tableView.setItems(list);
+                return;
         }
-        tableView.setItems(filterList);
+
+        try {
+            List<Book> filteredList = bookSearch.search(
+                    "BOOK",
+                    columnName + " LIKE ?",
+                    new Object[]{"%" + searchContent + "%"},
+                    ListBookController.Book.class
+            );
+
+            tableView.setItems(FXCollections.observableArrayList(filteredList));
+        } catch (Exception e) {
+            Logger.getLogger(ListBookController.class.getName()).log(Level.SEVERE,
+                    "Error", e);
+        }
     }
+
+
+
     // function to extract data from database to put to table
     private void loadData() {
         list.clear();
@@ -157,7 +178,7 @@ public class ListBookController implements Initializable {
                 String aut = res.getString("author");
                 String idx = res.getString("id");
                 String pub = res.getString("publisher");
-                String gen = res.getString("genre"); // Lấy genre từ kết quả truy vấn
+                String gen = res.getString("genre");
                 Boolean ava = res.getBoolean("isAvail");
 
                 // add data of book to list
@@ -186,6 +207,17 @@ public class ListBookController implements Initializable {
         private final SimpleStringProperty urlCoverImage;
         private final SimpleStringProperty description;
 
+        public Book() {
+            this.title = new SimpleStringProperty("");
+            this.id = new SimpleStringProperty("");
+            this.author = new SimpleStringProperty("");
+            this.publisher = new SimpleStringProperty("");
+            this.genre = new SimpleStringProperty("");
+            this.availability = new SimpleBooleanProperty(true);
+            this.url = new SimpleStringProperty("");
+            this.urlCoverImage = new SimpleStringProperty("");
+            this.description = new SimpleStringProperty("");
+        }
 
         public Book(String title, String id, String author, String publisher, String genre, Boolean avail, String url, String urlCoverImage, String description) {
             this.title = new SimpleStringProperty(title);
@@ -234,6 +266,31 @@ public class ListBookController implements Initializable {
 
         public String getDescription() {
             return description.get();
+        }
+
+        public static String getColumnName(String fieldName) {
+            switch (fieldName) {
+                case "title":
+                    return "title";
+                case "author":
+                    return "author";
+                case "id":
+                    return "id";
+                case "publisher":
+                    return "publisher";
+                case "genre":
+                    return "genre";
+                case "availability":
+                    return "isAvail";
+                case "url":
+                    return "url";
+                case "urlCoverImage":
+                    return "urlCoverImage";
+                case "description":
+                    return "description";
+                default:
+                    throw new IllegalArgumentException("Unknown field: " + fieldName);
+            }
         }
     }
 
