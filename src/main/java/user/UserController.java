@@ -19,6 +19,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -221,7 +222,7 @@ public class UserController implements Initializable {
     private void setupTableClickHandler(TableView<Book> tableView) {
         BookController loadBook = new BookController();
         tableView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 1) {
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
                 Book selectedBook = tableView.getSelectionModel().getSelectedItem();
                 if (selectedBook != null) {
                     loadBook.handleBookSelection(selectedBook.getId());
@@ -399,7 +400,7 @@ public class UserController implements Initializable {
                 Boolean ava = res.getBoolean("isAvail");
 
                 // add data of book to list
-                list.add(new Book(tit, idx, aut, pub, gen, ava,null,null,null));
+                list.add(new Book(tit, aut, idx, gen, pub, ava,null,null,null));
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
