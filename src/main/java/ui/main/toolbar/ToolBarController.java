@@ -16,8 +16,8 @@ public class ToolBarController implements Initializable {
     }
 
     @FXML
-    private void loadAddBook(ActionEvent event) {
-        LibraryUtil.loadWindow(getClass().getResource("/fxml/addbook.fxml"), "Add New Book", null);
+    private void loadAddDocument(ActionEvent event) {
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/adddocument.fxml"), "Add New Document", null);
     }
 
     @FXML

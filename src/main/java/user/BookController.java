@@ -25,9 +25,6 @@ public class BookController {
     private final ApiSearchController search = new ApiSearchController();
     private final DataBaseHandler dataBaseHandler = DataBaseHandler.getInstance();
 
-
-
-
     @FXML
     private ImageView bookCoverImageView;
     @FXML
