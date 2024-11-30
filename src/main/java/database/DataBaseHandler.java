@@ -578,7 +578,7 @@ public class DataBaseHandler {
                 String pub = rs.getString("publisher");
                 String gen = rs.getString("genre"); // Lấy genre từ kết quả truy vấn
                 Boolean ava = rs.getBoolean("isAvail");
-                issuedBooks.add(new Book(tit, idx, aut, pub, gen, ava,null,null,null));
+                issuedBooks.add(new Book(tit, aut, idx, gen, pub, ava,null,null,null));
             }
         } catch (SQLException e) {
             Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
@@ -611,7 +611,7 @@ public class DataBaseHandler {
                 String pub = rs.getString("publisher");
                 String gen = rs.getString("genre"); // Lấy genre từ kết quả truy vấn
                 Boolean ava = rs.getBoolean("isAvail");
-                recommendedBooks.add(new Book(tit, idx, aut, pub, gen, ava,null,null,null));
+                recommendedBooks.add(new Book(tit, aut, idx, gen, pub, ava,null,null,null));
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Handle exception appropriately
@@ -636,7 +636,7 @@ public class DataBaseHandler {
                 String pub = rs.getString("publisher");
                 String gen = rs.getString("genre"); // Lấy genre từ kết quả truy vấn
                 Boolean ava = rs.getBoolean("isAvail");
-                recommendedBooks.add(new Book(tit, idx, aut, pub, gen, ava,null,null,null));
+                recommendedBooks.add(new Book(tit, aut, idx, gen, pub, ava,null,null,null));
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Handle exception appropriately
