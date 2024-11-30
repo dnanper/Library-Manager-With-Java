@@ -44,39 +44,38 @@ public class ApiSearchController {
     private TextField nameField;
 
     @FXML
-    private ImageView bookCoverImageView; // For displaying the book cover
+    private ImageView bookCoverImageView;
 
     @FXML
     private ImageView qrCodeImageView;
 
     @FXML
-    private ListView<String> searchResultsList; // To display matching books
+    private ListView<String> searchResultsList;
 
-    private ObservableList<JsonObject> searchResults = FXCollections.observableArrayList(); // To hold search results
+    private ObservableList<JsonObject> searchResults = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
-        searchResultsList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE); // Ensure single selection
+        searchResultsList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         searchResultsList.setOnMouseClicked((MouseEvent event) -> {
             int selectedIndex = searchResultsList.getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0 && selectedIndex < searchResults.size()) {
                 JsonObject selectedBook = searchResults.get(selectedIndex);
 
-                // Get the book cover URL and QR code URL
                 String bookCoverUrl = getBookCoverImageUrl(selectedBook);
-                String bookUrl = getBookUrl(selectedBook);  // Assume this method returns a book URL
+                String bookUrl = getBookUrl(selectedBook);
 
-                // Set book cover image
+                //  cover image
                 if (bookCoverUrl != null && !bookCoverUrl.isEmpty()) {
                     Image coverImage = new Image(bookCoverUrl);
                     bookCoverImageView.setImage(coverImage);
                 }
 
-                // Set QR code image
-                BufferedImage qrCodeImage = getQRCode(bookUrl);  // Generate QR code image
+                // qr code
+                BufferedImage qrCodeImage = getQRCode(bookUrl);
                 if (qrCodeImage != null) {
-                    Image qrImage = convertToJavaFXImage(qrCodeImage);  // Convert BufferedImage to JavaFX Image
+                    Image qrImage = convertToJavaFXImage(qrCodeImage);  // convert BufferedImage to JavaFX Image
                     qrCodeImageView.setImage(qrImage);
                 }
             }
@@ -89,15 +88,12 @@ public class ApiSearchController {
      */
     public Image convertToJavaFXImage(BufferedImage bufferedImage) {
         try {
-            // Convert BufferedImage to ByteArrayOutputStream
+
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
             byte[] imageData = byteArrayOutputStream.toByteArray();
 
-            // Convert byte array to InputStream
             InputStream inputStream = new java.io.ByteArrayInputStream(imageData);
-
-            // Create a JavaFX Image from InputStream
             return new Image(inputStream);
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,7 +103,7 @@ public class ApiSearchController {
 
     private String getBookCoverImageUrl(JsonObject bookJson) {
         try {
-            // Directly access imageLinks since it's at the root level
+
             JsonObject imageLinks = bookJson.getAsJsonObject("imageLinks");
             if (imageLinks != null) {
                 JsonElement thumbnail = imageLinks.get("thumbnail");
@@ -129,24 +125,20 @@ public class ApiSearchController {
 
     public BufferedImage getQRCode(String bookUrl) {
         if (bookUrl == null || bookUrl.trim().isEmpty()) {
-            // Handle invalid input (empty or null URL)
             System.out.println("Error: The URL is null or empty.");
             return null;
         }
 
         try {
-            // Set up QR code encoding with error correction level and size
-            Map<EncodeHintType, Object> hints = new HashMap<>();
-            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L); // Low error correction
 
-            // Generate QR code matrix
+            Map<EncodeHintType, Object> hints = new HashMap<>();
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
             BitMatrix bitMatrix = new MultiFormatWriter().encode(bookUrl, BarcodeFormat.QR_CODE, 200, 200, hints);
 
-            // Convert BitMatrix to BufferedImage
+            // convert BitMatrix to BufferedImage
             BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
             for (int x = 0; x < 200; x++) {
                 for (int y = 0; y < 200; y++) {
-                    // Set pixel to black or white based on the BitMatrix value
                     image.setRGB(x, y, bitMatrix.get(x, y) ? Color.BLACK.getRGB() : Color.WHITE.getRGB());
                 }
             }
@@ -192,13 +184,13 @@ public class ApiSearchController {
 
 
                             String displayString = title + " by " + author + " (Publisher: " + publisher + ", Genre: " + genre + ")";
-                            searchResultsList.getItems().add(displayString); // Add display string to ListView
+                            searchResultsList.getItems().add(displayString);
                         }
                     } else {
-                        AlertMaker.showSimpleAlert("Search Result", "No books found for: " + searchText); // Use AlertMaker
+                        AlertMaker.showSimpleAlert("Search Result", "No books found for: " + searchText);
                     }
                 } else {
-                    AlertMaker.showSimpleAlert("Input Error", "Please enter a search term."); // Use AlertMaker
+                    AlertMaker.showSimpleAlert("Input Error", "Please enter a search term.");
                 }
             }
         });
@@ -278,7 +270,6 @@ public class ApiSearchController {
 
 
 
-    // Helper methods to get book details remain unchanged
     private String getBookTitle(JsonObject bookJson) {
         return bookJson.has("title") ? bookJson.get("title").getAsString() : "No Title Found";
     }
@@ -314,10 +305,10 @@ public class ApiSearchController {
 
     private String getBookUrl(JsonObject bookJson) {
         try {
-            // Directly access canonicalVolumeLink since it's at the root level
+
             String url = (bookJson.has("canonicalVolumeLink")) ?
                     bookJson.get("canonicalVolumeLink").getAsString() : "";
-            System.out.println("Book URL: " + url); // Debugging line
+            System.out.println("Book URL: " + url);
             return url;
         } catch (Exception e) {
             e.printStackTrace();

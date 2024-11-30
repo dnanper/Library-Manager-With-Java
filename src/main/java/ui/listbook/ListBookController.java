@@ -149,10 +149,11 @@ public class ListBookController implements Initializable {
         }
 
         try {
+
             List<Book> filteredList = bookSearch.search(
                     "BOOK",
-                    columnName + " LIKE ?",
-                    new Object[]{"%" + searchContent + "%"},
+                    "LOWER(" + columnName + ") LIKE ?",
+                    new Object[]{"%" + searchContent.toLowerCase() + "%"},
                     ListBookController.Book.class
             );
 
@@ -162,6 +163,7 @@ public class ListBookController implements Initializable {
                     "Error", e);
         }
     }
+
 
 
 
