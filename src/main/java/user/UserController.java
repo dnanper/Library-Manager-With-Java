@@ -25,6 +25,7 @@ import javafx.scene.layout.Pane;
 import database.DataBaseHandler;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Book;
 import ui.listbook.ListBookController;
 import ui.settings.UserPreferences;
 import ui.theme.ThemeManager;
@@ -131,13 +132,13 @@ public class UserController implements Initializable {
     private Pane mailPane;
 
     @FXML
-    private TableView<ListBookController.Book> tableView;
+    private TableView<Book> tableView;
 
     @FXML
-    private TableView<ListBookController.Book> tableView2;
+    private TableView<Book> tableView2;
 
     @FXML
-    private TableView<ListBookController.Book> tableView1;
+    private TableView<Book> tableView1;
 
     @FXML
     private TableColumn<?, ?> titleCol;
@@ -168,7 +169,7 @@ public class UserController implements Initializable {
 
     private ObservableList<String> emailList = FXCollections.observableArrayList();
 
-    ObservableList<ListBookController.Book> list = FXCollections.observableArrayList();
+    ObservableList<Book> list = FXCollections.observableArrayList();
 
     public static String userName;
 
@@ -177,7 +178,7 @@ public class UserController implements Initializable {
 
     DataBaseHandler handler = DataBaseHandler.getInstance();
     Connection connection = handler.getConnection();
-    GenericSearch<ListBookController.Book> bookSearch = new GenericSearch<>(connection);
+    GenericSearch<Book> bookSearch = new GenericSearch<>(connection);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -217,11 +218,11 @@ public class UserController implements Initializable {
         setupTableClickHandler(tableView2);
     }
 
-    private void setupTableClickHandler(TableView<ListBookController.Book> tableView) {
+    private void setupTableClickHandler(TableView<Book> tableView) {
         BookController loadBook = new BookController();
         tableView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 1) {
-                ListBookController.Book selectedBook = tableView.getSelectionModel().getSelectedItem();
+                Book selectedBook = tableView.getSelectionModel().getSelectedItem();
                 if (selectedBook != null) {
                     loadBook.handleBookSelection(selectedBook.getId());
                 }
@@ -265,9 +266,9 @@ public class UserController implements Initializable {
         String condition = "LOWER(title) LIKE ?";
         Object[] parameters = new Object[]{"%" + searchTitle.toLowerCase() + "%"};
 
-        List<ListBookController.Book> filterList = bookSearch.search("BOOK", condition, parameters, ListBookController.Book.class);
+        List<Book> filterList = bookSearch.search("BOOK", condition, parameters, Book.class);
 
-        ObservableList<ListBookController.Book> observableFilterList = FXCollections.observableArrayList(filterList);
+        ObservableList<Book> observableFilterList = FXCollections.observableArrayList(filterList);
         tableView.setItems(observableFilterList);
     }
 
@@ -398,7 +399,7 @@ public class UserController implements Initializable {
                 Boolean ava = res.getBoolean("isAvail");
 
                 // add data of book to list
-                list.add(new ListBookController.Book(tit, idx, aut, pub, gen, ava,null,null,null));
+                list.add(new Book(tit, idx, aut, pub, gen, ava,null,null,null));
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);

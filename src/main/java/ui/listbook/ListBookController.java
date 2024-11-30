@@ -28,6 +28,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Book;
 import ui.addbook.AddBookController;
 import javafx.event.ActionEvent;
 
@@ -62,7 +63,7 @@ public class ListBookController implements Initializable {
     private TableColumn<Book, String> publisherCol;
 
     @FXML
-    private TableColumn<Book, String> genreCol; // Thêm cột genre
+    private TableColumn<Book, String> genreCol;
 
     @FXML
     private AnchorPane rootAnchorPane;
@@ -87,7 +88,7 @@ public class ListBookController implements Initializable {
 
     DataBaseHandler handler = DataBaseHandler.getInstance();
     Connection connection = handler.getConnection();
-    GenericSearch<ListBookController.Book> bookSearch = new GenericSearch<>(connection);
+        GenericSearch<Book> bookSearch = new GenericSearch<>(connection);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -98,11 +99,11 @@ public class ListBookController implements Initializable {
 
     }
 
-    private void setupTableClickHandler(TableView<ListBookController.Book> tableView) {
+    private void setupTableClickHandler(TableView<Book> tableView) {
         BookController loadBook = new BookController();
         tableView.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
-                ListBookController.Book selectedBook = tableView.getSelectionModel().getSelectedItem();
+                Book selectedBook = tableView.getSelectionModel().getSelectedItem();
                 if (selectedBook != null) {
                     loadBook.handleBookSelection(selectedBook.getId());
                 }
@@ -154,7 +155,7 @@ public class ListBookController implements Initializable {
                     "BOOK",
                     "LOWER(" + columnName + ") LIKE ?",
                     new Object[]{"%" + searchContent.toLowerCase() + "%"},
-                    ListBookController.Book.class
+                    Book.class
             );
 
             tableView.setItems(FXCollections.observableArrayList(filteredList));
@@ -184,7 +185,7 @@ public class ListBookController implements Initializable {
                 Boolean ava = res.getBoolean("isAvail");
 
                 // add data of book to list
-                list.add(new Book(tit, idx, aut, pub, gen, ava,null,null,null));
+                list.add(new Book(tit, aut, idx, gen, pub, ava,null,null,null));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ListBookController.class.getName()).log(Level.SEVERE, null, ex);
@@ -197,105 +198,6 @@ public class ListBookController implements Initializable {
             filterBookList(newValue, type);
         });
     }
-
-    public static class Book {
-        private final SimpleStringProperty title;
-        private final SimpleStringProperty id;
-        private final SimpleStringProperty author;
-        private final SimpleStringProperty publisher;
-        private final SimpleStringProperty genre;
-        private final SimpleBooleanProperty availability;
-        private final SimpleStringProperty url;
-        private final SimpleStringProperty urlCoverImage;
-        private final SimpleStringProperty description;
-
-        public Book() {
-            this.title = new SimpleStringProperty("");
-            this.id = new SimpleStringProperty("");
-            this.author = new SimpleStringProperty("");
-            this.publisher = new SimpleStringProperty("");
-            this.genre = new SimpleStringProperty("");
-            this.availability = new SimpleBooleanProperty(true);
-            this.url = new SimpleStringProperty("");
-            this.urlCoverImage = new SimpleStringProperty("");
-            this.description = new SimpleStringProperty("");
-        }
-
-        public Book(String title, String id, String author, String publisher, String genre, Boolean avail, String url, String urlCoverImage, String description) {
-            this.title = new SimpleStringProperty(title);
-            this.id = new SimpleStringProperty(id);
-            this.author = new SimpleStringProperty(author);
-            this.publisher = new SimpleStringProperty(publisher);
-            this.genre = new SimpleStringProperty(genre);
-            this.availability = new SimpleBooleanProperty(avail);
-            this.url = new SimpleStringProperty(url);
-            this.urlCoverImage = new SimpleStringProperty(urlCoverImage);
-            this.description = new SimpleStringProperty(description);
-
-        }
-
-        public String getTitle() {
-            return title.get();
-        }
-
-        public String getId() {
-            return id.get();
-        }
-
-        public String getAuthor() {
-            return author.get();
-        }
-
-        public String getPublisher() {
-            return publisher.get();
-        }
-
-        public String getGenre() {
-            return genre.get();
-        }
-
-        public Boolean getAvailability() {
-            return availability.get();
-        }
-
-        public String getUrl() {
-            return url.get();
-        }
-
-        public String getUrlCoverImage() {
-            return urlCoverImage.get();
-        }
-
-        public String getDescription() {
-            return description.get();
-        }
-
-        public static String getColumnName(String fieldName) {
-            switch (fieldName) {
-                case "title":
-                    return "title";
-                case "author":
-                    return "author";
-                case "id":
-                    return "id";
-                case "publisher":
-                    return "publisher";
-                case "genre":
-                    return "genre";
-                case "availability":
-                    return "isAvail";
-                case "url":
-                    return "url";
-                case "urlCoverImage":
-                    return "urlCoverImage";
-                case "description":
-                    return "description";
-                default:
-                    throw new IllegalArgumentException("Unknown field: " + fieldName);
-            }
-        }
-    }
-
 
     @FXML
     void handleBookDeleteOption(ActionEvent event) {

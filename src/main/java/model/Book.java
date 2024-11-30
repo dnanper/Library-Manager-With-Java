@@ -69,4 +69,5 @@ public class Book extends Document {
     public void displayInfo() {
         System.out.println("Book: " + getTitle() + " by " + getAuthor() + ", Publisher: " + publisher  + ", URL: " + url);
     }
+
 }
