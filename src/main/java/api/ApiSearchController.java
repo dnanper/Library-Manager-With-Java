@@ -215,12 +215,10 @@ public class ApiSearchController {
 
                     String bookID = getBookISBN(selectedBook);
 
-
                     if (isBookExists(bookID)) {
                         AlertMaker.showSimpleAlert("Duplicate Book", "This book already exists in the database.");
                         return;
                     }
-
 
                     String title = getBookTitle(selectedBook).replace("'", "''");
                     String author = getBookAuthor(selectedBook).replace("'", "''");

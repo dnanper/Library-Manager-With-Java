@@ -11,7 +11,7 @@
             <FontAwesomeIcon glyphName="USER" size="25" />
          </graphic>
       </JFXButton>
-      <JFXButton contentDisplay="TOP" mnemonicParsing="false" onAction="#loadAddBook" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="Add Book">
+      <JFXButton contentDisplay="TOP" mnemonicParsing="false" onAction="#loadAddDocument" prefHeight="150.0" prefWidth="200.0" styleClass="toolbar-button" text="Add Document">
          <graphic>
             <FontAwesomeIcon glyphName="BOOK" size="25" />
          </graphic>

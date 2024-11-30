@@ -26,6 +26,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
+import model.Book;
 import ui.listbook.ListBookController;
 import ui.listmember.ListMemberController;
 import ui.settings.Preferences;
@@ -222,8 +223,8 @@ public class MainController implements Initializable {
             for (UserPreferences.User user : uList) {
                 String id = user.getUsername();
                 Long userFine = 0L;
-                ObservableList<ListBookController.Book> issueBook = dataBaseHandler.getBooksIssuedToMember(id);
-                for (ListBookController.Book tmp : issueBook) {
+                ObservableList<Book> issueBook = dataBaseHandler.getBooksIssuedToMember(id);
+                for (Book tmp : issueBook) {
                     String id2 = tmp.getId();
                     String myQuery = "SELECT ISSUE.bookID, ISSUE.memberID, ISSUE.issueTime, ISSUE.renew_count,\n"
                             + "MEMBER.name, MEMBER.phone, MEMBER.email,\n"

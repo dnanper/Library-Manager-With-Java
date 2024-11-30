@@ -40,5 +40,4 @@ build/
 
 # Ignore custom files and directories
 config.txt
-database/
 derby.log

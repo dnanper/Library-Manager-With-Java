@@ -23,6 +23,7 @@ module controller {
     requires java.net.http;
     requires com.google.zxing;
 
+    opens model to javafx.fxml;
     opens ui.login to javafx.fxml, javafx.media;
     opens ui.settings to javafx.fxml, com.google.gson, javafx.media;
     opens ui.listmember to javafx.fxml;
@@ -37,7 +38,7 @@ module controller {
 
     opens user to javafx.fxml, java.mail;
     exports user;
-
+    exports model;
     exports ui.login;
     exports util;
     exports ui.theme;

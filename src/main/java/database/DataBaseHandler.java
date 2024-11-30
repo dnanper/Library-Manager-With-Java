@@ -3,6 +3,10 @@ package database;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
+import model.Book;
+import model.Document;
+import model.Paper;
+import model.Thesis;
 import ui.listbook.ListBookController;
 import ui.listmember.ListMemberController;
 import ui.main.MainController;
@@ -64,7 +68,6 @@ public class DataBaseHandler {
     void setupBookTable() {
         String TABLE_NAME = "BOOK";
         try {
-
             stmt = conn.createStatement();
             DatabaseMetaData dbm = conn.getMetaData();
             ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
@@ -72,10 +75,8 @@ public class DataBaseHandler {
             if (tables.next()) {
                 System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
 
-
                 ResultSet columns = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "URL");
                 if (!columns.next()) {
-
                     stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN url VARCHAR(500)");
                     System.out.println("Column 'url' added to the table.");
                 }
@@ -83,7 +84,6 @@ public class DataBaseHandler {
                 // Check if 'urlCoverImage' column exists
                 ResultSet urlCoverImageColumn = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "URLCOVERIMAGE");
                 if (!urlCoverImageColumn.next()) {
-
                     stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN urlCoverImage VARCHAR(500)");
                     System.out.println("Column 'urlCoverImage' added to the table.");
                 }
@@ -91,7 +91,6 @@ public class DataBaseHandler {
                 // Check if 'description' column exists
                 ResultSet descriptionColumn = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "DESCRIPTION");
                 if (!descriptionColumn.next()) {
-                    // If the 'description' column doesn't exist, add it
                     stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN description VARCHAR(1000)");
                     System.out.println("Column 'description' added to the table.");
                 }
@@ -120,6 +119,84 @@ public class DataBaseHandler {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    void setupThesisTable() {
+        String TABLE_NAME = "THESIS";
+        try {
+            Statement stmt = conn.createStatement();
+            DatabaseMetaData dbm = conn.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
+
+            if (tables.next()) {
+                System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
+                // Check and add columns if they don't exist (you can add more specific columns as needed)
+                addColumnIfNotExists(TABLE_NAME, "supervisor", "VARCHAR(200)");
+                addColumnIfNotExists(TABLE_NAME, "department", "VARCHAR(100)");
+            } else {
+                // Create the table with its columns if it doesn't exist
+                String createTableSql = "CREATE TABLE " + TABLE_NAME + " ("
+                        + "id VARCHAR(200) PRIMARY KEY, "
+                        + "title VARCHAR(200), "
+                        + "author VARCHAR(200), "
+                        + "publisher VARCHAR(100), "
+                        + "isAvail BOOLEAN DEFAULT TRUE, "
+                        + "genre VARCHAR(100), "
+                        + "supervisor VARCHAR(200), "
+                        + "department VARCHAR(100)"
+                        + ")";
+                stmt.execute(createTableSql);
+                System.out.println("Table " + TABLE_NAME + " created successfully.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error setting up the database: " + e.getMessage());
+        }
+    }
+
+    // Method to set up the Paper table in the database
+    void setupPaperTable() {
+        String TABLE_NAME = "PAPER";
+        try {
+            Statement stmt = conn.createStatement();
+            DatabaseMetaData dbm = conn.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
+
+            if (tables.next()) {
+                System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
+                // Check and add columns if they don't exist (you can add more specific columns as needed)
+                addColumnIfNotExists(TABLE_NAME, "conference", "VARCHAR(200)");
+                addColumnIfNotExists(TABLE_NAME, "year", "INTEGER");
+            } else {
+                // Create the table with its columns if it doesn't exist
+                String createTableSql = "CREATE TABLE " + TABLE_NAME + " ("
+                        + "id VARCHAR(200) PRIMARY KEY, "
+                        + "title VARCHAR(200), "
+                        + "author VARCHAR(200), "
+                        + "publisher VARCHAR(100), "
+                        + "isAvail BOOLEAN DEFAULT TRUE, "
+                        + "genre VARCHAR(100), "
+                        + "conference VARCHAR(200), "
+                        + "year INTEGER"
+                        + ")";
+                stmt.execute(createTableSql);
+                System.out.println("Table " + TABLE_NAME + " created successfully.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error setting up the database: " + e.getMessage());
+        }
+    }
+
+    // Helper method to add a column to a table if it doesn't exist (unchanged from before)
+    private void addColumnIfNotExists(String tableName, String columnName, String columnType) throws SQLException {
+        try (ResultSet columns = conn.getMetaData().getColumns(null, null, tableName.toUpperCase(), columnName)) {
+            if (!columns.next()) {
+                String alterTableSql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType;
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.execute(alterTableSql);
+                    System.out.println("Column '" + columnName + "' added to the table.");
+                }
             }
         }
     }
@@ -211,8 +288,6 @@ public class DataBaseHandler {
         }
     }
 
-
-
     // return the pointer to the result table of statement "query"
     // execQuery: get something from SQL database
     public ResultSet execQuery(String query) {
@@ -244,7 +319,7 @@ public class DataBaseHandler {
         }
     }
 
-    public boolean deleteBook(ListBookController.Book book) {
+    public boolean deleteBook(Book book) {
 
         try {
             String delStatement = "DELETE FROM BOOK WHERE ID = ?";
@@ -276,7 +351,7 @@ public class DataBaseHandler {
         return false;
     }
 
-    public boolean isIssued(ListBookController.Book book) {
+    public boolean isIssued(Book book) {
         try {
             String checkSmt = "SELECT COUNT(*) FROM ISSUE WHERE bookID = ?";
             // Get the string that has same bookID
@@ -303,7 +378,6 @@ public class DataBaseHandler {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 int count = rs.getInt(1);
-                System.out.println(count);
                 return (count > 0);
             }
         }
@@ -313,7 +387,18 @@ public class DataBaseHandler {
         return false;
     }
 
-    public boolean updateBook(ListBookController.Book book) {
+    public boolean updateDocument(Document document) {
+        if (document instanceof Book) {
+            return updateBook((Book) document);
+        } else if (document instanceof Thesis) {
+            return updateThesis((Thesis) document);
+        } else if (document instanceof Paper) {
+            return updatePaper((Paper) document);
+        }
+        return false;
+    }
+
+    public boolean updateBook(Book book) {
         try {
             String update = "UPDATE BOOK SET TITLE = ?, AUTHOR = ?, PUBLISHER = ?, GENRE = ?, url = ?, urlCoverImage = ?, description = ? WHERE ID = ?";
             PreparedStatement stmt = conn.prepareStatement(update);
@@ -325,6 +410,44 @@ public class DataBaseHandler {
             stmt.setString(6, book.getUrlCoverImage());
             stmt.setString(7, book.getDescription());
             stmt.setString(8, book.getId());
+
+            int res = stmt.executeUpdate();
+            return (res > 0);
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+    private boolean updateThesis(Thesis thesis) {
+        try {
+            String update = "UPDATE THESIS SET TITLE =?, AUTHOR =?, UNIVERSITY =?, GENRE =?, DEPARTMENT =? WHERE ID =?";
+            PreparedStatement stmt = conn.prepareStatement(update);
+            stmt.setString(1, thesis.getTitle());
+            stmt.setString(2, thesis.getAuthor());
+            stmt.setString(3, thesis.getUniversity());
+            stmt.setString(4, thesis.getGenre());
+            stmt.setString(5, thesis.getDepartment());
+            stmt.setString(6, thesis.getId());
+
+            int res = stmt.executeUpdate();
+            return (res > 0);
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+    private boolean updatePaper(Paper paper) {
+        try {
+            String update = "UPDATE PAPER SET TITLE =?, AUTHOR =?, CONFERENCE =?, GENRE =?, YEAR =? WHERE ID =?";
+            PreparedStatement stmt = conn.prepareStatement(update);
+            stmt.setString(1, paper.getTitle());
+            stmt.setString(2, paper.getAuthor());
+            stmt.setString(3, paper.getConference());
+            stmt.setString(4, paper.getGenre());
+            stmt.setString(5, paper.getYear());
+            stmt.setString(6, paper.getId());
 
             int res = stmt.executeUpdate();
             return (res > 0);
@@ -349,10 +472,6 @@ public class DataBaseHandler {
         }
         return false;
     }
-
-//    public static void main(String[] args) throws Exception {
-//        DataBaseHandler.getInstance();
-//    }
 
     public ObservableList<PieChart.Data> getBookGraphicStatics() {
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
@@ -445,8 +564,8 @@ public class DataBaseHandler {
         return otBooks;
     }
 
-    public ObservableList<ListBookController.Book> getBooksIssuedToMember(String memberId) {
-        ObservableList<ListBookController.Book> issuedBooks = FXCollections.observableArrayList();
+    public ObservableList<Book> getBooksIssuedToMember(String memberId) {
+        ObservableList<Book> issuedBooks = FXCollections.observableArrayList();
         String query = "SELECT * FROM BOOK INNER JOIN ISSUE ON BOOK.id = ISSUE.bookID WHERE ISSUE.memberID = ?";
         try {
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -459,7 +578,7 @@ public class DataBaseHandler {
                 String pub = rs.getString("publisher");
                 String gen = rs.getString("genre"); // Lấy genre từ kết quả truy vấn
                 Boolean ava = rs.getBoolean("isAvail");
-                issuedBooks.add(new ListBookController.Book(tit, idx, aut, pub, gen, ava,null,null,null));
+                issuedBooks.add(new Book(tit, idx, aut, pub, gen, ava,null,null,null));
             }
         } catch (SQLException e) {
             Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
@@ -467,8 +586,8 @@ public class DataBaseHandler {
         return issuedBooks;
     }
 
-    public ObservableList<ListBookController.Book> getRecommendedBooksForMember(String memberId) {
-        ObservableList<ListBookController.Book> recommendedBooks = FXCollections.observableArrayList();
+    public ObservableList<Book> getRecommendedBooksForMember(String memberId) {
+        ObservableList<Book> recommendedBooks = FXCollections.observableArrayList();
 
         String query = "SELECT * FROM BOOK WHERE genre = " +
                 "(SELECT genre FROM ( " +
@@ -492,7 +611,7 @@ public class DataBaseHandler {
                 String pub = rs.getString("publisher");
                 String gen = rs.getString("genre"); // Lấy genre từ kết quả truy vấn
                 Boolean ava = rs.getBoolean("isAvail");
-                recommendedBooks.add(new ListBookController.Book(tit, idx, aut, pub, gen, ava,null,null,null));
+                recommendedBooks.add(new Book(tit, idx, aut, pub, gen, ava,null,null,null));
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Handle exception appropriately
@@ -501,8 +620,8 @@ public class DataBaseHandler {
         return recommendedBooks;
     }
 
-    public ObservableList<ListBookController.Book> getRecommendedBooksForMember(String memberId, String genr) {
-        ObservableList<ListBookController.Book> recommendedBooks = FXCollections.observableArrayList();
+    public ObservableList<Book> getRecommendedBooksForMember(String memberId, String genr) {
+        ObservableList<Book> recommendedBooks = FXCollections.observableArrayList();
 
         String query = "SELECT * FROM BOOK WHERE LOWER(genre) = LOWER(?)";
 
@@ -517,7 +636,7 @@ public class DataBaseHandler {
                 String pub = rs.getString("publisher");
                 String gen = rs.getString("genre"); // Lấy genre từ kết quả truy vấn
                 Boolean ava = rs.getBoolean("isAvail");
-                recommendedBooks.add(new ListBookController.Book(tit, idx, aut, pub, gen, ava,null,null,null));
+                recommendedBooks.add(new Book(tit, idx, aut, pub, gen, ava,null,null,null));
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Handle exception appropriately
