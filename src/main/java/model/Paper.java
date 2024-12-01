@@ -31,7 +31,7 @@ public class Paper extends Document {
             case "conference":
                 return "conference";
             case "year":
-                return "year";
+                return "release_year";
             case "availability":
                 return "isAvail";
             default:

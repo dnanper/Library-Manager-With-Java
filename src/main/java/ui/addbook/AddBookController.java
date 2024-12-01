@@ -1,6 +1,5 @@
 package ui.addbook;
 
-import Factory.BookFactory;
 import Factory.DocumentFactory;
 import alert.AlertMaker;
 import com.jfoenix.controls.JFXButton;
@@ -66,9 +65,9 @@ public class AddBookController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         dataBaseHandler = DataBaseHandler.getInstance();
         checkData("Book");
-//        checkData("Thesis");
-//        checkData("Paper");
-        documentFactory = new BookFactory();
+        checkData("Thesis");
+        checkData("Paper");
+        documentFactory = new DocumentFactory();
     }
 
     public static boolean isDocumentExists(String id, String type) {
@@ -109,12 +108,18 @@ public class AddBookController implements Initializable {
         }
 
         String documentType = "Book";
-        if (publisher.isVisible() && genre.isVisible()) {
+        if (!publisher.getText().isEmpty()) {
+            System.out.println("Define Book Type");
             documentType = "Book";
-        } else if (university.isVisible() && department.isVisible()) {
+        } else if (!university.getText().isEmpty() && !department.getText().isEmpty()) {
+            System.out.println("Define Thesis Type");
             documentType = "Thesis";
-        } else if (conference.isVisible() && year.isVisible()) {
+        } else if (!conference.getText().isEmpty() && !year.getText().isEmpty()) {
+            System.out.println("Define Paper Type");
             documentType = "Paper";
+        } else {
+            AlertMaker.showMaterialDialog(stackRootPane, rootPane, new ArrayList<>(), "Invalid information input", "Unable to determine document type.\nPlease fill in the required fields.");
+            return;
         }
 
         String[] additionalInfo = new String[4];
@@ -137,13 +142,17 @@ public class AddBookController implements Initializable {
         }
 
         if (document!= null) {
+            System.out.println("Success Create Document");
             String insertQuery = null;
             if (document instanceof Book) {
                 insertQuery = "INSERT INTO BOOK (id, title, author, publisher, genre, isAvail) VALUES (?, ?, ?, ?, ?, ?)";
+                System.out.println("Insert into Book Table");
             } else if (document instanceof Thesis) {
                 insertQuery = "INSERT INTO THESIS (id, title, author, university, genre, department, isAvail) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                System.out.println("Insert into Thesis Table");
             } else if (document instanceof Paper) {
-                insertQuery = "INSERT INTO PAPER (id, title, author, conference, genre, year, isAvail) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                insertQuery = "INSERT INTO PAPER (id, title, author, conference, genre, release_year, isAvail) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                System.out.println("Insert into Paper Table");
             }
             try {
                 PreparedStatement stmt = dataBaseHandler.getConnection().prepareStatement(insertQuery);

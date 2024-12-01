@@ -33,6 +33,8 @@ public class DataBaseHandler {
     private DataBaseHandler() {
         createConnection();
         setupBookTable();
+        setupThesisTable();
+        setupPaperTable();
         setupMemberTable();
         setupIssueTable();
         setupReviewTable();
@@ -133,8 +135,17 @@ public class DataBaseHandler {
             if (tables.next()) {
                 System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
                 // Check and add columns if they don't exist (you can add more specific columns as needed)
-                addColumnIfNotExists(TABLE_NAME, "supervisor", "VARCHAR(200)");
-                addColumnIfNotExists(TABLE_NAME, "department", "VARCHAR(100)");
+                ResultSet supcolumns = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "UNIVERSITY");
+                if (!supcolumns.next()) {
+                    stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN UNIVERSITY VARCHAR(200)");
+                    System.out.println("Column 'UNIVERSITY' added to the table.");
+                }
+
+                ResultSet departcolumns = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "DEPARTMENT");
+                if (!departcolumns.next()) {
+                    stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN DEPARTMENT VARCHAR(100)");
+                    System.out.println("Column 'department' added to the table.");
+                }
             } else {
                 // Create the table with its columns if it doesn't exist
                 String createTableSql = "CREATE TABLE " + TABLE_NAME + " ("
@@ -144,7 +155,7 @@ public class DataBaseHandler {
                         + "publisher VARCHAR(100), "
                         + "isAvail BOOLEAN DEFAULT TRUE, "
                         + "genre VARCHAR(100), "
-                        + "supervisor VARCHAR(200), "
+                        + "university VARCHAR(200), "
                         + "department VARCHAR(100)"
                         + ")";
                 stmt.execute(createTableSql);
@@ -166,8 +177,17 @@ public class DataBaseHandler {
             if (tables.next()) {
                 System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
                 // Check and add columns if they don't exist (you can add more specific columns as needed)
-                addColumnIfNotExists(TABLE_NAME, "conference", "VARCHAR(200)");
-                addColumnIfNotExists(TABLE_NAME, "year", "INTEGER");
+                ResultSet concolumns = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "CONFERENCE");
+                if (!concolumns.next()) {
+                    stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN CONFERENCE VARCHAR(200)");
+                    System.out.println("Column 'conference' added to the table.");
+                }
+
+                ResultSet yearcolumns = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "RELEASE_YEAR");
+                if (!yearcolumns.next()) {
+                    stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN RELEASE_YEAR INTEGER");
+                    System.out.println("Column 'release_year' added to the table.");
+                }
             } else {
                 // Create the table with its columns if it doesn't exist
                 String createTableSql = "CREATE TABLE " + TABLE_NAME + " ("
@@ -178,26 +198,13 @@ public class DataBaseHandler {
                         + "isAvail BOOLEAN DEFAULT TRUE, "
                         + "genre VARCHAR(100), "
                         + "conference VARCHAR(200), "
-                        + "year INTEGER"
+                        + "release_year INTEGER"
                         + ")";
                 stmt.execute(createTableSql);
                 System.out.println("Table " + TABLE_NAME + " created successfully.");
             }
         } catch (SQLException e) {
             System.err.println("Error setting up the database: " + e.getMessage());
-        }
-    }
-
-    // Helper method to add a column to a table if it doesn't exist (unchanged from before)
-    private void addColumnIfNotExists(String tableName, String columnName, String columnType) throws SQLException {
-        try (ResultSet columns = conn.getMetaData().getColumns(null, null, tableName.toUpperCase(), columnName)) {
-            if (!columns.next()) {
-                String alterTableSql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType;
-                try (Statement stmt = conn.createStatement()) {
-                    stmt.execute(alterTableSql);
-                    System.out.println("Column '" + columnName + "' added to the table.");
-                }
-            }
         }
     }
 
