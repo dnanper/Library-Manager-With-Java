@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import database.GenericSearch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -38,6 +39,7 @@ import javax.mail.*;
 import javax.mail.internet.MimeMessage;
 import javax.mail.search.FlagTerm;
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -174,6 +176,11 @@ public class UserController implements Initializable {
 
     private Boolean banned = false;
 
+
+    DataBaseHandler handler = DataBaseHandler.getInstance();
+    Connection connection = handler.getConnection();
+    GenericSearch<Book> bookSearch = new GenericSearch<>(connection);
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -256,14 +263,17 @@ public class UserController implements Initializable {
             tableView.setItems(list);
             return;
         }
-        ObservableList<Book> filterList = FXCollections.observableArrayList();
-        for (Book book : list) {
-            if (book.getTitle().toLowerCase().contains(searchTitle.toLowerCase())) {
-                filterList.add(book);
-            }
-        }
-        tableView.setItems(filterList);
+
+        String condition = "LOWER(title) LIKE ?";
+        Object[] parameters = new Object[]{"%" + searchTitle.toLowerCase() + "%"};
+
+        List<Book> filterList = bookSearch.search("BOOK", condition, parameters, Book.class);
+
+        ObservableList<Book> observableFilterList = FXCollections.observableArrayList(filterList);
+        tableView.setItems(observableFilterList);
     }
+
+
 
     @FXML
     void confirmEmailHandle(ActionEvent event) {

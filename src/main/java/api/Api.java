@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class Api {
     private static final String GOOGLE_BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
-    private final String apiKey = "AIzaSyAp6Bgoq3o06qefC_qQEP8I_yDSPhjy8lk"; // Replace with your actual API key
+    private final String apiKey = "AIzaSyAp6Bgoq3o06qefC_qQEP8I_yDSPhjy8lk"; // API key
     private Gson gson = new Gson();
 
     // search for books by ISBN
@@ -33,6 +33,7 @@ public class Api {
         return gson.fromJson(jsonResponse, JsonObject.class);
     }
 
+    // by title
     public JsonObject getBookByTitle(String title) {
         try {
             String encodedTitle = URLEncoder.encode(title, "UTF-8");
@@ -46,6 +47,7 @@ public class Api {
     }
 
 
+
     private String sendGetRequest(String urlString) {
         StringBuilder result = new StringBuilder();
         HttpURLConnection conn = null;
@@ -57,7 +59,6 @@ public class Api {
 
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                // Read the response
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
@@ -71,10 +72,10 @@ public class Api {
             e.printStackTrace();
         } finally {
             if (conn != null) {
-                conn.disconnect(); // Clean up connection
+                conn.disconnect();
             }
         }
-        System.out.println("Response: " + result.toString()); // Print the response
+        System.out.println("Response: " + result.toString());
         return result.toString();
     }
 }

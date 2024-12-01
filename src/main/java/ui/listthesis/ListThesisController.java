@@ -1,9 +1,6 @@
-package ui.listbook;
+package ui.listthesis;
 
 import alert.AlertMaker;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import database.DataBaseHandler;
@@ -17,7 +14,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
@@ -28,7 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.Book;
+import model.Thesis;
 import ui.addbook.AddBookController;
 import javafx.event.ActionEvent;
 
@@ -42,28 +38,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert.AlertType;
 import ui.main.MainController;
-import ui.theme.ThemeManager;
-import user.BookController;
 import util.LibraryUtil;
 
-public class ListBookController implements Initializable {
+public class ListThesisController implements Initializable {
 
-    ObservableList<Book> list = FXCollections.observableArrayList();
-
-    @FXML
-    private TableColumn<Book, String> authorCol;
+    ObservableList<Thesis> list = FXCollections.observableArrayList();
 
     @FXML
-    private TableColumn<Book, Boolean> availabilityCol;
+    private TableColumn<Thesis, String> authorCol;
 
     @FXML
-    private TableColumn<Book, String> idCol;
+    private TableColumn<Thesis, Boolean> availabilityCol;
 
     @FXML
-    private TableColumn<Book, String> publisherCol;
+    private TableColumn<Thesis, String> idCol;
 
     @FXML
-    private TableColumn<Book, String> genreCol;
+    private TableColumn<Thesis, String> universityCol;
+
+    @FXML
+    private TableColumn<Thesis, String> departmentCol;
+
+    @FXML
+    private TableColumn<Thesis, String> genreCol;
 
     @FXML
     private AnchorPane rootAnchorPane;
@@ -77,18 +74,17 @@ public class ListBookController implements Initializable {
     @FXML
     private JFXTextField searchText;
 
-    // tables contain books
     @FXML
-    private TableView<Book> tableView;
+    private TableView<Thesis> tableView;
 
     @FXML
-    private TableColumn<Book, String> titleCol;
+    private TableColumn<Thesis, String> titleCol;
 
-    ObservableList<String> typeList = FXCollections.observableArrayList( "ID", "Title", "Author", "Genre");
+    ObservableList<String> typeList = FXCollections.observableArrayList("ID", "Title", "Author", "University", "Department", "Genre");
 
     DataBaseHandler handler = DataBaseHandler.getInstance();
     Connection connection = handler.getConnection();
-        GenericSearch<Book> bookSearch = new GenericSearch<>(connection);
+    GenericSearch<Thesis> thesisSearch = new GenericSearch<>(connection);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -96,32 +92,31 @@ public class ListBookController implements Initializable {
         initCol();
         loadData();
         setupTableClickHandler(tableView);
-
     }
 
-    private void setupTableClickHandler(TableView<Book> tableView) {
-        BookController loadBook = new BookController();
+    private void setupTableClickHandler(TableView<Thesis> tableView) {
         tableView.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
-                Book selectedBook = tableView.getSelectionModel().getSelectedItem();
-                if (selectedBook != null) {
-                    loadBook.handleBookSelection(selectedBook.getId());
+                Thesis selectedThesis = tableView.getSelectionModel().getSelectedItem();
+                if (selectedThesis != null) {
+                    // Handle thesis selection (e.g., load detailed view or edit form)
+                    // loadThesis.handleThesisSelection(selectedThesis.getId());
                 }
             }
         });
     }
 
-    // function to connect the columns in table with the tags of the book
     private void initCol() {
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
-        publisherCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
+        universityCol.setCellValueFactory(new PropertyValueFactory<>("university"));
+        departmentCol.setCellValueFactory(new PropertyValueFactory<>("department"));
         genreCol.setCellValueFactory(new PropertyValueFactory<>("genre"));
         availabilityCol.setCellValueFactory(new PropertyValueFactory<>("availability"));
     }
 
-    private void filterBookList(String searchContent, String type) {
+    private void filterThesisList(String searchContent, String type) {
         if (searchContent == null || searchContent.isEmpty() || type == null) {
             tableView.setItems(list);
             return;
@@ -131,101 +126,89 @@ public class ListBookController implements Initializable {
 
         switch (type) {
             case "ID":
-                columnName = Book.getColumnName("id");
+                columnName = Thesis.getColumnName("id");
                 break;
             case "Title":
-                columnName = Book.getColumnName("title");
+                columnName = Thesis.getColumnName("title");
                 break;
             case "Author":
-                columnName = Book.getColumnName("author");
+                columnName = Thesis.getColumnName("author");
+                break;
+            case "University":
+                columnName = Thesis.getColumnName("university");
+                break;
+            case "Department":
+                columnName = Thesis.getColumnName("department");
                 break;
             case "Genre":
-                columnName = Book.getColumnName("genre");
+                columnName = Thesis.getColumnName("genre");
                 break;
             default:
-                Logger.getLogger(ListBookController.class.getName()).log(Level.WARNING,
+                Logger.getLogger(ListThesisController.class.getName()).log(Level.WARNING,
                         "Invalid search type: {0}", type);
                 tableView.setItems(list);
                 return;
         }
 
         try {
-
-            List<Book> filteredList = bookSearch.search(
-                    "BOOK",
+            List<Thesis> filteredList = thesisSearch.search(
+                    "THESIS",
                     "LOWER(" + columnName + ") LIKE ?",
                     new Object[]{"%" + searchContent.toLowerCase() + "%"},
-                    Book.class
+                    Thesis.class
             );
 
             tableView.setItems(FXCollections.observableArrayList(filteredList));
         } catch (Exception e) {
-            Logger.getLogger(ListBookController.class.getName()).log(Level.SEVERE,
-                    "Error", e);
+            Logger.getLogger(ListThesisController.class.getName()).log(Level.SEVERE, "Error", e);
         }
     }
 
-
-
-
-    // function to extract data from database to put to table
     private void loadData() {
         list.clear();
-        DataBaseHandler handler = DataBaseHandler.getInstance();
-        String qu = "SELECT * FROM BOOK";
+        String qu = "SELECT * FROM THESIS";
         ResultSet res = handler.execQuery(qu);
         try {
-            // get all attributes of each book from database
             while (res.next()) {
                 String tit = res.getString("title");
                 String aut = res.getString("author");
                 String idx = res.getString("id");
-                String pub = res.getString("publisher");
+                String uni = res.getString("university");
+                String dep = res.getString("department");
                 String gen = res.getString("genre");
                 Boolean ava = res.getBoolean("isAvail");
 
-                // add data of book to list
-                list.add(new Book(tit, aut, idx, gen, pub, ava,null,null,null));
+                list.add(new Thesis(tit, aut, idx, gen, uni, dep, ava));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ListBookController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ListThesisController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // push all elements in list to table
         tableView.setItems(list);
-        // Search Book
         searchText.textProperty().addListener((observable, oldValue, newValue) -> {
             String type = searchTypeCBox.getValue();
-            filterBookList(newValue, type);
+            filterThesisList(newValue, type);
         });
     }
 
     @FXML
-    void handleBookDeleteOption(ActionEvent event) {
-        // Fetch the chosen row ( book )
-        Book selectDel = tableView.getSelectionModel().getSelectedItem();
+    void handleThesisDeleteOption(ActionEvent event) {
+        Thesis selectDel = tableView.getSelectionModel().getSelectedItem();
         if (selectDel == null) {
-            AlertMaker.showErrorMessage("No book selected", "Please select a book for deletion!");
-            return;
-        }
-
-        // If the book was issued before and hasn't been returned
-        if (DataBaseHandler.getInstance().isIssued(selectDel)) {
-            AlertMaker.showErrorMessage("This book is not available", "Please select another book for deletion!");
+            AlertMaker.showErrorMessage("No thesis selected", "Please select a thesis for deletion!");
             return;
         }
 
         Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Deleting Book");
-        alert.setContentText("Are you sure want to delete the book " + selectDel.getTitle() + " from library?");
+        alert.setTitle("Deleting Thesis");
+        alert.setContentText("Are you sure want to delete the thesis " + selectDel.getTitle() + " from library?");
         Optional<ButtonType> ans = alert.showAndWait();
-        // If user agree to delete
         if (ans.get() == ButtonType.OK) {
-            Boolean flag = DataBaseHandler.getInstance().deleteBook(selectDel);
+            Boolean flag = DataBaseHandler.getInstance().deleteThesis(selectDel);
             if (flag) {
                 list.remove(selectDel);
-                AlertMaker.showSimpleAlert("Book Deleted ", selectDel.getTitle() + " was delete successfully!");
+                AlertMaker.showSimpleAlert("Thesis Deleted", selectDel.getTitle() + " was deleted successfully!");
             } else {
-                AlertMaker.showSimpleAlert("Failed ", selectDel.getTitle() + " could not be delete");
+                AlertMaker.showSimpleAlert("Failed", selectDel.getTitle() + " could not be deleted");
             }
         } else {
             AlertMaker.showSimpleAlert("Deletion Cancelled", "Deletion process cancelled");
@@ -233,31 +216,28 @@ public class ListBookController implements Initializable {
     }
 
     @FXML
-    void handleBookEditOption(ActionEvent event) {
-        // Fetch the chosen row ( book )
-        Book selectEdit = tableView.getSelectionModel().getSelectedItem();
+    void handleThesisEditOption(ActionEvent event) {
+        Thesis selectEdit = tableView.getSelectionModel().getSelectedItem();
         if (selectEdit == null) {
-            AlertMaker.showErrorMessage("No book selected", "Please select a book for edition");
+            AlertMaker.showErrorMessage("No thesis selected", "Please select a thesis for editing");
             return;
         }
 
-        // Display Edit Book Window
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addbook.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/adddocument.fxml"));
             Parent parent = loader.load();
 
             AddBookController controller = (AddBookController) loader.getController();
             controller.inflateUI(selectEdit);
 
             Stage stage = new Stage(StageStyle.DECORATED);
-            stage.setTitle("Edit Book");
+            stage.setTitle("Edit Thesis");
             stage.setScene(new Scene(parent));
             stage.show();
             LibraryUtil.setStageIcon(stage);
 
-            // Refresh after Edit
             stage.setOnCloseRequest((e) -> {
-                handleBookRefreshOption(new ActionEvent());
+                handleThesisRefreshOption(new ActionEvent());
             });
         } catch (IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
@@ -265,9 +245,7 @@ public class ListBookController implements Initializable {
     }
 
     @FXML
-    void handleBookRefreshOption(ActionEvent event) {
+    void handleThesisRefreshOption(ActionEvent event) {
         loadData();
     }
-
 }
-

@@ -326,6 +326,7 @@ public class DataBaseHandler {
         }
     }
 
+
     public boolean deleteBook(Book book) {
 
         try {
@@ -341,6 +342,22 @@ public class DataBaseHandler {
         }
         return false;
     }
+
+    public boolean deleteThesis(Thesis thesis) {
+        try {
+            String delStatement = "DELETE FROM THESIS WHERE ID = ?";
+            PreparedStatement stmt = conn.prepareStatement(delStatement);
+            stmt.setString(1, thesis.getId());
+            int rw = stmt.executeUpdate();
+            if (rw == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
 
     public boolean deleteMember(ListMemberController.Member member) {
 
