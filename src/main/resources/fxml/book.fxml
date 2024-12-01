@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="626.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.BookController">
+<AnchorPane prefHeight="600.0" prefWidth="626.0" xmlns="http://javafx.com/javafx/22.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.BookController">
 
     <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="153.0" prefWidth="610.0" spacing="20.0">
         <ImageView fx:id="bookCoverImageView" fitHeight="141.0" fitWidth="150.0" preserveRatio="true" />
