@@ -2,39 +2,66 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="773.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="api.ApiSearchController">
-    <VBox alignment="CENTER" layoutX="-1.0" layoutY="-1.6" prefHeight="434.0" prefWidth="774.0" spacing="15" style="-fx-background-color: #2C2F36; -fx-padding: 20px; -fx-border-radius: 10px;" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-2.0">
+    <VBox alignment="CENTER" layoutX="-1.0" layoutY="-1.6" prefHeight="434.0" prefWidth="774.0" spacing="15" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-2.0">
 
-        <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px 0;" text="Search for a Book by Name" textFill="#FFFFFF" />
-        <JFXTextField fx:id="nameField" onKeyReleased="#onSearchByName" promptText="Enter Book Name" style="-fx-background-color: #3c3f41; -fx-text-fill: white; -fx-prompt-text-fill: #aaaaaa; -fx-font-size: 14px; -fx-padding: 10px; -fx-border-color: #555555; -fx-border-radius: 5px; -fx-background-radius: 5px;" />
+        <Label text="Search for a Book by Name" textFill="RED">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Label>
+
+        <JFXTextField fx:id="nameField" onKeyReleased="#onSearchByName" promptText="Enter Book Name">
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" />
+         </VBox.margin></JFXTextField>
 
 
-        <Label style="-fx-font-size: 16px; -fx-padding: 5px 0 0 0;" text="Search Results" textFill="#FFFFFF" />
-        <ListView fx:id="searchResultsList" prefHeight="400" prefWidth="740" style="-fx-background-color: #3c3f41; -fx-control-inner-background: #3c3f41; -fx-text-fill: white; -fx-border-color: #555555; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 10px;" />
+        <Label text="Search Results" textFill="RED">
+         <font>
+            <Font size="16.0" />
+         </font></Label>
+        <ListView fx:id="searchResultsList" prefHeight="400" prefWidth="740">
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" />
+         </VBox.margin></ListView>
 
 
-        <JFXButton onAction="#onAddSelectedBook" style="-fx-background-color: #1F80F0; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 10px 20px; -fx-text-fill: white;" styleClass="button-bar" text="Add Selected Book" textFill="#FFFFFF" />
+        <JFXButton onAction="#onAddSelectedBook" text="Add Selected Book">
+         <font>
+            <Font size="16.0" />
+         </font></JFXButton>
     </VBox>
 
 
-    <HBox alignment="CENTER" layoutX="-5.0" layoutY="433.0" minHeight="-Infinity" prefHeight="166.0" prefWidth="781.0" spacing="20" style="-fx-background-color: #3c3f41; -fx-border-radius: 5px; -fx-padding: 10px;">
+    <HBox alignment="CENTER" layoutX="-5.0" layoutY="433.0" minHeight="-Infinity" prefHeight="166.0" prefWidth="781.0" spacing="20">
 
 
-        <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #3c3f41; -fx-border-radius: 5px; -fx-padding: 5px;">
-            <Label style="-fx-font-size: 14px;" text="Book Cover" textFill="#FFFFFF" />
-            <ImageView fx:id="bookCoverImageView" fitHeight="100" fitWidth="100" style="-fx-background-color: #3c3f41; -fx-border-radius: 5px; -fx-padding: 5px;" />
+        <VBox alignment="CENTER" spacing="5">
+            <Label text="Book Cover" textFill="RED">
+            <font>
+               <Font size="16.0" />
+            </font></Label>
+            <ImageView fx:id="bookCoverImageView" fitHeight="100" fitWidth="100" />
         </VBox>
 
-        <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #3c3f41; -fx-border-radius: 5px; -fx-padding: 5px;">
-            <Label style="-fx-font-size: 14px;" text="QR Code" textFill="#FFFFFF" />
-            <ImageView fx:id="qrCodeImageView" fitHeight="100" fitWidth="100" style="-fx-background-color: #3c3f41; -fx-border-radius: 5px; -fx-padding: 5px;" />
+        <VBox alignment="CENTER" spacing="5">
+            <Label text="QR Code" textFill="RED">
+            <font>
+               <Font size="16.0" />
+            </font></Label>
+            <ImageView fx:id="qrCodeImageView" fitHeight="100" fitWidth="100" />
         </VBox>
 
     </HBox>

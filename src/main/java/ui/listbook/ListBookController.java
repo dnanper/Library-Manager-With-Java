@@ -243,10 +243,10 @@ public class ListBookController implements Initializable {
 
         // Display Edit Book Window
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addbook.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/adddocument.fxml"));
             Parent parent = loader.load();
 
-            AddBookController controller = (AddBookController) loader.getController();
+            AddBookController controller = loader.getController();
             controller.inflateUI(selectEdit);
 
             Stage stage = new Stage(StageStyle.DECORATED);

@@ -9,74 +9,101 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="stackRootPane" prefHeight="702.0" prefWidth="684.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.addbook.AddBookController">
+<StackPane fx:id="stackRootPane" prefHeight="750.0" prefWidth="684.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.addbook.AddBookController">
    <children>
-      <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="684.0" stylesheets="@../dark-theme.css">
+      <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="684.0" stylesheets="@../dark-theme.css">
          <children>
-            <VBox prefHeight="326.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <VBox prefHeight="326.0" prefWidth="684.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <JFXTextField fx:id="title" labelFloat="true" prefHeight="50.0" prefWidth="0.0" promptText="Title">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="25.0" />
                      </VBox.margin>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                   </JFXTextField>
                   <JFXTextField fx:id="id" labelFloat="true" prefHeight="50.0" prefWidth="0.0" promptText="ID">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
                      </VBox.margin>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                   </JFXTextField>
                   <JFXTextField fx:id="author" labelFloat="true" prefHeight="50.0" prefWidth="0.0" promptText="Author">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
                      </VBox.margin>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                   </JFXTextField>
                   <JFXTextField fx:id="genre" labelFloat="true" prefHeight="50.0" prefWidth="0.0" promptText="Genre">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
                      </VBox.margin>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                   </JFXTextField>
                   <!-- New Genre Field -->
                   <JFXTextField fx:id="publisher" labelFloat="true" prefHeight="50.0" prefWidth="0.0" promptText="Publisher (Book Only)">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
                      </VBox.margin>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                   </JFXTextField>
                   <JFXTextField fx:id="university" labelFloat="true" layoutX="20.0" layoutY="310.0" prefHeight="50.0" prefWidth="0.0" promptText="University (Thesis Only)">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
                      </VBox.margin>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                   </JFXTextField>
                   <JFXTextField fx:id="department" labelFloat="true" layoutX="10.0" layoutY="352.0" prefHeight="50.0" prefWidth="0.0" promptText="Department (Thesis Only)">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
                      </VBox.margin>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                   </JFXTextField>
                   <JFXTextField fx:id="conference" labelFloat="true" layoutX="10.0" layoutY="430.0" prefHeight="50.0" prefWidth="0.0" promptText="Conference (Paper Only)">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
                      </VBox.margin>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                   </JFXTextField>
                   <JFXTextField fx:id="year" labelFloat="true" layoutX="10.0" layoutY="480.0" prefHeight="50.0" prefWidth="0.0" promptText="Year (Paper Only)">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
                      </VBox.margin>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
                   </JFXTextField>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="570.0">
+                  <HBox alignment="CENTER" prefHeight="106.0" prefWidth="684.0">
                      <children>
-                        <JFXButton fx:id="saveButton" onAction="#addDocument" prefHeight="65.0" prefWidth="1000.0" text="Save">
+                        <JFXButton fx:id="saveButton" onAction="#addDocument" prefHeight="100.0" prefWidth="1000.0" text="Save">
                            <font>
                               <Font size="25.0" />
                            </font>
                            <HBox.margin>
-                              <Insets top="25.0" />
+                              <Insets />
                            </HBox.margin>
                         </JFXButton>
-                        <JFXButton fx:id="cancelButton" onAction="#cancel" prefHeight="65.0" prefWidth="1000.0" text="Cancel">
+                        <JFXButton fx:id="cancelButton" onAction="#cancel" prefHeight="100.0" prefWidth="1000.0" text="Cancel">
                            <font>
                               <Font size="25.0" />
                            </font>
                            <HBox.margin>
-                              <Insets top="25.0" />
+                              <Insets />
                            </HBox.margin>
                         </JFXButton>
                      </children>

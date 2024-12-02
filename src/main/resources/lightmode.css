@@ -24,7 +24,7 @@
     -fx-font-size: 12pt;
 }
 
-.button:hover, .button:focused {
+.button:hover,.button:focused {
     -fx-border-color: -fx-secondary;
     -fx-background-color: -fx-secondary;
     -fx-text-fill: -fx-primary;
@@ -35,6 +35,25 @@
     -fx-font-size: 12pt;
     -jfx-focus-color: -fx-secondary;
     -fx-text-fill: derive(-fx-secondary, -20%);
+}
+
+/* Adjustments for JFXTextField prompt text floating */
+.jfx-text-field {
+    -jfx-label-float: false; /* This disables the default floating behavior */
+    -jfx-prompt-text-fill: derive(-fx-secondary, -40%); /* Adjust the prompt text color */
+    -jfx-unfocus-color: derive(-fx-secondary, -40%); /* Adjust the unfocused border color */
+}
+
+.jfx-text-field.input-line {
+    -fx-background-color: -fx-secondary; /* Set the color of the input line */
+}
+
+.jfx-text-field:filled {
+    -jfx-label-float: true; /* Re-enable floating when the field is filled */
+}
+
+.jfx-text-field:filled.input-line {
+    -fx-background-color: derive(-fx-secondary, -20%); /* Change the color of the input line when filled */
 }
 
 /*Login Screen Specific*/
@@ -72,11 +91,11 @@
     -fx-background-color: -fx-secondary;
 }
 
-.settings-tab:selected .tab-label {
+.settings-tab:selected.tab-label {
     -fx-text-fill: -fx-primary;
 }
 
-.settings-tab .tab-header-background {
+.settings-tab.tab-header-background {
     -fx-background-color: derive(-fx-primary, -30%);
 }
 
@@ -116,7 +135,7 @@
     -fx-text-fill: -fx-primary;
 }
 
-.toolbar-button:hover .glyph-icon, .toolbar-button:hover .glyph-icon {
+.toolbar-button:hover.glyph-icon,.toolbar-button:hover.glyph-icon {
     -fx-fill: -fx-primary;
 }
 
@@ -165,20 +184,20 @@
     -fx-cell-size: 40px;
 }
 
-.table-view .column-header-background {
+.table-view.column-header-background {
     -fx-background-color: -fx-primary;
 }
 
-.table-view .column-header-background .label {
+.table-view.column-header-background.label {
     -fx-background-color: transparent;
     -fx-text-fill: -fx-primarytext;
 }
 
-.table-view .table-cell {
+.table-view.table-cell {
     -fx-text-fill: -fx-primarytext;
 }
 
-.table-row-cell:focused, .table-cell:focused {
+.table-row-cell:focused,.table-cell:focused {
     -fx-text-fill: -fx-primary;
 }
 
@@ -202,22 +221,22 @@
     -fx-background-insets: 0;
 }
 
-.table-row-cell:selected .table-cell {
+.table-row-cell:selected.table-cell {
     -fx-text-fill: -fx-primary;
 }
 
-.placeholder .label {
+.placeholder.label {
     -fx-text-fill: -fx-primarytext;
 }
 
 /*ScrollBar styling*/
-.scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb {
+.scroll-bar:horizontal.thumb,.scroll-bar:vertical.thumb {
     -fx-background-color: derive(-fx-primary, -50%);
     -fx-border-color: transparent;
     -fx-background-radius: 5em;
 }
 
-.table-view .filler {
+.table-view.filler {
     -fx-fill: -fx-primary;
     -fx-background-color: -fx-primary;
 }
@@ -227,16 +246,16 @@
     -fx-background-color: -fx-color-1;
 }
 
-.jfx-layout-heading .label {
+.jfx-layout-heading.label {
     -fx-text-fill: -fx-primarytext;
     -fx-font-size: 12pt;
 }
 
-.jfx-layout-body, .jfx-layout-actions {
+.jfx-layout-body,.jfx-layout-actions {
     -fx-background-color: -fx-primary;
 }
 
-.jfx-layout-body .label {
+.jfx-layout-body.label {
     -fx-text-fill: -fx-primarytext;
     -fx-padding: 20px 0 0 0;
 }
@@ -256,11 +275,11 @@
 }
 
 /*Progress bar*/
-.progress-bar-main .track {
+.progress-bar-main.track {
     -fx-background-color: -fx-primary;
 }
 
-.progress-bar-main .bar {
+.progress-bar-main.bar {
     -fx-background-color: -fx-secondary;
     -fx-padding: 5px;
 }
@@ -291,17 +310,17 @@
     -fx-background-color: -fx-blue;
 }
 
-.custom-alert:header .header-panel .label {
+.custom-alert:header.header-panel.label {
     -fx-font-style: normal;
     -fx-text-fill: -fx-primarytext;
 }
 
 /*Context menu*/
-.colored-context-menu .menu-item:focused {
+.colored-context-menu.menu-item:focused {
     -fx-background-color: -fx-secondary;
     -fx-text-fill: -fx-primary;
 }
 
-.colored-context-menu .menu-item:focused .label {
+.colored-context-menu.menu-item:focused.label {
     -fx-text-fill: -fx-primary;
 }
