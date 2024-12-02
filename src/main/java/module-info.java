@@ -30,6 +30,7 @@ module controller {
     opens ui.addbook to javafx.fxml, com.google.gson;
     opens ui.addmember to javafx.fxml;
     opens ui.listthesis to javafx.fxml;
+    opens ui.listpaper to javafx.fxml;
     opens ui.listbook to javafx.fxml, com.google.gson;
     opens ui.main to javafx.fxml, java.mail;
     opens ui.main.toolbar to javafx.fxml;
@@ -51,5 +52,6 @@ module controller {
     exports ui.addmember;
     exports ui.listbook;
     exports ui.listthesis;
+    exports ui.listpaper;
     exports api;
 }

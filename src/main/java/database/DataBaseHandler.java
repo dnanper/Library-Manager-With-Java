@@ -358,6 +358,21 @@ public class DataBaseHandler {
         return false;
     }
 
+    public boolean deletePaper(Paper paper) {
+        try {
+            String delStatement = "DELETE FROM PAPER WHERE ID = ?";
+            PreparedStatement stmt = conn.prepareStatement(delStatement);
+            stmt.setString(1, paper.getId());
+            int rw = stmt.executeUpdate();
+            if (rw == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DataBaseHandler.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
 
     public boolean deleteMember(ListMemberController.Member member) {
 
