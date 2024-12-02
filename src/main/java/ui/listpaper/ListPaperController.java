@@ -1,4 +1,4 @@
-package ui.listthesis;
+package ui.listpaper;
 
 import alert.AlertMaker;
 import com.jfoenix.controls.JFXComboBox;
@@ -24,7 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.Thesis;
+import model.Paper;
 import ui.addbook.AddBookController;
 import javafx.event.ActionEvent;
 
@@ -38,29 +38,30 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert.AlertType;
 import ui.main.MainController;
+
 import util.LibraryUtil;
 
-public class ListThesisController implements Initializable {
+public class ListPaperController implements Initializable {
 
-    ObservableList<Thesis> list = FXCollections.observableArrayList();
-
-    @FXML
-    private TableColumn<Thesis, String> authorCol;
+    ObservableList<Paper> list = FXCollections.observableArrayList();
 
     @FXML
-    private TableColumn<Thesis, Boolean> availabilityCol;
+    private TableColumn<Paper, String> authorCol;
 
     @FXML
-    private TableColumn<Thesis, String> idCol;
+    private TableColumn<Paper, Boolean> availabilityCol;
 
     @FXML
-    private TableColumn<Thesis, String> universityCol;
+    private TableColumn<Paper, String> idCol;
 
     @FXML
-    private TableColumn<Thesis, String> departmentCol;
+    private TableColumn<Paper, String> conferenceCol;
 
     @FXML
-    private TableColumn<Thesis, String> genreCol;
+    private TableColumn<Paper, String> yearCol;
+
+    @FXML
+    private TableColumn<Paper, String> genreCol;
 
     @FXML
     private AnchorPane rootAnchorPane;
@@ -75,16 +76,16 @@ public class ListThesisController implements Initializable {
     private JFXTextField searchText;
 
     @FXML
-    private TableView<Thesis> tableView;
+    private TableView<Paper> tableView;
 
     @FXML
-    private TableColumn<Thesis, String> titleCol;
+    private TableColumn<Paper, String> titleCol;
 
-    ObservableList<String> typeList = FXCollections.observableArrayList("ID", "Title", "Author", "University", "Department", "Genre");
+    ObservableList<String> typeList = FXCollections.observableArrayList("ID", "Title", "Author", "Conference", "Year");
 
     DataBaseHandler handler = DataBaseHandler.getInstance();
     Connection connection = handler.getConnection();
-    GenericSearch<Thesis> thesisSearch = new GenericSearch<>(connection);
+    GenericSearch<Paper> paperSearch = new GenericSearch<>(connection);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -94,13 +95,12 @@ public class ListThesisController implements Initializable {
         setupTableClickHandler(tableView);
     }
 
-    private void setupTableClickHandler(TableView<Thesis> tableView) {
+    private void setupTableClickHandler(TableView<Paper> tableView) {
         tableView.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
-                Thesis selectedThesis = tableView.getSelectionModel().getSelectedItem();
-                if (selectedThesis != null) {
-                    selectedThesis.displayInfo();
-                    // loadThesis.handleThesisSelection(selectedThesis.getId());
+                Paper selectedPaper = tableView.getSelectionModel().getSelectedItem();
+                if (selectedPaper != null) {
+                    selectedPaper.displayInfo();
 
                 }
             }
@@ -111,13 +111,13 @@ public class ListThesisController implements Initializable {
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
-        universityCol.setCellValueFactory(new PropertyValueFactory<>("university"));
-        departmentCol.setCellValueFactory(new PropertyValueFactory<>("department"));
+        conferenceCol.setCellValueFactory(new PropertyValueFactory<>("conference"));
+        yearCol.setCellValueFactory(new PropertyValueFactory<>("year"));
         genreCol.setCellValueFactory(new PropertyValueFactory<>("genre"));
         availabilityCol.setCellValueFactory(new PropertyValueFactory<>("availability"));
     }
 
-    private void filterThesisList(String searchContent, String type) {
+    private void filterPaperList(String searchContent, String type) {
         if (searchContent == null || searchContent.isEmpty() || type == null) {
             tableView.setItems(list);
             return;
@@ -127,87 +127,88 @@ public class ListThesisController implements Initializable {
 
         switch (type) {
             case "ID":
-                columnName = Thesis.getColumnName("id");
+                columnName = Paper.getColumnName("id");
                 break;
             case "Title":
-                columnName = Thesis.getColumnName("title");
+                columnName = Paper.getColumnName("title");
                 break;
             case "Author":
-                columnName = Thesis.getColumnName("author");
+                columnName = Paper.getColumnName("author");
                 break;
-            case "University":
-                columnName = Thesis.getColumnName("university");
+            case "Conference":
+                columnName = Paper.getColumnName("conference");
                 break;
-            case "Department":
-                columnName = Thesis.getColumnName("department");
-                break;
-            case "Genre":
-                columnName = Thesis.getColumnName("genre");
+            case "Year":
+                columnName = Paper.getColumnName("year");
                 break;
             default:
-                Logger.getLogger(ListThesisController.class.getName()).log(Level.WARNING,
+                Logger.getLogger(ListPaperController.class.getName()).log(Level.WARNING,
                         "Invalid search type: {0}", type);
                 tableView.setItems(list);
                 return;
         }
 
         try {
-            List<Thesis> filteredList = thesisSearch.search(
-                    "THESIS",
+            List<Paper> filteredList = paperSearch.search(
+                    "PAPER",
                     "LOWER(" + columnName + ") LIKE ?",
                     new Object[]{"%" + searchContent.toLowerCase() + "%"},
-                    Thesis.class
+                    Paper.class
             );
 
             tableView.setItems(FXCollections.observableArrayList(filteredList));
         } catch (Exception e) {
-            Logger.getLogger(ListThesisController.class.getName()).log(Level.SEVERE, "Error", e);
+            Logger.getLogger(ListPaperController.class.getName()).log(Level.SEVERE,
+                    "Error", e);
         }
     }
 
     private void loadData() {
         list.clear();
-        String qu = "SELECT * FROM THESIS";
+        DataBaseHandler handler = DataBaseHandler.getInstance();
+        String qu = "SELECT * FROM PAPER";
         ResultSet res = handler.execQuery(qu);
         try {
             while (res.next()) {
                 String tit = res.getString("title");
                 String aut = res.getString("author");
                 String idx = res.getString("id");
-                String uni = res.getString("university");
-                String dep = res.getString("department");
+                String conf = res.getString("conference");
+                String yr = res.getString("release_year");
                 String gen = res.getString("genre");
                 Boolean ava = res.getBoolean("isAvail");
 
-                list.add(new Thesis(tit, aut, idx, gen, uni, dep, ava));
+                list.add(new Paper(tit, aut, idx, gen, conf, yr, ava));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ListThesisController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ListPaperController.class.getName()).log(Level.SEVERE, null, ex);
         }
         tableView.setItems(list);
+
         searchText.textProperty().addListener((observable, oldValue, newValue) -> {
             String type = searchTypeCBox.getValue();
-            filterThesisList(newValue, type);
+            filterPaperList(newValue, type);
         });
     }
 
     @FXML
-    void handleThesisDeleteOption(ActionEvent event) {
-        Thesis selectDel = tableView.getSelectionModel().getSelectedItem();
+    void handlePaperDeleteOption(ActionEvent event) {
+        Paper selectDel = tableView.getSelectionModel().getSelectedItem();
         if (selectDel == null) {
-            AlertMaker.showErrorMessage("No thesis selected", "Please select a thesis for deletion!");
+            AlertMaker.showErrorMessage("No paper selected", "Please select a paper for deletion!");
             return;
         }
 
         Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Deleting Thesis");
-        alert.setContentText("Are you sure want to delete the thesis " + selectDel.getTitle() + " from library?");
+        alert.setTitle("Deleting Paper");
+        alert.setContentText("Are you sure you want to delete the paper " + selectDel.getTitle() + " from the library?");
         Optional<ButtonType> ans = alert.showAndWait();
+
         if (ans.get() == ButtonType.OK) {
-            Boolean flag = DataBaseHandler.getInstance().deleteThesis(selectDel);
+            Boolean flag = DataBaseHandler.getInstance().deletePaper(selectDel);
             if (flag) {
                 list.remove(selectDel);
-                AlertMaker.showSimpleAlert("Thesis Deleted", selectDel.getTitle() + " was deleted successfully!");
+                AlertMaker.showSimpleAlert("Paper Deleted", selectDel.getTitle() + " was deleted successfully!");
             } else {
                 AlertMaker.showSimpleAlert("Failed", selectDel.getTitle() + " could not be deleted");
             }
@@ -217,28 +218,28 @@ public class ListThesisController implements Initializable {
     }
 
     @FXML
-    void handleThesisEditOption(ActionEvent event) {
-        Thesis selectEdit = tableView.getSelectionModel().getSelectedItem();
+    void handlePaperEditOption(ActionEvent event) {
+        Paper selectEdit = tableView.getSelectionModel().getSelectedItem();
         if (selectEdit == null) {
-            AlertMaker.showErrorMessage("No thesis selected", "Please select a thesis for editing");
+            AlertMaker.showErrorMessage("No paper selected", "Please select a paper for editing!");
             return;
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/adddocument.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addpaper.fxml"));
             Parent parent = loader.load();
 
-            AddBookController controller = (AddBookController) loader.getController();
+            AddBookController controller = loader.getController();
             controller.inflateUI(selectEdit);
 
             Stage stage = new Stage(StageStyle.DECORATED);
-            stage.setTitle("Edit Thesis");
+            stage.setTitle("Edit Paper");
             stage.setScene(new Scene(parent));
             stage.show();
             LibraryUtil.setStageIcon(stage);
 
             stage.setOnCloseRequest((e) -> {
-                handleThesisRefreshOption(new ActionEvent());
+                handlePaperRefreshOption(new ActionEvent());
             });
         } catch (IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
@@ -246,7 +247,7 @@ public class ListThesisController implements Initializable {
     }
 
     @FXML
-    void handleThesisRefreshOption(ActionEvent event) {
+    void handlePaperRefreshOption(ActionEvent event) {
         loadData();
     }
 }
