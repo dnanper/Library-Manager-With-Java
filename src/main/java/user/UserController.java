@@ -266,6 +266,7 @@ public class UserController implements Initializable {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
         tableViewPaper.setItems(listPaper);
+        searchPaperText.textProperty().addListener((observable, oldValue, newValue) -> filterPaperList(newValue));
     }
 
     @FXML
@@ -291,6 +292,7 @@ public class UserController implements Initializable {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
         tableViewThesis.setItems(listThesis);
+        searchThesisText.textProperty().addListener((observable, oldValue, newValue) -> filterThesisList(newValue));
     }
 
 
@@ -306,6 +308,8 @@ public class UserController implements Initializable {
     DataBaseHandler handler = DataBaseHandler.getInstance();
     Connection connection = handler.getConnection();
     GenericSearch<Book> bookSearch = new GenericSearch<>(connection);
+    GenericSearch<Thesis> thesisSearch = new GenericSearch<>(connection);
+    GenericSearch<Paper> paperSearch = new GenericSearch<>(connection);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -414,6 +418,38 @@ public class UserController implements Initializable {
         ObservableList<Book> observableFilterList = FXCollections.observableArrayList(filterList);
         tableView.setItems(observableFilterList);
     }
+
+    private void filterPaperList(String searchTitle) {
+        if (searchTitle == null || searchTitle.isEmpty()) {
+            tableViewPaper.setItems(listPaper);
+            return;
+        }
+
+        String condition = "LOWER(title) LIKE ?";
+        Object[] parameters = new Object[]{"%" + searchTitle.toLowerCase() + "%"};
+
+        List<Paper> filterList = paperSearch.search("PAPER", condition, parameters, Paper.class);
+
+        ObservableList<Paper> observableFilterList = FXCollections.observableArrayList(filterList);
+        tableViewPaper.setItems(observableFilterList);
+    }
+
+    private void filterThesisList(String searchTitle) {
+        if (searchTitle == null || searchTitle.isEmpty()) {
+            tableViewThesis.setItems(listThesis);
+            return;
+        }
+
+        String condition = "LOWER(title) LIKE ?";
+        Object[] parameters = new Object[]{"%" + searchTitle.toLowerCase() + "%"};
+
+        List<Thesis> filterList = thesisSearch.search("THESIS", condition, parameters, Thesis.class);
+
+        ObservableList<Thesis> observableFilterList = FXCollections.observableArrayList(filterList);
+        tableViewThesis.setItems(observableFilterList);
+    }
+
+
 
     @FXML
     void confirmEmailHandle(ActionEvent event) {
