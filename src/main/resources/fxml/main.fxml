@@ -46,6 +46,8 @@
                               <Menu mnemonicParsing="false" text="View">
                                   <items>
                                       <MenuItem mnemonicParsing="false" onAction="#handleMenuLoadBook" text="View Books" />
+                              <MenuItem mnemonicParsing="false" onAction="#handleMenuLoadThesis" text="View Thesis" />
+                              <MenuItem mnemonicParsing="false" onAction="#handleMenuLoadPaper" text="View Papers" />
                                       <MenuItem mnemonicParsing="false" onAction="#handleMenuLoadMember" text="View Members" />
                                       <MenuItem mnemonicParsing="false" onAction="#handleMenuFullScreen" text="FullScreen" />
                                   </items>

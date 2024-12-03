@@ -27,7 +27,11 @@ import database.DataBaseHandler;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Book;
+import model.Paper;
+import model.Thesis;
 import ui.listbook.ListBookController;
+import ui.listpaper.ListPaperController;
+import ui.listthesis.ListThesisController;
 import ui.settings.UserPreferences;
 import ui.theme.ThemeManager;
 import util.LibraryUtil;
@@ -168,6 +172,128 @@ public class UserController implements Initializable {
     @FXML
     private AnchorPane normalPane;
 
+    // Thesis
+    @FXML
+    private TableView<Thesis> tableViewThesis;
+
+    @FXML
+    private TableColumn<?, ?> authorColThesis;
+
+    @FXML
+    private TableColumn<?, ?> availabilityColThesis;
+
+    @FXML
+    private TableColumn<?, ?> departmentCol;
+
+    @FXML
+    private TableColumn<?, ?> genreColThesis;
+
+    @FXML
+    private TableColumn<?, ?> idColThesis;
+
+    @FXML
+    private JFXTextField searchThesisText;
+
+    @FXML
+    private JFXButton thesisButton;
+
+    @FXML
+    private Pane thesisPane;
+
+    @FXML
+    private TableColumn<?, ?> titleColThesis;
+
+    @FXML
+    private TableColumn<?, ?> universityCol;
+
+    // Paper
+    @FXML
+    private TableView<Paper> tableViewPaper;
+
+    @FXML
+    private TableColumn<?, ?> authorPaper;
+
+    @FXML
+    private TableColumn<?, ?> availabilityPaper;
+
+    @FXML
+    private TableColumn<?, ?> conferenceCol;
+
+    @FXML
+    private TableColumn<?, ?> genreColPaper;
+
+    @FXML
+    private TableColumn<?, ?> idColPaper;
+
+    @FXML
+    private JFXButton paperButton;
+
+    @FXML
+    private Pane paperPane;
+
+    @FXML
+    private JFXTextField searchPaperText;
+
+    @FXML
+    private TableColumn<?, ?> titleColPaper;
+
+    @FXML
+    private TableColumn<?, ?> yearCol;
+
+    ObservableList<Thesis> listThesis = FXCollections.observableArrayList();
+    ObservableList<Paper> listPaper = FXCollections.observableArrayList();
+
+    @FXML
+    void ViewPaperHandle(ActionEvent event) {
+        listPaper.clear();
+        showPane(paperPane);
+        DataBaseHandler handler = DataBaseHandler.getInstance();
+        String qu = "SELECT * FROM PAPER";
+        ResultSet res = handler.execQuery(qu);
+        try {
+            while (res.next()) {
+                String tit = res.getString("title");
+                String aut = res.getString("author");
+                String idx = res.getString("id");
+                String conf = res.getString("conference");
+                String yr = res.getString("release_year");
+                String gen = res.getString("genre");
+                Boolean ava = res.getBoolean("isAvail");
+
+                listPaper.add(new Paper(tit, aut, idx, gen, conf, yr, ava));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tableViewPaper.setItems(listPaper);
+    }
+
+    @FXML
+    void ViewThesisHandle(ActionEvent event) {
+        listThesis.clear();
+        showPane(thesisPane);
+        DataBaseHandler handler = DataBaseHandler.getInstance();
+        String qu = "SELECT * FROM THESIS";
+        ResultSet res = handler.execQuery(qu);
+        try {
+            while (res.next()) {
+                String tit = res.getString("title");
+                String aut = res.getString("author");
+                String idx = res.getString("id");
+                String uni = res.getString("university");
+                String dep = res.getString("department");
+                String gen = res.getString("genre");
+                Boolean ava = res.getBoolean("isAvail");
+
+                listThesis.add(new Thesis(tit, aut, idx, gen, uni, dep, ava));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tableViewThesis.setItems(listThesis);
+    }
+
+
     private ObservableList<String> emailList = FXCollections.observableArrayList();
 
     ObservableList<Book> list = FXCollections.observableArrayList();
@@ -252,6 +378,22 @@ public class UserController implements Initializable {
         publisherCol2.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         genreCol2.setCellValueFactory(new PropertyValueFactory<>("genre")); // Kết nối cột genre
         availabilityCol2.setCellValueFactory(new PropertyValueFactory<>("availability"));
+        // thesis
+        idColThesis.setCellValueFactory(new PropertyValueFactory<>("id"));
+        titleColThesis.setCellValueFactory(new PropertyValueFactory<>("title"));
+        authorColThesis.setCellValueFactory(new PropertyValueFactory<>("author"));
+        departmentCol.setCellValueFactory(new PropertyValueFactory<>("department"));
+        genreColThesis.setCellValueFactory(new PropertyValueFactory<>("genre"));
+        availabilityColThesis.setCellValueFactory(new PropertyValueFactory<>("availability"));
+        universityCol.setCellValueFactory(new PropertyValueFactory<>("university"));
+        // paper
+        idColPaper.setCellValueFactory(new PropertyValueFactory<>("id"));
+        titleColPaper.setCellValueFactory(new PropertyValueFactory<>("title"));
+        authorPaper.setCellValueFactory(new PropertyValueFactory<>("author"));
+        conferenceCol.setCellValueFactory(new PropertyValueFactory<>("conference"));
+        genreColPaper.setCellValueFactory(new PropertyValueFactory<>("genre"));
+        availabilityPaper.setCellValueFactory(new PropertyValueFactory<>("availability"));
+        yearCol.setCellValueFactory(new PropertyValueFactory<>("year"));
     }
 
     public static void setUsername(String username) {
@@ -272,8 +414,6 @@ public class UserController implements Initializable {
         ObservableList<Book> observableFilterList = FXCollections.observableArrayList(filterList);
         tableView.setItems(observableFilterList);
     }
-
-
 
     @FXML
     void confirmEmailHandle(ActionEvent event) {
@@ -430,7 +570,7 @@ public class UserController implements Initializable {
 
     private void showPane(Pane paneToShow) {
         // List of all panes
-        List<Pane> allPanes = List.of(libraryPane, borrowPane, mailPane, settingPane, recommendPane);
+        List<Pane> allPanes = List.of(libraryPane, borrowPane, mailPane, settingPane, recommendPane, thesisPane, paperPane);
 
         // Show the specified pane and hide others
         for (Pane pane : allPanes) {

@@ -840,6 +840,16 @@ public class MainController implements Initializable {
     }
 
     @FXML
+    void handleMenuLoadPaper(ActionEvent event) {
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/listpaper.fxml"), "View Paper", null);
+    }
+
+    @FXML
+    void handleMenuLoadThesis(ActionEvent event) {
+        LibraryUtil.loadWindow(getClass().getResource("/fxml/listthesis.fxml"), "View Thesis", null);
+    }
+
+    @FXML
     private void handleMenuLoadMember(ActionEvent event) {
         LibraryUtil.loadWindow(getClass().getResource("/fxml/listmember.fxml"), "View Member", null);
     }
