@@ -735,6 +735,24 @@ public class DataBaseHandler {
         return null;
     }
 
+    public boolean isBookExists(String bookID) {
+
+        String checkQuery = "SELECT COUNT(*) FROM BOOK WHERE id = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(checkQuery)) {
+            preparedStatement.setString(1, bookID);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 
 }

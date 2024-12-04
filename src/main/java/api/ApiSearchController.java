@@ -37,7 +37,7 @@ import java.util.Map;
 
 public class ApiSearchController {
 
-    private final Api apiHandle = new Api();
+    private final Api apiHandle = Api.getInstance();
     private final DataBaseHandler dataBaseHandler = DataBaseHandler.getInstance();
 
     @FXML
@@ -101,19 +101,16 @@ public class ApiSearchController {
 
     private String getBookCoverImageUrl(JsonObject bookJson) {
         try {
-
-            JsonObject imageLinks = bookJson.getAsJsonObject("imageLinks");
-            if (imageLinks != null) {
-                JsonElement thumbnail = imageLinks.get("thumbnail");
-                if (thumbnail != null) {
-                    String url = thumbnail.getAsString();
-                    System.out.println("Book cover URL: " + url);
+            if (bookJson != null && bookJson.has("imageLinks")) {
+                JsonObject imageLinks = bookJson.getAsJsonObject("imageLinks");
+                if (imageLinks.has("thumbnail")) {
+                    String url = imageLinks.get("thumbnail").getAsString();
                     return url;
                 } else {
                     System.out.println("Thumbnail not found in imageLinks.");
                 }
             } else {
-                System.out.println("imageLinks object is missing.");
+                System.out.println("No imageLinks found.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,9 +118,10 @@ public class ApiSearchController {
         return null;
     }
 
+
     public BufferedImage getQRCode(String bookUrl) {
         if (bookUrl == null || bookUrl.trim().isEmpty()) {
-            System.out.println("Error: The URL is null or empty.");
+
             return null;
         }
 
@@ -171,14 +169,10 @@ public class ApiSearchController {
 
 
                             searchResults.add(volumeInfo);
-
-
                             String title = getBookTitle(volumeInfo);
                             String author = getBookAuthor(volumeInfo);
                             String publisher = getBookPublisher(volumeInfo);
                             String genre = getBookGenre(volumeInfo);
-
-
                             String displayString = title + " by " + author + " (Publisher: " + publisher + ", Genre: " + genre + ")";
                             searchResultsList.getItems().add(displayString);
                         }
@@ -203,7 +197,7 @@ public class ApiSearchController {
 
                     String bookID = getBookISBN(selectedBook);
 
-                    if (isBookExists(bookID)) {
+                    if (dataBaseHandler.isBookExists(bookID)) {
                         AlertMaker.showSimpleAlert("Duplicate Book", "This book already exists in the database.");
                         return;
                     }
@@ -240,24 +234,6 @@ public class ApiSearchController {
         }
     }
 
-
-    private boolean isBookExists(String bookID) {
-
-        String checkQuery = "SELECT COUNT(*) FROM BOOK WHERE id = ?";
-        try (PreparedStatement preparedStatement = dataBaseHandler.getConnection().prepareStatement(checkQuery)) {
-            preparedStatement.setString(1, bookID);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                return resultSet.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     private String getBookTitle(JsonObject bookJson) {
         return bookJson.has("title") ? bookJson.get("title").getAsString() : "No Title Found";
@@ -297,7 +273,7 @@ public class ApiSearchController {
 
             String url = (bookJson.has("canonicalVolumeLink")) ?
                     bookJson.get("canonicalVolumeLink").getAsString() : "";
-            System.out.println("Book URL: " + url);
+
             return url;
         } catch (Exception e) {
             e.printStackTrace();

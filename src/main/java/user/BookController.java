@@ -164,7 +164,7 @@ public class BookController {
 
                 int rowsInserted = stmt.executeUpdate();
                 if (rowsInserted > 0) {
-                    loadBookData(actualBookId); // Refresh data to include the new review
+                    loadBookData(actualBookId); // refresh data to include the new review
                     ratingField.clear();
                     reviewField.clear();
                     AlertMaker.showSimpleAlert("Success", "Your reviews have been recorded");
