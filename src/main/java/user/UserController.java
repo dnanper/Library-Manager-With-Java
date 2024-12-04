@@ -304,7 +304,6 @@ public class UserController implements Initializable {
 
     private Boolean banned = false;
 
-
     DataBaseHandler handler = DataBaseHandler.getInstance();
     Connection connection = handler.getConnection();
     GenericSearch<Book> bookSearch = new GenericSearch<>(connection);
@@ -342,7 +341,6 @@ public class UserController implements Initializable {
         }
     }
 
-
     private void setupTableClickHandlers() {
         setupTableClickHandler(tableView);
         setupTableClickHandler(tableView1);
@@ -361,28 +359,27 @@ public class UserController implements Initializable {
         });
     }
     private void initCol() {
-        // library
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
         publisherCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         genreCol.setCellValueFactory(new PropertyValueFactory<>("genre")); // Kết nối cột genre
         availabilityCol.setCellValueFactory(new PropertyValueFactory<>("availability"));
-        // borrow
+
         titleCol1.setCellValueFactory(new PropertyValueFactory<>("title"));
         idCol1.setCellValueFactory(new PropertyValueFactory<>("id"));
         authorCol1.setCellValueFactory(new PropertyValueFactory<>("author"));
         publisherCol1.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         genreCol1.setCellValueFactory(new PropertyValueFactory<>("genre")); // Kết nối cột genre
         availabilityCol1.setCellValueFactory(new PropertyValueFactory<>("availability"));
-        // recommend
+
         titleCol2.setCellValueFactory(new PropertyValueFactory<>("title"));
         idCol2.setCellValueFactory(new PropertyValueFactory<>("id"));
         authorCol2.setCellValueFactory(new PropertyValueFactory<>("author"));
         publisherCol2.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         genreCol2.setCellValueFactory(new PropertyValueFactory<>("genre")); // Kết nối cột genre
         availabilityCol2.setCellValueFactory(new PropertyValueFactory<>("availability"));
-        // thesis
+
         idColThesis.setCellValueFactory(new PropertyValueFactory<>("id"));
         titleColThesis.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColThesis.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -390,7 +387,7 @@ public class UserController implements Initializable {
         genreColThesis.setCellValueFactory(new PropertyValueFactory<>("genre"));
         availabilityColThesis.setCellValueFactory(new PropertyValueFactory<>("availability"));
         universityCol.setCellValueFactory(new PropertyValueFactory<>("university"));
-        // paper
+
         idColPaper.setCellValueFactory(new PropertyValueFactory<>("id"));
         titleColPaper.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorPaper.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -566,24 +563,20 @@ public class UserController implements Initializable {
         String qu = "SELECT * FROM BOOK";
         ResultSet res = handler.execQuery(qu);
         try {
-            // get all attributes of each book from database
             while (res.next()) {
                 String tit = res.getString("title");
                 String aut = res.getString("author");
                 String idx = res.getString("id");
                 String pub = res.getString("publisher");
-                String gen = res.getString("genre"); // Lấy genre từ kết quả truy vấn
+                String gen = res.getString("genre");
                 Boolean ava = res.getBoolean("isAvail");
 
-                // add data of book to list
                 list.add(new Book(tit, aut, idx, gen, pub, ava,null,null,null));
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // push all elements in list to table
         tableView.setItems(list);
-        // search Book
         searchBookText.textProperty().addListener((observable, oldValue, newValue) -> {
             filterBookList(newValue);
         });
@@ -605,10 +598,8 @@ public class UserController implements Initializable {
     }
 
     private void showPane(Pane paneToShow) {
-        // List of all panes
         List<Pane> allPanes = List.of(libraryPane, borrowPane, mailPane, settingPane, recommendPane, thesisPane, paperPane);
 
-        // Show the specified pane and hide others
         for (Pane pane : allPanes) {
             pane.setVisible(pane == paneToShow);
         }

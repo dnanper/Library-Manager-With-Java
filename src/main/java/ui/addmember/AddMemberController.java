@@ -148,9 +148,7 @@ public class AddMemberController implements Initializable {
     }
 
     private void handleEditMod() {
-        // push data after edit to new book and use that book to update
         ListMemberController.Member member = new ListMemberController.Member(name.getText(), id.getText(), phone.getText(), email.getText());
-        // update here
         if (DataBaseHandler.getInstance().updateMember(member)) {
             AlertMaker.showSimpleAlert("Success", "Member Updated");
         } else {

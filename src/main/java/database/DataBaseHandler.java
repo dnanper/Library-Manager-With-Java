@@ -54,9 +54,7 @@ public class DataBaseHandler {
 
     void createConnection() {
         try {
-            // fetch driver for database
             Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
-            // connect database with URL
             conn = DriverManager.getConnection(DB_URL);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Can't load Database", "Database Error", JOptionPane.ERROR_MESSAGE);
@@ -65,8 +63,6 @@ public class DataBaseHandler {
         }
     }
 
-    // This method is a part of AddBook statement, so javafx of it written in AddBookController
-    // Before save the book, create a table for it
     void setupBookTable() {
         String TABLE_NAME = "BOOK";
         try {
@@ -83,14 +79,12 @@ public class DataBaseHandler {
                     System.out.println("Column 'url' added to the table.");
                 }
 
-                // Check if 'urlCoverImage' column exists
                 ResultSet urlCoverImageColumn = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "URLCOVERIMAGE");
                 if (!urlCoverImageColumn.next()) {
                     stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN urlCoverImage VARCHAR(500)");
                     System.out.println("Column 'urlCoverImage' added to the table.");
                 }
 
-                // Check if 'description' column exists
                 ResultSet descriptionColumn = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "DESCRIPTION");
                 if (!descriptionColumn.next()) {
                     stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN description VARCHAR(1000)");
@@ -98,7 +92,6 @@ public class DataBaseHandler {
                 }
 
             } else {
-                // If the table doesn't exist, create the table with all columns
                 stmt.execute("CREATE TABLE " + TABLE_NAME + " ("
                         + "id VARCHAR(200) PRIMARY KEY, "
                         + "title VARCHAR(200), "
@@ -134,7 +127,7 @@ public class DataBaseHandler {
 
             if (tables.next()) {
                 System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
-                // Check and add columns if they don't exist (you can add more specific columns as needed)
+
                 ResultSet supcolumns = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "UNIVERSITY");
                 if (!supcolumns.next()) {
                     stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN UNIVERSITY VARCHAR(200)");
@@ -147,7 +140,7 @@ public class DataBaseHandler {
                     System.out.println("Column 'department' added to the table.");
                 }
             } else {
-                // Create the table with its columns if it doesn't exist
+
                 String createTableSql = "CREATE TABLE " + TABLE_NAME + " ("
                         + "id VARCHAR(200) PRIMARY KEY, "
                         + "title VARCHAR(200), "
@@ -166,7 +159,6 @@ public class DataBaseHandler {
         }
     }
 
-    // Method to set up the Paper table in the database
     void setupPaperTable() {
         String TABLE_NAME = "PAPER";
         try {
@@ -176,7 +168,7 @@ public class DataBaseHandler {
 
             if (tables.next()) {
                 System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
-                // Check and add columns if they don't exist (you can add more specific columns as needed)
+
                 ResultSet concolumns = dbm.getColumns(null, null, TABLE_NAME.toUpperCase(), "CONFERENCE");
                 if (!concolumns.next()) {
                     stmt.execute("ALTER TABLE " + TABLE_NAME + " ADD COLUMN CONFERENCE VARCHAR(200)");
@@ -189,7 +181,6 @@ public class DataBaseHandler {
                     System.out.println("Column 'release_year' added to the table.");
                 }
             } else {
-                // Create the table with its columns if it doesn't exist
                 String createTableSql = "CREATE TABLE " + TABLE_NAME + " ("
                         + "id VARCHAR(200) PRIMARY KEY, "
                         + "title VARCHAR(200), "
@@ -211,12 +202,10 @@ public class DataBaseHandler {
     void setupMemberTable() {
         String TABLE_NAME = "MEMBER";
         try {
-            // Create a variable to store the introduction that user give to database to execute
             stmt = conn.createStatement();
             DatabaseMetaData dbm = conn.getMetaData();
             ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
 
-            // If exist a table already, then return table, else create new table with SQL introduction
             if (tables.next()) {
                 System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
             } else {
@@ -233,16 +222,13 @@ public class DataBaseHandler {
         }
     }
 
-    // prepare table for book-member table
     void setupIssueTable() {
         String TABLE_NAME = "ISSUE";
         try {
-            // Create a variable to store the introduction that user give to database to execute
             stmt = conn.createStatement();
             DatabaseMetaData dbm = conn.getMetaData();
             ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
 
-            // If exist a table already, then return table, else create new table with SQL introduction
             if (tables.next()) {
                 System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
             } else {
@@ -269,7 +255,6 @@ public class DataBaseHandler {
             DatabaseMetaData dbm = conn.getMetaData();
             ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
 
-
             if (tables.next()) {
                 System.out.println("Table " + TABLE_NAME + " already exists. Ready for go!");
             } else {
@@ -295,10 +280,7 @@ public class DataBaseHandler {
         }
     }
 
-    // return the pointer to the result table of statement "query"
-    // execQuery: get something from SQL database
     public ResultSet execQuery(String query) {
-        // maintain cursor point to the first row of data table that gain after execute statement
         ResultSet result;
         try {
             stmt = conn.createStatement();
@@ -311,8 +293,6 @@ public class DataBaseHandler {
         return result;
     }
 
-    // check if we can execute statement "qu"
-    // execAction: add/update something to SQL database
     public boolean execAction(String qu) {
         try {
             stmt = conn.createStatement();
@@ -648,12 +628,12 @@ public class DataBaseHandler {
                 String aut = rs.getString("author");
                 String idx = rs.getString("id");
                 String pub = rs.getString("publisher");
-                String gen = rs.getString("genre"); // Lấy genre từ kết quả truy vấn
+                String gen = rs.getString("genre");
                 Boolean ava = rs.getBoolean("isAvail");
                 recommendedBooks.add(new Book(tit, aut, idx, gen, pub, ava,null,null,null));
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle exception appropriately
+            e.printStackTrace();
         }
 
         return recommendedBooks;
@@ -673,12 +653,12 @@ public class DataBaseHandler {
                 String aut = rs.getString("author");
                 String idx = rs.getString("id");
                 String pub = rs.getString("publisher");
-                String gen = rs.getString("genre"); // Lấy genre từ kết quả truy vấn
+                String gen = rs.getString("genre");
                 Boolean ava = rs.getBoolean("isAvail");
                 recommendedBooks.add(new Book(tit, aut, idx, gen, pub, ava,null,null,null));
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle exception appropriately
+            e.printStackTrace();
         }
 
         return recommendedBooks;
@@ -695,7 +675,7 @@ public class DataBaseHandler {
                 res = rs.getString("email");
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle exception appropriately
+            e.printStackTrace();
         }
         return  res;
     }

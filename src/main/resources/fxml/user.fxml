@@ -19,7 +19,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<StackPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.UserController">
+<StackPane xmlns="http://javafx.com/javafx/22.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.UserController">
    <children>
       <Pane fx:id="banPane" prefHeight="200.0" prefWidth="200.0" visible="false">
          <children>
@@ -242,7 +242,7 @@
                                     </VBox>
                                  </children>
                               </Pane>
-                              <Pane fx:id="paperPane" layoutX="10.0" layoutY="10.0" prefHeight="539.0" prefWidth="730.0">
+                              <Pane fx:id="paperPane" layoutX="10.0" layoutY="10.0" prefHeight="539.0" prefWidth="730.0" visible="false">
                                  <children>
                                     <VBox prefHeight="537.0" prefWidth="730.0">
                                        <children>

@@ -29,10 +29,8 @@ public class LibraryUtil {
         stage.getIcons().add(img);
     }
 
-    // function to load window of each method
     public static void loadWindow(URL loc, String title, Stage parStage) {
         try {
-            // for each of FXML file, parent will be different
             Parent parent = FXMLLoader.load(loc);
             Stage stage = null;
             if (parStage != null) {
@@ -41,7 +39,6 @@ public class LibraryUtil {
                 stage = new Stage(StageStyle.DECORATED);
             }
             stage.setTitle(title);
-            // Create scene from FXML file that stored in parent
             stage.setScene(new Scene(parent));
             ThemeManager.setTheme(stage.getScene());
             stage.show();

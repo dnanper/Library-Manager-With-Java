@@ -80,19 +80,10 @@ public class SettingsController implements Initializable {
             preferences.setPassword(pass);
             preferences.setEmail(em);
             preferences.setEmailPassword(epass);
-
             Preferences.writePreferenceToFile(preferences);
-
-//            MainController.getInstance().loadOTData();
-
-            // Show success alert
-            //AlertMaker.showSimpleAlert("Success", "Settings have been saved successfully.");
-
-            // Close the settings window
             ((Stage) nDaysWithoutFine.getScene().getWindow()).close();
 
         } catch (NumberFormatException e) {
-            // Show error alert if input is invalid
             AlertMaker.showErrorMessage("Invalid Input", "Please enter valid numbers for days and fine.");
         }
     }
@@ -121,11 +112,9 @@ public class SettingsController implements Initializable {
 
     private void setupVolumeControl() {
         if (mediaPlayer != null) {
-            // Kiểm tra mediaPlayer trước khi sử dụng
-            volumeSlider.setValue(mediaPlayer.getVolume() * 100); // Đặt giá trị ban đầu của slider
-
+            volumeSlider.setValue(mediaPlayer.getVolume() * 100);
             volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-                mediaPlayer.setVolume(newValue.doubleValue() / 100.0); // Cập nhật âm lượng theo slider
+                mediaPlayer.setVolume(newValue.doubleValue() / 100.0);
             });
         } else {
             System.out.println("mediaPlayer chưa được khởi tạo");
@@ -136,20 +125,18 @@ public class SettingsController implements Initializable {
         String selectedAudio = audioComboBox.getValue();
         String audioPath = "";
 
-        // Chọn file âm thanh tùy theo lựa chọn
         if ("MB1".equals(selectedAudio)) {
             audioPath = "/MB1.mp3";
         } else if ("MB2".equals(selectedAudio)) {
             audioPath = "/MB2.mp3";
         }
 
-        // Tạo MediaPlayer mới và phát nhạc
         Media media = new Media(getClass().getResource(audioPath).toExternalForm());
         if (mediaPlayer != null) {
-            mediaPlayer.stop(); // Dừng mediaPlayer hiện tại
+            mediaPlayer.stop();
         }
         mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Lặp lại vô hạn
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.play();
     }
 }

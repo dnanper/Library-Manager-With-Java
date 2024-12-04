@@ -66,7 +66,6 @@ public class BookController {
             return;
         }
 
-
         String actualBookId = bookId.startsWith("Book ID: ") ? bookId.replace("Book ID: ", "").trim() : bookId;
 
         String title = dataBaseHandler.getValueById(actualBookId, "title");
@@ -114,10 +113,6 @@ public class BookController {
         }
     }
 
-
-
-
-
     @FXML
     public void handleBookSelection(String bookId) {
         Stage stage = new Stage();
@@ -132,8 +127,6 @@ public class BookController {
             e.printStackTrace();
         }
     }
-
-
 
     @FXML
     private void handleSubmitReview() {
@@ -182,7 +175,4 @@ public class BookController {
             AlertMaker.showSimpleAlert("Fail", "Cannot send your review");
         }
     }
-
-
-
 }

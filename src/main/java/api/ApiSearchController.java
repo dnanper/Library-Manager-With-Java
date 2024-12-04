@@ -66,16 +66,14 @@ public class ApiSearchController {
                 String bookCoverUrl = getBookCoverImageUrl(selectedBook);
                 String bookUrl = getBookUrl(selectedBook);
 
-                //  cover image
                 if (bookCoverUrl != null && !bookCoverUrl.isEmpty()) {
                     Image coverImage = new Image(bookCoverUrl);
                     bookCoverImageView.setImage(coverImage);
                 }
 
-                // qr code
                 BufferedImage qrCodeImage = getQRCode(bookUrl);
                 if (qrCodeImage != null) {
-                    Image qrImage = convertToJavaFXImage(qrCodeImage);  // convert BufferedImage to JavaFX Image
+                    Image qrImage = convertToJavaFXImage(qrCodeImage);
                     qrCodeImageView.setImage(qrImage);
                 }
             }
@@ -109,7 +107,7 @@ public class ApiSearchController {
                 JsonElement thumbnail = imageLinks.get("thumbnail");
                 if (thumbnail != null) {
                     String url = thumbnail.getAsString();
-                    System.out.println("Book cover URL: " + url); // Debugging line
+                    System.out.println("Book cover URL: " + url);
                     return url;
                 } else {
                     System.out.println("Thumbnail not found in imageLinks.");
@@ -130,12 +128,10 @@ public class ApiSearchController {
         }
 
         try {
-
             Map<EncodeHintType, Object> hints = new HashMap<>();
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
             BitMatrix bitMatrix = new MultiFormatWriter().encode(bookUrl, BarcodeFormat.QR_CODE, 200, 200, hints);
 
-            // convert BitMatrix to BufferedImage
             BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
             for (int x = 0; x < 200; x++) {
                 for (int y = 0; y < 200; y++) {
@@ -153,7 +149,7 @@ public class ApiSearchController {
             e.printStackTrace();
             return null;
         }
-        }
+    }
 
     @FXML
     private void onSearchByName() {
@@ -248,11 +244,8 @@ public class ApiSearchController {
     private boolean isBookExists(String bookID) {
 
         String checkQuery = "SELECT COUNT(*) FROM BOOK WHERE id = ?";
-
-
         try (PreparedStatement preparedStatement = dataBaseHandler.getConnection().prepareStatement(checkQuery)) {
             preparedStatement.setString(1, bookID);
-
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -265,8 +258,6 @@ public class ApiSearchController {
         }
         return false;
     }
-
-
 
     private String getBookTitle(JsonObject bookJson) {
         return bookJson.has("title") ? bookJson.get("title").getAsString() : "No Title Found";

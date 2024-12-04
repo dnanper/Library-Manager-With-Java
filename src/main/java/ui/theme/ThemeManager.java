@@ -18,7 +18,7 @@ public class ThemeManager {
     }
 
     public static void setTheme(Scene scene) {
-        scene.getStylesheets().clear(); // Xóa các stylesheets hiện tại
+        scene.getStylesheets().clear();
         String themePath = isDarkMode ? DARK_THEME : LIGHT_THEME;
         System.out.println(isDarkMode + themePath);
         URL themeUrl = ThemeManager.class.getResource(themePath);

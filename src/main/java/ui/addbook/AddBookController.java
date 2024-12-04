@@ -88,7 +88,6 @@ public class AddBookController implements Initializable {
         return false;
     }
 
-    // Run whenever user presses save
     @FXML
     public void addDocument(ActionEvent event) {
         String documentID = id.getText();
@@ -125,7 +124,7 @@ public class AddBookController implements Initializable {
         String[] additionalInfo = new String[4];
         if ("Book".equals(documentType)) {
             additionalInfo[0] = publisher.getText();
-            additionalInfo[1] = ""; // url
+            additionalInfo[1] = "";
         } else if ("Thesis".equals(documentType)) {
             additionalInfo[0] = university.getText();
             additionalInfo[1] = department.getText();
@@ -232,10 +231,6 @@ public class AddBookController implements Initializable {
             author.setText(book.getAuthor());
             publisher.setText(book.getPublisher());
             genre.setText(book.getGenre());
-//            university.setVisible(false);
-//            department.setVisible(false);
-//            conference.setVisible(false);
-//            year.setVisible(false);
         } else if (document instanceof Thesis) {
             Thesis thesis = (Thesis) document;
             title.setText(thesis.getTitle());
@@ -244,9 +239,6 @@ public class AddBookController implements Initializable {
             university.setText(thesis.getUniversity());
             department.setText(thesis.getDepartment());
             genre.setText(thesis.getGenre());
-//            publisher.setVisible(false);
-//            conference.setVisible(false);
-//            year.setVisible(false);
         } else if (document instanceof Paper) {
             Paper paper = (Paper) document;
             title.setText(paper.getTitle());
@@ -255,9 +247,6 @@ public class AddBookController implements Initializable {
             conference.setText(paper.getConference());
             year.setText(paper.getYear());
             genre.setText(paper.getGenre());
-//            publisher.setVisible(false);
-//            university.setVisible(false);
-//            department.setVisible(false);
         }
         id.setEditable(false);
         isEditMod = Boolean.TRUE;

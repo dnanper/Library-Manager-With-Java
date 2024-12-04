@@ -23,17 +23,15 @@ import java.util.Map;
 
 public class Api {
     private static final String GOOGLE_BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
-    private final String apiKey = "AIzaSyAp6Bgoq3o06qefC_qQEP8I_yDSPhjy8lk"; // API key
+    private final String apiKey = "AIzaSyAp6Bgoq3o06qefC_qQEP8I_yDSPhjy8lk";
     private Gson gson = new Gson();
 
-    // search for books by ISBN
     public JsonObject getBookByISBN(String isbn) {
         String urlString = GOOGLE_BOOKS_API_URL + "isbn:" + isbn + "&key=" + apiKey;
         String jsonResponse = sendGetRequest(urlString);
         return gson.fromJson(jsonResponse, JsonObject.class);
     }
 
-    // by title
     public JsonObject getBookByTitle(String title) {
         try {
             String encodedTitle = URLEncoder.encode(title, "UTF-8");

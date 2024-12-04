@@ -55,19 +55,11 @@ public class ListMemberController implements Initializable {
     @FXML
     private TableView<Member> tableView;
 
-
-    // SAME AS LISTBOOK
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initCol();
         loadData();
-
-
     }
-
-
-
 
     private void initCol() {
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -76,7 +68,6 @@ public class ListMemberController implements Initializable {
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
     }
 
-    // function to extract data from database to put to table
     private void loadData() {
         list.clear();
 
@@ -84,21 +75,17 @@ public class ListMemberController implements Initializable {
         String qu = "SELECT * FROM MEMBER";
         ResultSet res = handler.execQuery(qu);
         try {
-            // get all attributes of each book from database
             while (res.next()) {
                 String nam = res.getString("name");
                 String pho = res.getString("phone");
                 String idx = res.getString("id");
                 String ema = res.getString("email");
-
-                // add data of book to list
                 list.add(new Member(nam, idx, pho, ema));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ListMemberController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        // push all elements in list to table
         tableView.getItems().setAll(list);
     }
 
@@ -135,27 +122,23 @@ public class ListMemberController implements Initializable {
 
     @FXML
     void handleMemberDelete(ActionEvent event) {
-        // Fetch the chosen row ( member )
-        // return selected member objects
         Member selectDel = tableView.getSelectionModel().getSelectedItem();
         if (selectDel == null) {
             AlertMaker.showErrorMessage("No member selected", "Please select a member for deletion!");
             return;
         }
 
-        // If the member currently issue some books
         if (DataBaseHandler.getInstance().isMemberHasAnyBooks(selectDel))
         {
             AlertMaker.showErrorMessage("This Member has some books", "Please select another member for deletion!");
             return;
         }
-        // else
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Deleting Member");
         alert.setContentText("Are you sure want to delete this member " + selectDel.getName() + "?");
         Optional<ButtonType> ans = alert.showAndWait();
-        // If user agree to delete
+
         if (ans.get() == ButtonType.OK) {
             Boolean flag = DataBaseHandler.getInstance().deleteMember(selectDel);
             if (flag) {
@@ -176,10 +159,9 @@ public class ListMemberController implements Initializable {
     }
 
     private boolean deleteUserByMemberID(String memberID) {
-        List<UserPreferences.User> users = UserPreferences.loadUsers(); // Load all users
+        List<UserPreferences.User> users = UserPreferences.loadUsers();
         boolean userFound = false;
 
-        // Delete target User from user List
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getUsername().equals(memberID)) {
                 users.remove(i);
@@ -189,7 +171,6 @@ public class ListMemberController implements Initializable {
         }
 
         if (userFound) {
-            // Save the updated user list back to file
             try (Writer writer = new FileWriter(UserPreferences.CONFIG_FILE)) {
                 Gson gson = new Gson();
                 for (UserPreferences.User user : users) {
@@ -208,16 +189,12 @@ public class ListMemberController implements Initializable {
 
     @FXML
     void handleMemberEdit(ActionEvent event) {
-        // Fetch the chosen row ( member )
-        // return selected member objects
+
         Member selectEdit = tableView.getSelectionModel().getSelectedItem();
         if (selectEdit == null) {
             AlertMaker.showErrorMessage("No member selected", "Please select a member for edition");
         }
-
-        // Display Edit Member Window
         try {
-            // Load window
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/addmember.fxml"));
             Parent parent = loader.load();
 
@@ -226,12 +203,10 @@ public class ListMemberController implements Initializable {
 
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.setTitle("Edit Member");
-            // Create scene from FXML file that stored in parent
             stage.setScene(new Scene(parent));
             stage.show();
             LibraryUtil.setStageIcon(stage);
 
-            // Refresh after Edit
             stage.setOnCloseRequest((e)->{
                 handleMemberRefresh(new ActionEvent());
             });

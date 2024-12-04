@@ -145,8 +145,6 @@ public class GenericSearch<T> {
         } else if (clazz == Paper.class) {
             return Paper.getColumnName(fieldName);
         }
-        // For other Document subclasses (if added in the future), you might need to implement a specific mapping
-        // For now, just return the fieldName as a fallback, but you should adjust this based on your actual needs
         return fieldName;
     }
 }

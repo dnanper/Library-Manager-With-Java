@@ -111,7 +111,6 @@ public class ListBookController implements Initializable {
         });
     }
 
-    // function to connect the columns in table with the tags of the book
     private void initCol() {
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -165,17 +164,12 @@ public class ListBookController implements Initializable {
         }
     }
 
-
-
-
-    // function to extract data from database to put to table
     private void loadData() {
         list.clear();
         DataBaseHandler handler = DataBaseHandler.getInstance();
         String qu = "SELECT * FROM BOOK";
         ResultSet res = handler.execQuery(qu);
         try {
-            // get all attributes of each book from database
             while (res.next()) {
                 String tit = res.getString("title");
                 String aut = res.getString("author");
@@ -183,16 +177,12 @@ public class ListBookController implements Initializable {
                 String pub = res.getString("publisher");
                 String gen = res.getString("genre");
                 Boolean ava = res.getBoolean("isAvail");
-
-                // add data of book to list
                 list.add(new Book(tit, aut, idx, gen, pub, ava,null,null,null));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ListBookController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // push all elements in list to table
         tableView.setItems(list);
-        // Search Book
         searchText.textProperty().addListener((observable, oldValue, newValue) -> {
             String type = searchTypeCBox.getValue();
             filterBookList(newValue, type);
@@ -201,14 +191,11 @@ public class ListBookController implements Initializable {
 
     @FXML
     void handleBookDeleteOption(ActionEvent event) {
-        // Fetch the chosen row ( book )
         Book selectDel = tableView.getSelectionModel().getSelectedItem();
         if (selectDel == null) {
             AlertMaker.showErrorMessage("No book selected", "Please select a book for deletion!");
             return;
         }
-
-        // If the book was issued before and hasn't been returned
         if (DataBaseHandler.getInstance().isIssued(selectDel)) {
             AlertMaker.showErrorMessage("This book is not available", "Please select another book for deletion!");
             return;
@@ -218,7 +205,6 @@ public class ListBookController implements Initializable {
         alert.setTitle("Deleting Book");
         alert.setContentText("Are you sure want to delete the book " + selectDel.getTitle() + " from library?");
         Optional<ButtonType> ans = alert.showAndWait();
-        // If user agree to delete
         if (ans.get() == ButtonType.OK) {
             Boolean flag = DataBaseHandler.getInstance().deleteBook(selectDel);
             if (flag) {
@@ -234,14 +220,12 @@ public class ListBookController implements Initializable {
 
     @FXML
     void handleBookEditOption(ActionEvent event) {
-        // Fetch the chosen row ( book )
         Book selectEdit = tableView.getSelectionModel().getSelectedItem();
         if (selectEdit == null) {
             AlertMaker.showErrorMessage("No book selected", "Please select a book for edition");
             return;
         }
 
-        // Display Edit Book Window
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/adddocument.fxml"));
             Parent parent = loader.load();
@@ -255,7 +239,6 @@ public class ListBookController implements Initializable {
             stage.show();
             LibraryUtil.setStageIcon(stage);
 
-            // Refresh after Edit
             stage.setOnCloseRequest((e) -> {
                 handleBookRefreshOption(new ActionEvent());
             });
