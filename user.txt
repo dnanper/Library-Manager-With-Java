@@ -1,4 +1,4 @@
-{"username":"23020003","password":"d033e22ae348aeb5660fc2140aec35850c4da997","fine":"175","banned":false}
+{"username":"23020003","password":"d033e22ae348aeb5660fc2140aec35850c4da997","fine":"190","banned":false}
 {"username":"23020009","password":"2a2f81d0651cfd3c9ed520e812f18292e7579f1f","fine":"0","banned":false}
-{"username":"23020018","password":"92e0497344d7d5690f3cbf599b5d68626f906645","fine":"45","banned":false}
+{"username":"23020018","password":"92e0497344d7d5690f3cbf599b5d68626f906645","fine":"50","banned":false}
 {"username":"23020015","password":"b0ea69840593fabc2c96d1181fcc7b37143e4f39","fine":"0","banned":false}

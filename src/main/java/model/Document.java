@@ -23,6 +23,28 @@ public abstract class Document {
         this.isAvail = isAvail;
     }
 
+
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setGerne(String gerne) {
+        this.gerne = gerne;
+    }
+
+    public void setAvail(Boolean avail) {
+        isAvail = avail;
+    }
+
     public Boolean getAvailability() {
         return isAvail;
     }

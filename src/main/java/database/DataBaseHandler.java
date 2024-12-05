@@ -299,7 +299,7 @@ public class DataBaseHandler {
             stmt.execute(qu);
             return true;
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error Occured", JOptionPane.ERROR_MESSAGE);
+
             System.out.println("Exception at execAction: dataHandler" + e.getLocalizedMessage());
             return false;
         } finally {

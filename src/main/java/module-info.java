@@ -54,4 +54,5 @@ module controller {
     exports ui.listthesis;
     exports ui.listpaper;
     exports api;
+    exports database;
 }
