@@ -40,6 +40,22 @@ public class Book extends Document {
         return url;
     }
 
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setUrlCoverImage(String urlCoverImage) {
+        this.urlCoverImage = urlCoverImage;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public static String getColumnName(String fieldName) {
         switch (fieldName) {
             case "title":

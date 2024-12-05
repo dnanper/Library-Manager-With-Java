@@ -380,14 +380,14 @@ public class UserController implements Initializable {
         idCol1.setCellValueFactory(new PropertyValueFactory<>("id"));
         authorCol1.setCellValueFactory(new PropertyValueFactory<>("author"));
         publisherCol1.setCellValueFactory(new PropertyValueFactory<>("publisher"));
-        genreCol1.setCellValueFactory(new PropertyValueFactory<>("genre")); // Kết nối cột genre
+        genreCol1.setCellValueFactory(new PropertyValueFactory<>("genre"));
         availabilityCol1.setCellValueFactory(new PropertyValueFactory<>("availability"));
 
         titleCol2.setCellValueFactory(new PropertyValueFactory<>("title"));
         idCol2.setCellValueFactory(new PropertyValueFactory<>("id"));
         authorCol2.setCellValueFactory(new PropertyValueFactory<>("author"));
         publisherCol2.setCellValueFactory(new PropertyValueFactory<>("publisher"));
-        genreCol2.setCellValueFactory(new PropertyValueFactory<>("genre")); // Kết nối cột genre
+        genreCol2.setCellValueFactory(new PropertyValueFactory<>("genre"));
         availabilityCol2.setCellValueFactory(new PropertyValueFactory<>("availability"));
 
         idColThesis.setCellValueFactory(new PropertyValueFactory<>("id"));

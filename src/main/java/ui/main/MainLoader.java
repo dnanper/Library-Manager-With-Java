@@ -1,5 +1,6 @@
 package ui.main;
 
+import api.Api;
 import database.DataBaseHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,10 @@ public class MainLoader extends Application{
 
         new Thread(() -> {
             DataBaseHandler.getInstance();
+        }).start();
+
+        new Thread(() -> {
+            Api.getInstance();
         }).start();
     }
 

@@ -336,7 +336,7 @@ public class DataBaseHandler {
             stmt.execute(qu);
             return true;
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error Occured", JOptionPane.ERROR_MESSAGE);
+
             System.out.println("Exception at execAction: dataHandler" + e.getLocalizedMessage());
             return false;
         } finally {
@@ -771,5 +771,25 @@ public class DataBaseHandler {
         }
         return null;
     }
+
+    public boolean isBookExists(String bookID) {
+
+        String checkQuery = "SELECT COUNT(*) FROM BOOK WHERE id = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(checkQuery)) {
+            preparedStatement.setString(1, bookID);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
 
 }

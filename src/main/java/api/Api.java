@@ -22,9 +22,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Api {
+    private static Api api = null;
     private static final String GOOGLE_BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes?q=";
     private final String apiKey = "AIzaSyAp6Bgoq3o06qefC_qQEP8I_yDSPhjy8lk";
     private Gson gson = new Gson();
+
+    private Api(){}
+
+    public static Api getInstance() {
+        if (api == null) {
+            api = new Api(); // Tạo đối tượng chỉ khi chưa có
+        }
+        return api;
+    }
 
     public JsonObject getBookByISBN(String isbn) {
         String urlString = GOOGLE_BOOKS_API_URL + "isbn:" + isbn + "&key=" + apiKey;
