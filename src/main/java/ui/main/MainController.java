@@ -217,6 +217,11 @@ public class MainController implements Initializable {
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
     }
 
+    /**
+     * Updates the fine information for all users. It queries the database to retrieve details of books issued to each user, calculates the fines based on
+     * book issue durations and overdue status, and then updates the user preferences with the new fine amounts. In case of any database or processing errors,
+     * it logs the exception using the logger for this class.
+     */
     private void updateFineUser() {
         try {
             List<UserPreferences.User> uList = UserPreferences.loadUsers();
@@ -696,7 +701,11 @@ public class MainController implements Initializable {
         }
     }
 
-    // add new relation between book-member
+    /**
+     * Handles the operation of issuing a book to a member, including database updates and UI feedback.
+     *
+     * @param event The action event that triggers the operation.
+     */
     @FXML
     private void loadIssueOperation(ActionEvent event) {
         String memberID = memberIDInput.getText();
@@ -819,6 +828,11 @@ public class MainController implements Initializable {
         AlertMaker.showMaterialDialog(rootPane, rootAnchorPane, Arrays.asList(buttonT, buttonF), "Confirm Renew", "Are you sure want to renew the book ?");
     }
 
+    /**
+     * Handles the operation of closing the application window.
+     *
+     * @param event The action event that triggers the operation.
+     */
     @FXML
     private void handleMenuClose(ActionEvent event) {
         ((Stage)rootPane.getScene().getWindow()).close();

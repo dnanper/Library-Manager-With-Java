@@ -70,6 +70,14 @@ public class AddBookController implements Initializable {
         documentFactory = new DocumentFactory();
     }
 
+    /**
+     * Checks if a document with the given ID already exists in the database for the specified document type.
+     *
+     * @param id The unique identifier of the document to check.
+     * @param type The type of the document (e.g., "Book", "Thesis", "Paper").
+     * @return `true` if a document with the given ID exists in the database for the specified type, `false` otherwise.
+     *         In case of a SQL exception during the query execution, it logs the error and returns `false`.
+     */
     public static boolean isDocumentExists(String id, String type) {
         try {
             String checkstmt = "SELECT COUNT(*) FROM " + type.toUpperCase() + " WHERE id=?";
@@ -88,6 +96,13 @@ public class AddBookController implements Initializable {
         return false;
     }
 
+    /**
+     * Handles the action when the user clicks the "add" or "save" button (depending on the mode). Validates the input fields, determines the document type,
+     * creates the appropriate document object using the factory, checks for duplicates, and inserts the document into the database if it's a new document.
+     * If in edit mode, it updates the existing document in the database.
+     *
+     * @param event The action event triggered by the button click.
+     */
     @FXML
     public void addDocument(ActionEvent event) {
         String documentID = id.getText();
@@ -223,6 +238,11 @@ public class AddBookController implements Initializable {
         }
     }
 
+    /**
+     * Populates the UI fields with the details of the provided document. This is used when editing an existing document to display its current information in the UI.
+     *
+     * @param document The document object whose details should be used to populate the UI fields.
+     */
     public void inflateUI(Document document) {
         if (document instanceof Book) {
             Book book = (Book) document;

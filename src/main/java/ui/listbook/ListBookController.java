@@ -88,7 +88,11 @@ public class ListBookController implements Initializable {
 
     DataBaseHandler handler = DataBaseHandler.getInstance();
     Connection connection = handler.getConnection();
-        GenericSearch<Book> bookSearch = new GenericSearch<>(connection);
+
+    /**
+     * An instance of the `GenericSearch` class specialized for searching `Book` objects in the database.
+     */
+    GenericSearch<Book> bookSearch = new GenericSearch<>(connection);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -99,6 +103,12 @@ public class ListBookController implements Initializable {
 
     }
 
+    /**
+     * Sets up the click handler for the table view. When a row is clicked once with the left mouse button, it retrieves the selected book and passes its ID
+     * to the `BookController` for further handling (e.g., loading detailed information about the book).
+     *
+     * @param tableView The `TableView` object representing the table displaying the book list.
+     */
     private void setupTableClickHandler(TableView<Book> tableView) {
         BookController loadBook = new BookController();
         tableView.setOnMouseClicked(event -> {
@@ -120,6 +130,13 @@ public class ListBookController implements Initializable {
         availabilityCol.setCellValueFactory(new PropertyValueFactory<>("availability"));
     }
 
+    /**
+     * Filters the book list based on the provided search content and search type. If the search content or type is invalid or empty, it displays the full list.
+     * Otherwise, it performs a database search using the `GenericSearch` instance to find books that match the search criteria and updates the table view with the filtered list.
+     *
+     * @param searchContent The text entered by the user for searching (e.g., a book title, author name, etc.).
+     * @param type The type of search selected by the user (e.g., "ID", "Title", "Author", "Genre").
+     */
     private void filterBookList(String searchContent, String type) {
         if (searchContent == null || searchContent.isEmpty() || type == null) {
             tableView.setItems(list);
@@ -164,6 +181,11 @@ public class ListBookController implements Initializable {
         }
     }
 
+    /**
+     * Loads the book data from the database and populates the observable list (`list`) with `Book` objects.
+     * It then sets the items of the table view to display the loaded list. Also, it adds a listener to the search text field
+     * so that the book list is filtered automatically as the user types in the search text.
+     */
     private void loadData() {
         list.clear();
         DataBaseHandler handler = DataBaseHandler.getInstance();

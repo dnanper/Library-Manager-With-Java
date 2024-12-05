@@ -63,6 +63,10 @@ public class DataBaseHandler {
         }
     }
 
+    /**
+     * Sets up the `BOOK` table in the database. Checks if the table exists and, if so, adds any missing columns.
+     * If the table doesn't exist, it creates the `BOOK` table with the specified columns.
+     */
     void setupBookTable() {
         String TABLE_NAME = "BOOK";
         try {
@@ -118,6 +122,10 @@ public class DataBaseHandler {
         }
     }
 
+    /**
+     * Sets up the `THESIS` table in the database. Checks if the table exists and, if so, adds any missing columns.
+     * If the table doesn't exist, it creates the `THESIS` table with the specified columns.
+     */
     void setupThesisTable() {
         String TABLE_NAME = "THESIS";
         try {
@@ -159,6 +167,10 @@ public class DataBaseHandler {
         }
     }
 
+    /**
+     * Sets up the `PAPER` table in the database. Checks if the table exists and, if so, adds any missing columns.
+     * If the table doesn't exist, it creates the `PAPER` table with the specified columns.
+     */
     void setupPaperTable() {
         String TABLE_NAME = "PAPER";
         try {
@@ -199,6 +211,9 @@ public class DataBaseHandler {
         }
     }
 
+    /**
+     * Sets up the `MEMBER` table in the database. Checks if the table exists and, if it doesn't, creates the `MEMBER` table with the specified columns.
+     */
     void setupMemberTable() {
         String TABLE_NAME = "MEMBER";
         try {
@@ -222,6 +237,10 @@ public class DataBaseHandler {
         }
     }
 
+    /**
+     * Sets up the `ISSUE` table in the database. Checks if the table exists and, if it doesn't, creates the `ISSUE` table with the specified columns
+     * and foreign key references to the `BOOK` and `MEMBER` tables.
+     */
     void setupIssueTable() {
         String TABLE_NAME = "ISSUE";
         try {
@@ -247,6 +266,10 @@ public class DataBaseHandler {
         }
     }
 
+    /**
+     * Sets up the `REVIEW` table in the database. Checks if the table exists and, if it doesn't, creates the `REVIEW` table with the specified columns,
+     * including an auto-generated primary key and constraints on the `rating` column.
+     */
     void setupReviewTable() {
         String TABLE_NAME = "REVIEW";
         try {
@@ -280,6 +303,13 @@ public class DataBaseHandler {
         }
     }
 
+    /**
+     * Executes a SQL query on the database and returns the result set.
+     *
+     * @param query The SQL query to be executed.
+     * @return The `ResultSet` containing the query results if the execution is successful. In case of a `SQLException`, it prints the error message
+     *         and returns `null`.
+     */
     public ResultSet execQuery(String query) {
         ResultSet result;
         try {
@@ -293,6 +323,13 @@ public class DataBaseHandler {
         return result;
     }
 
+    /**
+     * Executes a SQL statement (e.g., INSERT, UPDATE, DELETE) on the database.
+     *
+     * @param qu The SQL statement to be executed.
+     * @return `true` if the statement is executed successfully, `false` otherwise. In case of a `SQLException`, it shows an error message dialog,
+     *         prints the error message, and returns `false`.
+     */
     public boolean execAction(String qu) {
         try {
             stmt = conn.createStatement();
@@ -734,7 +771,5 @@ public class DataBaseHandler {
         }
         return null;
     }
-
-
 
 }

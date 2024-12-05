@@ -84,6 +84,13 @@ public class LoginController implements Initializable{
         return mediaPlayer;
     }
 
+    /**
+     * Loads the main application UI for admins. It sets the root of the `MainController` to the loaded FXML layout for the main UI,
+     * configures the stage with the appropriate scene, sets the theme, initializes the media player to play background music,
+     * and shows the stage. Also, it sets the application icon for the stage.
+     *
+     * @throws IOException If there is an issue loading the main UI FXML file or creating the media object.
+     */
     void loadMain() throws IOException {
         MainController main = MainController.getInstance();
         main.setRoot(FXMLLoader.load(getClass().getResource("/fxml/main.fxml")));
@@ -103,6 +110,13 @@ public class LoginController implements Initializable{
         LibraryUtil.setStageIcon(stage);
     }
 
+    /**
+     * Loads the main application UI for regular users. It sets the username in the `UserController`, sets the root of the `MainController` to the loaded FXML layout
+     * for the user main UI, configures the stage with the appropriate scene, sets the theme, initializes the media player to play background music,
+     * and shows the stage. Also, it sets the application icon for the stage.
+     *
+     * @throws IOException If there is an issue loading the user main UI FXML file or creating the media object.
+     */
     void loadUserMain() throws IOException {
         String uname = username.getText();
         UserController.setUsername(uname);

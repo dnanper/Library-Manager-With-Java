@@ -26,6 +26,14 @@ public class pscfController {
         stage.close();
     }
 
+    /**
+     * Handles the confirmation action when the user clicks the corresponding button in the UI.
+     * It retrieves the entered email and password from the text fields, validates that they are not empty, and if valid, passes them to the
+     * associated `UserController` for further processing. If any errors occur during the process, appropriate error messages are shown to the user.
+     * Finally, it closes the stage (window) containing the input fields.
+     *
+     * @param event The action event triggered by the user clicking the confirm button.
+     */
     @FXML
     void handleConfirm(ActionEvent event) {
         try {

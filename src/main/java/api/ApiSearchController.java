@@ -82,7 +82,12 @@ public class ApiSearchController {
 
 
     /**
-     * Converts a BufferedImage to a JavaFX Image.
+     * Converts a `BufferedImage` (from the Java AWT library) to a JavaFX `Image` object.
+     * This is useful for displaying images in JavaFX applications that were created or manipulated using AWT.
+     *
+     * @param bufferedImage The `BufferedImage` to be converted.
+     * @return A JavaFX `Image` object if the conversion is successful. In case of an error during the conversion process,
+     *         it prints the stack trace and returns `null`.
      */
     public Image convertToJavaFXImage(BufferedImage bufferedImage) {
         try {
@@ -99,6 +104,14 @@ public class ApiSearchController {
         }
     }
 
+    /**
+     * Retrieves the URL of the book cover image from the provided book JSON object.
+     * It first tries to access the `imageLinks` object within the book JSON and then fetches the `thumbnail` URL.
+     *
+     * @param bookJson The JSON object representing the book's information.
+     * @return The URL of the book cover image as a string if found. If any part of the process fails (e.g., missing `imageLinks`
+     *         or `thumbnail`), it prints the stack trace and returns `null`.
+     */
     private String getBookCoverImageUrl(JsonObject bookJson) {
         try {
 
@@ -121,6 +134,15 @@ public class ApiSearchController {
         return null;
     }
 
+    /**
+     * Generates a QR code image as a `BufferedImage` for the given book URL.
+     * It uses the ZXing library to encode the URL into a QR code with specified error correction level and dimensions.
+     *
+     * @param bookUrl The URL for which the QR code should be generated.
+     * @return A `BufferedImage` representing the generated QR code if successful. In case of errors like encoding issues
+     *         or other exceptions during the generation process, it prints the appropriate error message and stack trace,
+     *         and returns `null`.
+     */
     public BufferedImage getQRCode(String bookUrl) {
         if (bookUrl == null || bookUrl.trim().isEmpty()) {
             System.out.println("Error: The URL is null or empty.");
@@ -240,7 +262,15 @@ public class ApiSearchController {
         }
     }
 
-
+    /**
+     * Checks if a book with the given ID already exists in the database.
+     * It constructs and executes a SQL query to count the number of records with the provided book ID.
+     *
+     * @param bookID The ID of the book to check for existence in the database.
+     * @return `true` if the book exists (i.e., the count of records with the given ID is greater than 0),
+     *         `false` otherwise. In case of a SQL exception during the query execution, it prints the stack trace
+     *         and returns `false`.
+     */
     private boolean isBookExists(String bookID) {
 
         String checkQuery = "SELECT COUNT(*) FROM BOOK WHERE id = ?";
@@ -263,6 +293,14 @@ public class ApiSearchController {
         return bookJson.has("title") ? bookJson.get("title").getAsString() : "No Title Found";
     }
 
+    /**
+     * Retrieves the ISBN of the book from the provided book JSON object (specifically from the `volumeInfo` part).
+     * It searches through the `industryIdentifiers` array to find the ISBN-13 identifier if available.
+     *
+     * @param volumeInfo The JSON object representing the `volumeInfo` part of the book's information.
+     * @return The ISBN of the book as a string if found. If no ISBN-13 identifier is present in the `industryIdentifiers`
+     *         array, it returns the string "No ISBN Found".
+     */
     private String getBookISBN(JsonObject volumeInfo) {
         if (volumeInfo.has("industryIdentifiers")) {
             JsonArray identifiers = volumeInfo.getAsJsonArray("industryIdentifiers");

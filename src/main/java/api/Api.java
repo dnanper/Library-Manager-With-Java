@@ -32,6 +32,14 @@ public class Api {
         return gson.fromJson(jsonResponse, JsonObject.class);
     }
 
+    /**
+     * Retrieves book information from the Google Books API using the provided book title.
+     * The title is URL-encoded before constructing the request URL to handle special characters properly.
+     *
+     * @param title The title of the book to retrieve.
+     * @return A `JsonObject` representing the book information retrieved from the API. If an exception occurs during the process,
+     *         such as an encoding error or a problem with the API request, the method will print the stack trace and return `null`.
+     */
     public JsonObject getBookByTitle(String title) {
         try {
             String encodedTitle = URLEncoder.encode(title, "UTF-8");
@@ -44,8 +52,14 @@ public class Api {
         }
     }
 
-
-
+    /**
+     * Sends an HTTP GET request to the specified URL and retrieves the response as a string.
+     * This method handles the connection setup, sending the request, reading the response, and closing the connection properly.
+     *
+     * @param urlString The URL to which the GET request should be sent.
+     * @return The response from the server as a string. If an error occurs during the request process, the stack trace will be printed
+     *         and an empty string or a partially retrieved response (depending on when the error occurred) will be returned.
+     */
     private String sendGetRequest(String urlString) {
         StringBuilder result = new StringBuilder();
         HttpURLConnection conn = null;

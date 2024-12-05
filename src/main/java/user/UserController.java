@@ -318,6 +318,10 @@ public class UserController implements Initializable {
         setupPane();
     }
 
+    /**
+     * Sets up the UI panes based on the user's banned status. Checks the user's banned status in the `UserPreferences` and if banned, makes the normal pane
+     * disabled and invisible while enabling and showing the ban pane. Otherwise, does the opposite.
+     */
     private void setupPane() {
         List<UserPreferences.User> uList = UserPreferences.loadUsers();
         for (UserPreferences.User user : uList) {
@@ -347,6 +351,12 @@ public class UserController implements Initializable {
         setupTableClickHandler(tableView2);
     }
 
+    /**
+     * Sets up a click handler for a specific table view. When a row in the table is clicked with the left mouse button and a single click,
+     * it retrieves the selected book and calls the `handleBookSelection` method in the `BookController` to handle further actions related to the selected book.
+     *
+     * @param tableView The table view for which the click handler is being set up.
+     */
     private void setupTableClickHandler(TableView<Book> tableView) {
         BookController loadBook = new BookController();
         tableView.setOnMouseClicked(event -> {
@@ -446,8 +456,13 @@ public class UserController implements Initializable {
         tableViewThesis.setItems(observableFilterList);
     }
 
-
-
+    /**
+     * Handles the action when the user clicks the button to confirm an email.
+     * This method loads the FXML layout for the `pscf` view, sets the `UserController` instance for the loaded `pscfController`,
+     * creates a new stage, applies a theme to the scene, shows the stage, and sets the stage icon.
+     *
+     * @param event The action event triggered by the user clicking the confirm email button.
+     */
     @FXML
     void confirmEmailHandle(ActionEvent event) {
         try {
@@ -469,6 +484,15 @@ public class UserController implements Initializable {
         }
     }
 
+    /**
+     * Handles the process of receiving emails for the user.
+     * It shows the mail pane in the UI, configures the properties for connecting to an IMAP email server, retrieves unread emails,
+     * filters for emails with the subject "Library Warning", adds relevant information to the `emailList`, marks the emails as read,
+     * updates the email list view, shuts down the executor service used for asynchronous processing, and closes the email connection.
+     *
+     * @param email The email address used to connect to the email server.
+     * @param pass The password for the email account.
+     */
     public void receiveEmail(String email, String pass) {
         showPane(mailPane);
 
@@ -527,6 +551,12 @@ public class UserController implements Initializable {
         }
     }
 
+    /**
+     * Handles the click event on an email item in the email list view.
+     * If the selected email has the subject "Library Warning", it sets the content text area with a specific warning message.
+     *
+     * @param event The mouse click event on an item in the email list view.
+     */
     @FXML
     public void handleEmailClick(MouseEvent event) {
         String selectedEmail = emailListView.getSelectionModel().getSelectedItem();
@@ -546,6 +576,13 @@ public class UserController implements Initializable {
         showPane(settingPane);
     }
 
+    /**
+     * Handles the action when the user clicks the button to view the borrowed books.
+     * It clears the existing list of books, shows the borrow pane, retrieves the list of books issued to the current user from the database,
+     * and sets the items of the corresponding table view.
+     *
+     * @param event The action event triggered by the user clicking the view borrowed books button.
+     */
     @FXML
     public void viewBorrowBookHandle(ActionEvent event) {
         list.clear();
@@ -555,6 +592,13 @@ public class UserController implements Initializable {
         tableView1.setItems(list);
     }
 
+    /**
+     * Handles the action when the user clicks the button to view the library (books available in the library).
+     * It clears the existing list of books, shows the library pane, queries the database for all books, populates the list with book objects,
+     * sets the items of the table view, and adds a listener to the search text field to filter the book list based on user input.
+     *
+     * @param event The action event triggered by the user clicking the view library button.
+     */
     @FXML
     public void ViewLibraryHandle(ActionEvent event) {
         list.clear();
@@ -582,6 +626,13 @@ public class UserController implements Initializable {
         });
     }
 
+    /**
+     * Handles the action when the user clicks the button to view recommended books.
+     * It clears the existing list of books, shows the recommend pane, determines the favorite genre (or uses a default if not specified),
+     * retrieves the recommended books for the current user from the database based on the genre, and sets the items of the corresponding table view.
+     *
+     * @param event The action event triggered by the user clicking the recommend button.
+     */
     @FXML
     public void recommendHandle(ActionEvent event) {
         list.clear();
@@ -597,6 +648,12 @@ public class UserController implements Initializable {
         tableView2.setItems(list);
     }
 
+    /**
+     * Controls the visibility of different panes in the UI.
+     * It iterates over a list of all available panes and makes only the specified `paneToShow` visible while hiding the others.
+     *
+     * @param paneToShow The pane that should be made visible.
+     */
     private void showPane(Pane paneToShow) {
         List<Pane> allPanes = List.of(libraryPane, borrowPane, mailPane, settingPane, recommendPane, thesisPane, paperPane);
 

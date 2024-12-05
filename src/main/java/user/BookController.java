@@ -58,6 +58,11 @@ public class BookController {
         submitReviewButton.setOnAction(event -> handleSubmitReview());
     }
 
+    /**
+     * Loads the detailed data of a book identified by the given book ID and populates the corresponding UI elements.
+     *
+     * @param bookId The ID of the book whose data is to be loaded. If it's null or empty, appropriate error handling is done.
+     */
     public void loadBookData(String bookId) {
         if (bookId == null || bookId.isEmpty()) {
             System.err.println("No book ID provided.");
@@ -113,6 +118,12 @@ public class BookController {
         }
     }
 
+    /**
+     * Handles the selection of a book and opens a new stage to display the detailed book information.
+     * It loads the FXML layout for the book details view, initializes the controller, and populates the data for the selected book.
+     *
+     * @param bookId The ID of the selected book.
+     */
     @FXML
     public void handleBookSelection(String bookId) {
         Stage stage = new Stage();
@@ -128,6 +139,12 @@ public class BookController {
         }
     }
 
+    /**
+     * Handles the submission of a user's review for a book.
+     * It validates the entered rating and review text, inserts the review data into the database if valid,
+     * and refreshes the book's data in the UI to reflect the new review if the insertion is successful.
+     * In case of any errors during the process, appropriate error messages are shown to the user.
+     */
     @FXML
     private void handleSubmitReview() {
         String bookId = bookIdLabel.getText();
