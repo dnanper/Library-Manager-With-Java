@@ -3,11 +3,17 @@ package ui.settings;
 import alert.AlertMaker;
 import com.jfoenix.controls.*;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.ResourceBundle;
 
+import javafx.application.HostServices;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -53,7 +59,17 @@ public class SettingsController implements Initializable {
     @FXML
     private StackPane rootPane;
 
+    @FXML
+    private JFXButton faceButton;
+
+    @FXML
+    private JFXButton gitButton;
+
+    @FXML
+    private JFXButton guideButton;
+
     ObservableList<String> musicList = FXCollections.observableArrayList("MB1", "MB2");
+    private HostServices hostServices;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -138,5 +154,41 @@ public class SettingsController implements Initializable {
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.play();
+    }
+
+    @FXML
+    void clickFaceHandle(ActionEvent event) {
+        try {
+            URI facebookUri = new URI("https://www.facebook.com/UET.VNUH");
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(facebookUri);
+            } else {
+                if (hostServices!= null) {
+                    hostServices.showDocument(facebookUri.toString());
+                }
+            }
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void clickGitHandle(ActionEvent event) {
+        try {
+            URI githubUri = new URI("https://github.com/dnanper");
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(githubUri);
+            } else {
+                if (hostServices!= null) {
+                    hostServices.showDocument(githubUri.toString());
+                }
+            }
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setHostServices(HostServices hostServices) {
+        this.hostServices = hostServices;
     }
 }

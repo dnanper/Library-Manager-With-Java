@@ -10,13 +10,15 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.settings.SettingsController">
+<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.settings.SettingsController">
     <children>
         <AnchorPane fx:id="rootAnchorPane" prefHeight="200.0" prefWidth="200.0">
             <children>
@@ -225,6 +227,15 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
+                                          <JFXButton fx:id="guideButton" onAction="#clickGitHandle">
+                                             <graphic>
+                                                <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../guide.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </JFXButton>
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="120.0" prefWidth="200.0">
@@ -234,6 +245,15 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
+                                          <JFXButton fx:id="faceButton" onAction="#clickFaceHandle">
+                                             <graphic>
+                                                <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../face.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </JFXButton>
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" layoutX="10.0" layoutY="110.0" prefHeight="120.0" prefWidth="200.0">
@@ -243,6 +263,15 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
+                                          <JFXButton fx:id="gitButton" onAction="#clickGitHandle">
+                                             <graphic>
+                                                <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../git.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </JFXButton>
                                        </children>
                                     </HBox>
                                  </children>

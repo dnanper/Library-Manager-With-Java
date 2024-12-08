@@ -1,5 +1,6 @@
 package user;
 
+import alert.AlertMaker;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextArea;
@@ -240,6 +241,12 @@ public class UserController implements Initializable {
     @FXML
     private TableColumn<?, ?> yearCol;
 
+    @FXML
+    private JFXTextField accountText;
+
+    @FXML
+    private JFXTextField passwordText;
+
     ObservableList<Thesis> listThesis = FXCollections.observableArrayList();
     ObservableList<Paper> listPaper = FXCollections.observableArrayList();
 
@@ -312,10 +319,19 @@ public class UserController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        initDefaultValues();
         initCol();
         setupTableClickHandlers();
         setupPane();
+    }
+
+    private void initDefaultValues() {
+        UserPreferences.User currentUser = UserPreferences.findUser(userName);
+        if (currentUser!= null) {
+            accountText.setText(currentUser.getUsername());
+            passwordText.setText(currentUser.getPassword());
+            accountText.setEditable(false);
+        }
     }
 
     /**
@@ -662,4 +678,47 @@ public class UserController implements Initializable {
         }
     }
 
+    @FXML
+    void handleSaveButton(ActionEvent event) {
+        try {
+            String pass = passwordText.getText();
+            String acc = accountText.getText();
+
+            if (pass.isEmpty() || acc.isEmpty()) {
+                AlertMaker.showErrorMessage("Invalid Input", "Please enter values for both password and account fields.");
+                return;
+            }
+
+            UserPreferences.User currentUser = UserPreferences.findUser(UserController.userName);
+            if (currentUser == null) {
+                AlertMaker.showErrorMessage("Error", "User not found in preferences.");
+                return;
+            }
+            currentUser.setPassword(pass);
+            List<UserPreferences.User> userList = UserPreferences.loadUsers();
+            if (userList == null) {
+                userList = new ArrayList<>();
+            }
+            boolean userUpdated = false;
+            for (int i = 0; i < userList.size(); i++) {
+                if (userList.get(i).getUsername().equals(UserController.userName)) {
+                    userList.set(i, currentUser);
+                    userUpdated = true;
+                    break;
+                }
+            }
+            if (!userUpdated) {
+                userList.add(currentUser);
+            }
+            try {
+                UserPreferences.updateUserList(userList);
+                AlertMaker.showErrorMessage("Success", "Account information has been updated successfully.");
+            } catch (Exception e) {
+                AlertMaker.showErrorMessage("Error", "There was an issue updating the account information. Please try again.");
+                e.printStackTrace();
+            }
+        } catch (NumberFormatException e) {
+            AlertMaker.showErrorMessage("Invalid Input", "Please enter valid numbers for password.");
+        }
+    }
 }

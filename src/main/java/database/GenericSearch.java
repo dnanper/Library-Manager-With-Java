@@ -30,7 +30,7 @@ public class GenericSearch<T> {
      *
      * @param tableName The name of the database table on which the search should be performed.
      * @param condition The WHERE condition for the SQL query (can be an empty string if no specific condition is needed).
-     * @param parameters An array of objects representing the parameters to be set in the SQL query's WHERE clause.
+     * @param parameters An array of objects representing the parameters to be set in the SQL queries WHERE clause.
      * @param clazz The class object representing the type of objects to be created from the database results.
      * @return A list of objects of type `T` representing the search results. If an error occurs during the search or object creation process,
      *         an empty list may be returned and the error will be logged.

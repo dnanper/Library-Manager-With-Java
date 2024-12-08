@@ -38,7 +38,7 @@ public class UserPreferences {
 
         public Boolean getBanned() { return banned; }
 
-        public void setPassword() {
+        public void setPassword(String password) {
             if (password.length() < 16) {
                 this.password = DigestUtils.shaHex(password);
             } else {

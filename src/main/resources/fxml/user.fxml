@@ -19,7 +19,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<StackPane xmlns="http://javafx.com/javafx/22.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.UserController">
+<StackPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.UserController">
    <children>
       <Pane fx:id="banPane" prefHeight="200.0" prefWidth="200.0" visible="false">
          <children>
@@ -314,9 +314,9 @@
                               </Pane>
                               <Pane fx:id="settingPane" prefHeight="200.0" prefWidth="200.0" visible="false">
                                  <children>
-                                    <VBox prefHeight="537.0" prefWidth="730.0">
+                                    <VBox alignment="TOP_CENTER" prefHeight="537.0" prefWidth="730.0">
                                        <children>
-                                          <HBox prefHeight="537.0" prefWidth="730.0">
+                                          <HBox prefHeight="230.0" prefWidth="730.0">
                                              <children>
                                                 <Label text="ACCOUNT">
                                                    <HBox.margin>
@@ -326,7 +326,7 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <JFXTextField prefHeight="25.0" prefWidth="300.0" />
+                                                <JFXTextField fx:id="accountText" prefHeight="25.0" prefWidth="300.0" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets />
@@ -335,7 +335,7 @@
                                                 <Insets top="100.0" />
                                              </padding>
                                           </HBox>
-                                          <HBox prefHeight="537.0" prefWidth="200.0">
+                                          <HBox prefHeight="230.0" prefWidth="200.0">
                                              <children>
                                                 <Label text="PASSWORD">
                                                    <HBox.margin>
@@ -345,7 +345,7 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Label>
-                                                <JFXTextField prefWidth="300.0" />
+                                                <JFXTextField fx:id="passwordText" prefWidth="300.0" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets />
@@ -354,6 +354,14 @@
                                                 <Insets top="100.0" />
                                              </padding>
                                           </HBox>
+                                          <JFXButton onAction="#handleSaveButton" prefHeight="60.0" prefWidth="161.0" text="SAVE">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </JFXButton>
                                        </children>
                                     </VBox>
                                  </children>
